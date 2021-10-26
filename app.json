@@ -1,0 +1,6 @@
+{
+  "name": "Deploy groovy bot on heroku",
+  "description": "Bot application based on abstract-bot.",
+  "repository": "https://github.com/khabaznia/abstract-bot",
+  "addons": [ "heroku-postgresql" ]
+}

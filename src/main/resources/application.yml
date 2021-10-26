@@ -1,0 +1,23 @@
+server.port: ${DEFAULT_PORT}
+
+spring:
+  datasource.driverClassName: org.postgresql.Driver
+  groovy.template.check-template-location: false
+  aop:
+    proxy-target-class: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: update
+    show_sql: false
+
+logging:
+  level:
+    org.hibernate: error
+    org.springframework: INFO
+    com.khabaznia.bot: ${LOGGING_LEVEL}
+
+bot:
+  token: ${BOT_TOKEN}
+  name: ${BOT_NAME}
+  admin.chat.id: ${CHAT_ADMIN}
+  logging.chat.id: ${CHAT_LOGGING}
