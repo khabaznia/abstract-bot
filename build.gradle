@@ -4,13 +4,20 @@ plugins {
 	id 'groovy'
 }
 
-group = 'com.khabaznia'
+group = 'com.github.khabaznia'
 version = '0.0.1'
 sourceCompatibility = '11'
 
-repositories {
-	mavenCentral()
+allprojects {
+	repositories {
+		mavenCentral()
+		maven { url 'https://jitpack.io' }
+	}
 }
+//repositories {
+//	mavenCentral()
+//	maven { url 'https://jitpack.io' }
+//}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -18,7 +25,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.codehaus.groovy:groovy'
-	runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.apache.commons:commons-dbcp2:2.6.0'
 	implementation 'org.telegram:telegrambots:5.3.0'

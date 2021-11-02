@@ -8,6 +8,7 @@ import javax.persistence.Id
 
 @Entity(name = "message")
 class Message {
+
     @Id
     @Column(name = "message_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

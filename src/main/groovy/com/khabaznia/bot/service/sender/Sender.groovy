@@ -1,4 +1,4 @@
-package com.khabaznia.bot.sender
+package com.khabaznia.bot.service.sender
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment

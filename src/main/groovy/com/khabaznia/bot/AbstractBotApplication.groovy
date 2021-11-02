@@ -7,8 +7,8 @@ import org.telegram.telegrambots.bots.DefaultAbsSender
 @SpringBootApplication
 class AbstractBotApplication {
 
-	static void main(String[] args) {
-		SpringApplication.run(AbstractBotApplication, args)
-	}
+    static void main(String[] args) {
+        SpringApplication.run(AbstractBotApplication, args)
+    }
 
 }
