@@ -1,4 +1,4 @@
-package com.khabaznia.bot.model
+package com.khabaznia.bot.enums
 
 enum ChatType {
 

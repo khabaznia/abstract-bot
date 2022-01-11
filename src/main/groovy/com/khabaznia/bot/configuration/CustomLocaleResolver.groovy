@@ -22,7 +22,6 @@ class CustomLocaleResolver extends AcceptHeaderLocaleResolver implements WebMvcC
 
     public static final String ENCODING = 'UTF-8'
     public static final String BUNDLE_NAME = 'messages'
-    public static final String CONFIG_KEYS_PREFIX = 'config.'
 
     @Autowired
     Environment env

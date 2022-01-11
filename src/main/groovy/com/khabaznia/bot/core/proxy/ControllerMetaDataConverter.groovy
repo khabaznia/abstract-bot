@@ -17,7 +17,7 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 
 import static com.khabaznia.bot.configuration.CustomLocaleResolver.*
-import static com.khabaznia.bot.core.proxy.Constants.*
+import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j
 @Component

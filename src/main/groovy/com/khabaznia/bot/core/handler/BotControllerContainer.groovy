@@ -5,7 +5,7 @@ import com.khabaznia.bot.core.proxy.BotControllerProxy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.core.proxy.Constants.*
+import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j
 @Component

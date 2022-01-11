@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 
-import static com.khabaznia.bot.core.proxy.Constants.*
+import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j
 @Component

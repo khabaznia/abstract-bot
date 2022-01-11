@@ -1,4 +1,4 @@
-package com.khabaznia.bot.core.proxy
+package com.khabaznia.bot.core
 
 class Constants {
     static final String PREVIOUS_PATH_DELIMITER = '|'
@@ -9,6 +9,7 @@ class Constants {
     static final String ENCRYPTED_PATH_PREFIX = '/encrypted'
 
     public static final String CONFIGS_DELIMITER = ','
+    public static final String CONFIG_KEYS_PREFIX = 'config.'
 
     static final String EDIT_MESSAGE_CONTROLLER_NAME = '/editMessage'
     static final String DEFAULT_CONTROLLER_NAME = '/default'

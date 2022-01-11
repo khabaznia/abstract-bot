@@ -22,6 +22,8 @@ class FrontController {
 
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {
+        log.trace "Got update -> $update"
+
 
     }
 
