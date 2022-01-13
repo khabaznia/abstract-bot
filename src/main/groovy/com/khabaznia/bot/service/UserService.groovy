@@ -9,6 +9,7 @@ import com.khabaznia.bot.repository.ChatRepository
 import com.khabaznia.bot.repository.ConfigRepository
 import com.khabaznia.bot.repository.UserRepository
 import com.khabaznia.bot.trait.Configurable
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -35,6 +36,12 @@ class UserService implements Configurable {
         userRepository.existsById(userCode) ? userRepository.getById(userCode) : createUser(userCode)
     }
 
+    void setPreviousPath(String path) {
+        def currentChat = SessionUtil.currentChat
+        currentChat.lastAction = path
+        chatRepository.save(currentChat)
+    }
+
     private Chat createChat(String chatCode, String userCode) {
         Chat chat = new Chat();
         chat.code = chatCode
@@ -57,11 +64,11 @@ class UserService implements Configurable {
         userRepository.save(user)
     }
 
-    UserRole getUserRole(String code) {
+    private UserRole getUserRole(String code) {
         code == getConfig(ADMIN_CHAT_ID) ? UserRole.ADMIN : UserRole.USER
     }
 
-    ChatRole getChatRole(String code) {
+    private ChatRole getChatRole(String code) {
         code == getConfig(LOGGING_CHAT_ID) ? ChatRole.LOGGING_CHAT : ChatRole.NONE
     }
 

@@ -16,6 +16,8 @@ import org.springframework.web.client.RestClientException
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
+import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
+
 @Slf4j
 @RestController
 class FrontController {
@@ -32,31 +34,33 @@ class FrontController {
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {
         log.trace "Got update -> $update"
-        def botController = commandMapper.getControllerForUpdate(update)
+        def botController = commandMapper.getController(update)
         while (botController) {
 //            publisher.publishEvent new SendChatActionEvent(actionType: botController.metaData.actionType)
             def path = botController.process update
-            botController = path ? commandMapper.getControllerForPath(path) : null
+            botController = path ? commandMapper.getController(path) : null
         }
 
     }
 
-
     @ExceptionHandler(RestClientException.class)
     ResponseEntity handleRestClientException(final RestClientException e) {
         e.printStackTrace()
+        log.error e.message
         new ResponseEntity(HttpStatus.OK)
     }
 
     @ExceptionHandler(TelegramApiException.class)
     ResponseEntity handleBotException(final TelegramApiException e) {
         e.printStackTrace()
+        log.error e.message
         new ResponseEntity(HttpStatus.OK)
     }
 
     @ExceptionHandler(Exception.class)
     ResponseEntity handleException(final Exception e) {
         e.printStackTrace()
+        log.error e.message
         new ResponseEntity(HttpStatus.OK)
     }
 }

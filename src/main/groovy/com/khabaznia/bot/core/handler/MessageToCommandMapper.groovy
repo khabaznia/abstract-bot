@@ -2,7 +2,6 @@ package com.khabaznia.bot.core.handler
 
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.service.UpdateService
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -19,13 +18,12 @@ class MessageToCommandMapper {
     @Autowired
     UpdateService updateService
 
-    BotControllerProxy getControllerForUpdate(Update update) {
-        def requestedPath = getPathForStringUpdate(update)
-        controllerContainer.getController(getPreviousPath(), requestedPath)
+    BotControllerProxy getController(Update update) {
+        getController(getPathForStringUpdate(update))
     }
 
-    BotControllerProxy getControllerForPath(String path) {
-        controllerContainer.getController(getPreviousPath(), path)
+    BotControllerProxy getController(String path) {
+        controllerContainer.getController(path)
     }
 
     private String getPathForStringUpdate(Update update) {
@@ -37,7 +35,4 @@ class MessageToCommandMapper {
         controllerPath
     }
 
-    private static String getPreviousPath() {
-        SessionUtil.currentChat.lastAction
-    }
 }

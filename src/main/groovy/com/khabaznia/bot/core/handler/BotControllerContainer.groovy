@@ -5,8 +5,8 @@ import com.khabaznia.bot.core.proxy.BotControllerProxy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.core.Constants.*
 import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
+import static com.khabaznia.bot.core.Constants.PREVIOUS_PATH_DELIMITER
 
 @Slf4j
 @Component
@@ -26,20 +26,13 @@ class BotControllerContainer {
         controllerMap[path] = proxy
     }
 
-    BotControllerProxy getController(String previousPath, String currentPath) {
-        def fullPath = previousPath + PREVIOUS_PATH_DELIMITER + currentPath
-        log.info 'Request ---------------> {}', fullPath
-        controllerMap.any { it.key == fullPath }
-                ? controllerMap.find { it.key == fullPath }?.value
-                : controllerMap.find { controllerForCurrentPath(it.key, currentPath) }?.value
-                ?: defaultController
+    BotControllerProxy getController(String currentPath) {
+        log.info 'Try to find controller for path ---------------> {}', currentPath
+        controllerMap.find { it.key ==~ /.*\|$currentPath/ }?.value ?: defaultController
     }
 
     BotControllerProxy getDefaultController() {
+        log.info "Controller not found. Using $DEFAULT controller"
         controllerMap[PREVIOUS_PATH_DELIMITER + DEFAULT]
-    }
-
-    private static boolean controllerForCurrentPath(String key, String currentPath) {
-        key.startsWith(PREVIOUS_PATH_DELIMITER) && key.substring(1) == currentPath
     }
 }

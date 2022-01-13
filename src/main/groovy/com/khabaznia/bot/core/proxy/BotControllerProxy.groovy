@@ -21,11 +21,11 @@ class BotControllerProxy {
     @SecuredBotMethod
     String process(final Update update) {
         log.info 'Executing method -> {} : {}', metaData.bean.class.simpleName, metaData.controllerPath
-//        metaData.beforeExecuteMethod.invoke(metaData.bean, metaData, update)
+        metaData.beforeExecuteMethod.invoke(metaData.bean, metaData, update)
         def result = metaData.hasParameters
                 ? metaData.executeMethod.invoke(metaData.bean, updateService.getParametersFromUpdate(update))
                 : metaData.executeMethod.invoke(metaData.bean)
-//        metaData.afterExecuteMethod.invoke(metaData.bean, metaData.currentPath)
+        metaData.afterExecuteMethod.invoke(metaData.bean, metaData.currentPath)
         metaData.returnString ? result as String : null
     }
 }

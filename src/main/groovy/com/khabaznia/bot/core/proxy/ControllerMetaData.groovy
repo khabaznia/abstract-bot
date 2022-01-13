@@ -10,7 +10,6 @@ class ControllerMetaData {
 
     Object bean
     Boolean hasParameters
-    Boolean hasRedirect
     Method beforeExecuteMethod
     Method executeMethod
     Method afterExecuteMethod
@@ -21,5 +20,5 @@ class ControllerMetaData {
     String previousPath
     String controllerPath
     Method keyboard
-    String returnString
+    Boolean returnString
 }

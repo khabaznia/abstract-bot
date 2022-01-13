@@ -8,6 +8,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.*
+import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.GET_REPLY
 
 @Slf4j
 @Component
@@ -16,6 +17,13 @@ class SampleController extends AbstractBotController {
 
     @BotRequest(path = GET_REPLY)
     getReply() {
+        sendMessage
+                .key('hi')
+                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
+    }
+
+    @BotRequest(path = '/next', after = GET_REPLY)
+    getNext() {
         sendMessage
                 .key('hi')
                 .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
