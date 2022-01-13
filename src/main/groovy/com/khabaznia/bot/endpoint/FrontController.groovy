@@ -1,7 +1,10 @@
 package com.khabaznia.bot.endpoint
 
+import com.khabaznia.bot.core.handler.MessageToCommandMapper
+import com.khabaznia.bot.service.UpdateService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,11 +22,22 @@ class FrontController {
 
     @Autowired
     Environment env
+    @Autowired
+    MessageToCommandMapper commandMapper
+    @Autowired
+    ApplicationEventPublisher publisher
+    @Autowired
+    UpdateService updateService
 
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {
         log.trace "Got update -> $update"
-
+        def botController = commandMapper.getControllerForUpdate(update)
+        while (botController) {
+//            publisher.publishEvent new SendChatActionEvent(actionType: botController.metaData.actionType)
+            def path = botController.process update
+            botController = path ? commandMapper.getControllerForPath(path) : null
+        }
 
     }
 

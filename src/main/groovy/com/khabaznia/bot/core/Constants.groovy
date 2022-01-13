@@ -11,7 +11,4 @@ class Constants {
     public static final String CONFIGS_DELIMITER = ','
     public static final String CONFIG_KEYS_PREFIX = 'config.'
 
-    static final String EDIT_MESSAGE_CONTROLLER_NAME = '/editMessage'
-    static final String DEFAULT_CONTROLLER_NAME = '/default'
-    static final String START_CONTROLLER_NAME = '/start'
 }

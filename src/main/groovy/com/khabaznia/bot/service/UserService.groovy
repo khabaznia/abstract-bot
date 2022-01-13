@@ -40,9 +40,13 @@ class UserService implements Configurable {
         chat.code = chatCode
         chat.role = getChatRole(chatCode)
         chat.type = getChatType(chatCode)
-        chat.users = [userRepository.getById(userCode)]
+        def user = userRepository.getById(userCode)
+        chat.users = [user]
 
-        chatRepository.save(chat)
+        def savedChat = chatRepository.save(chat)
+        user.setChat(savedChat)
+        userRepository.save(user)
+        savedChat
     }
 
     private User createUser(String code) {
@@ -58,7 +62,7 @@ class UserService implements Configurable {
     }
 
     ChatRole getChatRole(String code) {
-        code == getConfig(LOGGING_CHAT_ID) ? ChatRole.LOGGING_CHAT : ChatRole.USER
+        code == getConfig(LOGGING_CHAT_ID) ? ChatRole.LOGGING_CHAT : ChatRole.NONE
     }
 
     static ChatType getChatType(String code) {

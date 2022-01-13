@@ -20,13 +20,13 @@ class AdminController extends AbstractBotController {
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = START)
     onStart() {
-
+        log.debug "in admin start"
     }
 
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = FEATURES_LIST)
     getFeatures() {
-
+        log.debug "in features list"
     }
 
     @Secured(roles = Role.ADMIN)

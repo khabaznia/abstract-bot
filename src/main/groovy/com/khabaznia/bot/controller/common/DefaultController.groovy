@@ -5,17 +5,15 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.controller.Constants.COMMON.*
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.*
+import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 
 @Slf4j
 @Component
 @BotController
-class StartController {
+class DefaultController {
 
-    @BotRequest(path = START)
-    String onStart() {
-        SAMPLE_CONTROLLER + GET_REPLY
+    @BotRequest(path = DEFAULT)
+    defaultAction() {
     }
 
 }

@@ -19,15 +19,15 @@ class UpdateService {
         if (message) {
             return message?.chat?.id + CHAT_ID_DELIMITER + message?.from?.id
         } else {
-            return update.myChatMember?.chat?.id + CHAT_ID_DELIMITER + update.myChatMember.from.id
+            return update.myChatMember?.chat?.id + CHAT_ID_DELIMITER + update.myChatMember?.from?.id
         }
     }
 
 
     String getMessageFromUpdate(final Update update) {
         def message = update.hasCallbackQuery() ? update?.callbackQuery?.data : getMessage(update)?.text
-//        pathCryptService.isEncrypted(message) ? pathCryptService.decryptPath(message) : message
-        message
+//        pathCryptService.isEncrypted(message) ? pathCryptService.decryptPath(message) : message?:''
+        message?:''
     }
 
     Map<String, String> getParametersFromUpdate(final Update update) {

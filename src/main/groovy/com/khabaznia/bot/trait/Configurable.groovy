@@ -32,7 +32,7 @@ trait Configurable {
     private String getConfigParam(final String key) {
         log.trace 'Get config param for key -> {}', key
         configRepository.existsById(key)
-                ? configRepository.getById(key)
+                ? configRepository.getById(key).value
                 : getPropertyFromFileAndSave(key)
     }
 

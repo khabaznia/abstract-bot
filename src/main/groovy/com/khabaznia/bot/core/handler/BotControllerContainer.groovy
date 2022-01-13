@@ -6,6 +6,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.core.Constants.*
+import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 
 @Slf4j
 @Component
@@ -31,14 +32,11 @@ class BotControllerContainer {
         controllerMap.any { it.key == fullPath }
                 ? controllerMap.find { it.key == fullPath }?.value
                 : controllerMap.find { controllerForCurrentPath(it.key, currentPath) }?.value
+                ?: defaultController
     }
 
     BotControllerProxy getDefaultController() {
-        controllerMap[PREVIOUS_PATH_DELIMITER + DEFAULT_CONTROLLER_NAME]
-    }
-
-    boolean containsPath(final String path) {
-        controllerMap.containsKey(PREVIOUS_PATH_DELIMITER + path)
+        controllerMap[PREVIOUS_PATH_DELIMITER + DEFAULT]
     }
 
     private static boolean controllerForCurrentPath(String key, String currentPath) {

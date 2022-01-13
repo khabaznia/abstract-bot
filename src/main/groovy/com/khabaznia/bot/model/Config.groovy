@@ -1,10 +1,13 @@
 package com.khabaznia.bot.model
 
+import groovy.transform.ToString
+
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.validation.constraints.NotNull
 
+@ToString
 @Entity(name = "config")
 class Config {
 

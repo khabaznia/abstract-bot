@@ -2,6 +2,7 @@ package com.khabaznia.bot.core.handler
 
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.service.UpdateService
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -19,20 +20,12 @@ class MessageToCommandMapper {
     UpdateService updateService
 
     BotControllerProxy getControllerForUpdate(Update update) {
-        def requestedPath = getRequestedPath(update)
+        def requestedPath = getPathForStringUpdate(update)
         controllerContainer.getController(getPreviousPath(), requestedPath)
-                ?: controllerContainer.getDefaultController()
     }
 
     BotControllerProxy getControllerForPath(String path) {
         controllerContainer.getController(getPreviousPath(), path)
-                ?: controllerContainer.getDefaultController()
-    }
-
-    private String getRequestedPath(Update update) {
-        if (update.hasMessage() || update.hasCallbackQuery())
-            return getPathForStringUpdate(update)
-        null
     }
 
     private String getPathForStringUpdate(Update update) {
@@ -40,15 +33,11 @@ class MessageToCommandMapper {
         def controllerPath = updateService.getMessageFromUpdate(update)
         if (controllerPath?.startsWith(COMMANDS_DELIMITER)) {
             controllerPath = controllerPath.split(PARAMETERS_PREFIX)[0]
-        } else {
-            if (!controllerContainer.containsPath(controllerPath)) {
-                controllerPath = STRING_CONTROLLER_PATH
-            }
         }
         controllerPath
     }
 
     private static String getPreviousPath() {
-//        SecurityUtils.currentChat?.previousPath
+        SessionUtil.currentChat.lastAction
     }
 }

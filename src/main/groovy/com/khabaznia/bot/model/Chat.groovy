@@ -2,6 +2,7 @@ package com.khabaznia.bot.model
 
 import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.ChatType
+import groovy.transform.ToString
 
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -13,6 +14,7 @@ import javax.persistence.Id
 import javax.persistence.OneToMany
 import javax.validation.constraints.NotNull
 
+@ToString
 @Entity(name = "chat")
 class Chat {
 

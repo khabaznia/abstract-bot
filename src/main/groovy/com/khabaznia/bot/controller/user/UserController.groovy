@@ -19,6 +19,6 @@ class UserController extends AbstractBotController {
     @Secured(roles = Role.USER)
     @BotRequest(path = START)
     onStart() {
-
+        log.debug "in user start"
     }
 }

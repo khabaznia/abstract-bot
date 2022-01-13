@@ -11,7 +11,7 @@ abstract class AbstractBotController {
 
     SendMessage getSendMessage() {
 
-        return null
+        return new SendMessage()
     }
 
     EditMessage getEditMessage() {

@@ -5,6 +5,7 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.core.annotation.Secured
 import com.khabaznia.bot.core.annotation.SendAction
+import com.khabaznia.bot.security.Role
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -91,9 +92,12 @@ class ControllerMetaDataConverter {
     }
 
     private static List<String> getRoles(Method method) {
-        method.getAnnotation(Secured.class)?.roles()*.toString()
+        (method.getAnnotation(Secured.class)?.roles() ?: defaultRoles)*.toString()
     }
 
+    private static Role[] getDefaultRoles() {
+        Secured.class.getDeclaredMethod('roles').getDefaultValue() as Role[]
+    }
 
     private static Boolean hasLocalizedPath(Method method) {
         Boolean.valueOf(method.isAnnotationPresent(Localized.class))
