@@ -1,6 +1,7 @@
 package com.khabaznia.bot.endpoint
 
 import com.khabaznia.bot.core.handler.MessageToCommandMapper
+import com.khabaznia.bot.event.SendChatActionEvent
 import com.khabaznia.bot.service.UpdateService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,6 +9,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,7 +18,6 @@ import org.springframework.web.client.RestClientException
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
-import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 
 @Slf4j
 @RestController
@@ -36,11 +37,17 @@ class FrontController {
         log.trace "Got update -> $update"
         def botController = commandMapper.getController(update)
         while (botController) {
-//            publisher.publishEvent new SendChatActionEvent(actionType: botController.metaData.actionType)
+            publisher.publishEvent new SendChatActionEvent(actionType: botController.metaData.actionType)
             def path = botController.process update
             botController = path ? commandMapper.getController(path) : null
         }
 
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    ResponseEntity handleRestClientException(final AccessDeniedException e) {
+        log.error e.message
+        new ResponseEntity(HttpStatus.OK)
     }
 
     @ExceptionHandler(RestClientException.class)

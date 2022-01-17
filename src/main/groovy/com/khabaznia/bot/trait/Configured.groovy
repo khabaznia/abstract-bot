@@ -10,12 +10,12 @@ import static com.khabaznia.bot.core.Constants.CONFIGS_DELIMITER
 import static com.khabaznia.bot.core.Constants.CONFIG_KEYS_PREFIX
 
 @Slf4j
-trait Configurable {
+trait Configured {
 
     @Autowired
-    private Environment env
+    Environment env
     @Autowired
-    private ConfigRepository configRepository
+    ConfigRepository configRepository
 
     String getConfig(final String key) {
         getConfigParam(key)

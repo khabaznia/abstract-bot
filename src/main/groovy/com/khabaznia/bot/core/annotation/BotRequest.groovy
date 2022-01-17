@@ -14,7 +14,5 @@ import java.lang.annotation.Target
 
     String path() default ''
 
-    String ordered() default 'true'
-
     String after() default ''
 }

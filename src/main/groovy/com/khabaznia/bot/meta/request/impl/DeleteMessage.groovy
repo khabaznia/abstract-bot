@@ -1,6 +1,7 @@
 package com.khabaznia.bot.meta.request.impl
 
 import com.khabaznia.bot.meta.request.BaseRequest
+import com.khabaznia.bot.meta.response.impl.BooleanResponse
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
@@ -10,16 +11,16 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
 @ToString
-@Component
-@Scope("prototype")
+@Component(value = 'deleteMessage')
+@Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
-class DeleteMessage extends BaseRequest {
+class DeleteMessage extends BaseRequest<BooleanResponse> {
 
     Integer messageId
 
-    @Override
-    BotApiMethod toApiMethod() {
-        return null
+    DeleteMessage setMessageId(Integer messageId){
+        this.messageId = messageId
+        return this
     }
 }

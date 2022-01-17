@@ -1,7 +1,7 @@
 package com.khabaznia.bot.model
 
 import com.khabaznia.bot.enums.ChatRole
-import com.khabaznia.bot.enums.ChatType
+
 import groovy.transform.ToString
 
 import javax.persistence.CascadeType
@@ -29,17 +29,15 @@ class Chat {
     @Column(name = "last_action")
     String lastAction
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
     @Column(name = "type")
-    ChatType type
+    String type
 
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "role")
     ChatRole role
 
-    @OneToMany(mappedBy = "chat", cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chat", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.LAZY)
     @Column(name = "history")
     List<Message> history
 

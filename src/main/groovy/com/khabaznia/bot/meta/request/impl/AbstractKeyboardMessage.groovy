@@ -4,8 +4,9 @@ import com.khabaznia.bot.meta.keyboard.Keyboard
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
+import com.khabaznia.bot.meta.response.impl.MessageResponse
 
-abstract class AbstractKeyboardMessage extends BaseRequest {
+abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRequest {
 
     Keyboard keyboard
 

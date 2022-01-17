@@ -33,9 +33,9 @@ final class Constants {
 
     static final class SAMPLE_CONTROLLER {
         static final String SAMPLE_CONTROLLER = '/sample'
-        static final String ACTION_ONE = '/action_one'
-        static final String ACTION_TWO = '/action_two'
-        static final String GET_INLINE = '/get_inline'
+        static final String ACTION_ONE = 'path.action.one'
+        static final String ACTION_TWO = 'path.action_two'
+        static final String GET_INLINE = 'path.get.inline'
         static final String GET_REPLY = '/get_reply'
         static final String YES_ACTION = '/yes'
         static final String NO_ACTION = '/no'

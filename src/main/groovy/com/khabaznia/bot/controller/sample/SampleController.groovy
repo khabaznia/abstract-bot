@@ -4,11 +4,11 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
+import com.khabaznia.bot.enums.MessageType
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.*
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.GET_REPLY
 
 @Slf4j
 @Component
@@ -19,14 +19,15 @@ class SampleController extends AbstractBotController {
     getReply() {
         sendMessage
                 .key('hi')
-                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
+                .type(MessageType.PERSIST)
+//                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
     }
 
     @BotRequest(path = '/next', after = GET_REPLY)
     getNext() {
         sendMessage
                 .key('hi')
-                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
+//                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
     }
 
     @Localized

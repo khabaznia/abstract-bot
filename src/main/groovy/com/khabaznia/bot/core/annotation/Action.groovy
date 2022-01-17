@@ -11,7 +11,7 @@ import java.lang.annotation.Target
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
-@interface SendAction {
+@interface Action {
 
     ActionType actionType() default ActionType.TYPING
 }

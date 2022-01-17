@@ -14,11 +14,9 @@ class ControllerMetaData {
     Method executeMethod
     Method afterExecuteMethod
     ActionType actionType
-    Boolean ordered
     List<String> roles
     String currentPath
     String previousPath
     String controllerPath
-    Method keyboard
     Boolean returnString
 }

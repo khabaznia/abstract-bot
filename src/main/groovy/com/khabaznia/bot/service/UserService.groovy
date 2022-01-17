@@ -1,14 +1,16 @@
 package com.khabaznia.bot.service
 
 import com.khabaznia.bot.enums.ChatRole
-import com.khabaznia.bot.enums.ChatType
+
+import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.model.Chat
+import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.model.User
 import com.khabaznia.bot.repository.ChatRepository
 import com.khabaznia.bot.repository.ConfigRepository
 import com.khabaznia.bot.repository.UserRepository
-import com.khabaznia.bot.trait.Configurable
+import com.khabaznia.bot.trait.Configured
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service
 
 @Slf4j
 @Service
-class UserService implements Configurable {
+class UserService implements Configured {
 
     public static final String ADMIN_CHAT_ID = 'bot.admin.chat.id'
     public static final String LOGGING_CHAT_ID = 'bot.logging.chat.id'
@@ -72,7 +74,7 @@ class UserService implements Configurable {
         code == getConfig(LOGGING_CHAT_ID) ? ChatRole.LOGGING_CHAT : ChatRole.NONE
     }
 
-    static ChatType getChatType(String code) {
-        code.startsWith('-') ? ChatType.GROUP : ChatType.PRIVATE
+    static String getChatType(String code) {
+        code.startsWith('-') ? 'group' : 'private'
     }
 }

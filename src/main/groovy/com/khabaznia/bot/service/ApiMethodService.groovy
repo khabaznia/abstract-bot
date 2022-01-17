@@ -1,0 +1,55 @@
+package com.khabaznia.bot.service
+
+import com.khabaznia.bot.meta.mapper.ApiMethodMapper
+import com.khabaznia.bot.meta.request.BaseRequest
+import com.khabaznia.bot.meta.response.BaseResponse
+import com.khabaznia.bot.service.sender.Sender
+import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod
+
+
+@Slf4j
+@Service
+class ApiMethodService {
+
+    @Autowired
+    Sender sender
+    @Autowired
+    ApiMethodMapper methodMapper
+
+    BaseResponse execute(BaseRequest request, Long messageCode) {
+        log.debug "Execution api method..."
+        addCodeToParams(request, messageCode)
+        getMappedResponse(sender.execute(getApiMethod(request)), request)
+    }
+
+    BaseResponse execute(BaseRequest request){
+        log.debug "Execution api method..."
+        getMappedResponse(sender.execute(getApiMethod(request)), request)
+    }
+
+    void processResponse(BaseResponse response) {
+        log.debug "Processing response"
+    }
+
+    private BotApiMethod getApiMethod(BaseRequest request) {
+        log.debug "Request before mapping -> $request"
+        def botApiMethod = methodMapper.toApiMethod(request)
+        log.debug "Request after mapping -> {}", botApiMethod
+        botApiMethod
+    }
+
+    private BaseResponse getMappedResponse(Serializable apiResponse, BaseRequest request) {
+        log.debug "Got response -> $apiResponse"
+        def response = methodMapper.toResponse(apiResponse, request.type)
+        log.debug "Response after mapping -> {}", response
+        response
+    }
+
+    private void addCodeToParams(BaseRequest request, Long messageCode) {
+        //TODO
+    }
+
+}

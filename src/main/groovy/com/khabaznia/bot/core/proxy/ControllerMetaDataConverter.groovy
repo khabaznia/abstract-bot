@@ -4,7 +4,7 @@ import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.core.annotation.Secured
-import com.khabaznia.bot.core.annotation.SendAction
+import com.khabaznia.bot.core.annotation.Action
 import com.khabaznia.bot.security.Role
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,7 +50,6 @@ class ControllerMetaDataConverter {
         controllerMetaData.beforeExecuteMethod = getMethod(bean, BEFORE_METHOD)
         controllerMetaData.afterExecuteMethod = getMethod(bean, AFTER_METHOD)
         controllerMetaData.roles = getRoles(method)
-        controllerMetaData.ordered = getOrdered(method)
         controllerMetaData.previousPath = getPreviousPath(method)
         controllerMetaData.currentPath = currentPath
         controllerMetaData.controllerPath = getPreviousPath(method) + PREVIOUS_PATH_DELIMITER + currentPath
@@ -83,10 +82,6 @@ class ControllerMetaDataConverter {
         Arrays.stream(bean.class.methods).find { it?.name == methodName } as Method
     }
 
-    private static Boolean getOrdered(Method method) {
-        Boolean.valueOf(method.getAnnotation(BotRequest.class).ordered())
-    }
-
     private static String getPreviousPath(Method method) {
         method.getAnnotation(BotRequest.class).after()
     }
@@ -104,8 +99,8 @@ class ControllerMetaDataConverter {
     }
 
     private static ActionType getActionType(Method method) {
-        method.isAnnotationPresent(SendAction.class)
-                ? method.getAnnotation(SendAction.class)?.actionType()
-                : ActionType.TYPING
+        method.isAnnotationPresent(Action.class)
+                ? method.getAnnotation(Action.class)?.actionType()
+                : Action.class.getDeclaredMethod('actionType').getDefaultValue() as ActionType
     }
 }

@@ -1,6 +1,7 @@
 package com.khabaznia.bot.meta.request.impl
 
 import com.khabaznia.bot.meta.request.BaseRequest
+import com.khabaznia.bot.meta.response.impl.BooleanResponse
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
@@ -11,16 +12,16 @@ import org.telegram.telegrambots.meta.api.methods.ActionType
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
 @ToString
-@Component
-@Scope("prototype")
+@Component(value = 'sendChatAction')
+@Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
-class SendChatAction extends BaseRequest {
+class SendChatAction extends BaseRequest<BooleanResponse> {
 
-    ActionType chatAction
+    ActionType action
 
-    @Override
-    BotApiMethod toApiMethod() {
-        return null
+    SendChatAction setAction(ActionType actionType) {
+        this.action = actionType
+        return this
     }
 }
