@@ -1,6 +1,6 @@
-package com.khabaznia.bot.meta.request.impl
+package com.khabaznia.bot.meta.keyboard.impl
 
-import com.khabaznia.bot.meta.response.impl.MessageResponse
+import com.khabaznia.bot.meta.keyboard.Button
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
@@ -9,16 +9,13 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
 @ToString(includeSuper = true)
-@Component(value = 'sendMessage')
-@Scope('prototype')
+@Component(value = 'replyButton')
+@Scope(value = 'prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
-@TupleConstructor(includeSuperFields = true)
-class SendMessage extends AbstractKeyboardMessage<MessageResponse> {
+@TupleConstructor
+class ReplyButton extends Button {
 
     String key
     Map<String, String> binding
-
-    SendMessage() {
-        binding = [:]
-    }
+    String emoji
 }

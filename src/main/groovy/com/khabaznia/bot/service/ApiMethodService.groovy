@@ -1,6 +1,8 @@
 package com.khabaznia.bot.service
 
-import com.khabaznia.bot.meta.mapper.ApiMethodMapper
+
+import com.khabaznia.bot.meta.mapper.RequestMapper
+import com.khabaznia.bot.meta.mapper.ResponseMapper
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.service.sender.Sender
@@ -17,7 +19,10 @@ class ApiMethodService {
     @Autowired
     Sender sender
     @Autowired
-    ApiMethodMapper methodMapper
+    RequestMapper requestMapper
+    @Autowired
+    ResponseMapper responseMapper
+
 
     BaseResponse execute(BaseRequest request, Long messageCode) {
         log.debug "Execution api method..."
@@ -36,14 +41,14 @@ class ApiMethodService {
 
     private BotApiMethod getApiMethod(BaseRequest request) {
         log.debug "Request before mapping -> $request"
-        def botApiMethod = methodMapper.toApiMethod(request)
+        def botApiMethod = requestMapper.toApiMethod(request)
         log.debug "Request after mapping -> {}", botApiMethod
         botApiMethod
     }
 
     private BaseResponse getMappedResponse(Serializable apiResponse, BaseRequest request) {
         log.debug "Got response -> $apiResponse"
-        def response = methodMapper.toResponse(apiResponse, request.type)
+        def response = responseMapper.toResponse(apiResponse, request.type)
         log.debug "Response after mapping -> {}", response
         response
     }

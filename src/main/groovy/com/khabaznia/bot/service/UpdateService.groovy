@@ -1,6 +1,7 @@
 package com.khabaznia.bot.service
 
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -14,6 +15,9 @@ import static com.khabaznia.bot.security.Constants.CHAT_ID_DELIMITER
 @Service
 class UpdateService {
 
+    @Autowired
+    PathCryptService pathCryptService
+
     String getChatInfoFromUpdate(Update update) {
         def message = getMessage(update)
         if (message) {
@@ -26,8 +30,7 @@ class UpdateService {
 
     String getMessageFromUpdate(final Update update) {
         def message = update.hasCallbackQuery() ? update?.callbackQuery?.data : getMessage(update)?.text
-//        pathCryptService.isEncrypted(message) ? pathCryptService.decryptPath(message) : message?:''
-        message?:''
+        pathCryptService.isEncrypted(message) ? pathCryptService.decryptPath(message) : message?:''
     }
 
     Map<String, String> getParametersFromUpdate(final Update update) {
@@ -47,7 +50,7 @@ class UpdateService {
         return null
     }
 
-    private static Map<String, String> getParametersFromMessage(final String message) {
+    static Map<String, String> getParametersFromMessage(final String message) {
         message?.split(PARAMETERS_PREFIX)[1]?.split(PARAMETERS_DELIMITER)
                 ?.collectEntries { [it.split(PARAMETER_KEY_VALUE_DELIMITER)[0], it.split(PARAMETER_KEY_VALUE_DELIMITER)[1]] }
     }

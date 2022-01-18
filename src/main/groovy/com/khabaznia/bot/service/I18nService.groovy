@@ -21,7 +21,7 @@ class I18nService implements Configured {
     @Autowired
     ChatRepository chatRepository
 
-    boolean changeLocale(final String localeKey) {
+    boolean changeLocale(String localeKey) {
         log.debug 'Try to change locale to -> {}', localeKey
         if (localeKey && getConfigs(AVAILABLE_LOCALES).contains(localeKey)) {
             def chatToUpdate = SessionUtil.currentChat
@@ -33,14 +33,20 @@ class I18nService implements Configured {
         return false
     }
 
-    String getMessage(final String key) {
+    String getMessage(String key) {
         def localeFromChat = new Locale(SessionUtil.currentChat?.lang ?: DEFAULT_LOCALE)
         context.getMessage(key, null, localeFromChat)
     }
 
-    String getFilledTemplate(final String stringTemplateKey, final Map<String, String> binding) {
+    String getFilledTemplate(String stringTemplateKey, Map<String, String> binding) {
         def engine = new GStringTemplateEngine()
         def template = engine.createTemplate(getMessage(stringTemplateKey)).make(binding)
         template as String
+    }
+
+    String getFilledTemplate(String stringTemplateKey, Map<String, String> binding, String emoji) {
+        def engine = new GStringTemplateEngine()
+        def template = engine.createTemplate(getMessage(stringTemplateKey)).make(binding)
+        template + " " + emoji
     }
 }

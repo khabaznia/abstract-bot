@@ -21,7 +21,7 @@ class Row {
     @Id
     @Column(name = "row_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id
+    Long id
 
     @ElementCollection
     @CollectionTable(name = "button_mapping",

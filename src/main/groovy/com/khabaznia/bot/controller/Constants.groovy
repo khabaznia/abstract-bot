@@ -2,6 +2,11 @@ package com.khabaznia.bot.controller
 
 final class Constants {
 
+    static final class BUTTON_PARAMETERS {
+        public static final String ONE_TIME = 'oneTime'
+        public static final String ENABLED = 'enabled'
+    }
+
     static final class COMMON {
 
         static final String DEFAULT = '/default'

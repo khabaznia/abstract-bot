@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ActionType
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
-@ToString
+@ToString(includeSuper = true)
 @Component(value = 'sendChatAction')
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')

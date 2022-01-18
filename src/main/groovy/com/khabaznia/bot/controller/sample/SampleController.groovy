@@ -19,15 +19,15 @@ class SampleController extends AbstractBotController {
     getReply() {
         sendMessage
                 .key('hi')
+                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
                 .type(MessageType.PERSIST)
-//                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
     }
 
     @BotRequest(path = '/next', after = GET_REPLY)
     getNext() {
         sendMessage
                 .key('hi')
-//                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
+                .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
     }
 
     @Localized
@@ -48,10 +48,10 @@ class SampleController extends AbstractBotController {
     getInline() {
         sendMessage
                 .key('hi')
-                .keyboard(inlineKeyboard.addButton('yes, I confirm', YES_ACTION)
-                        .addButton("no, don't confirm", NO_ACTION, [param: 'some_param'])
-                        .addRow()
-                        .addButton('Back', BACK_ACTION)
+                .keyboard(inlineKeyboard.button('yes, I confirm', YES_ACTION)
+                        .button("no, don't confirm", NO_ACTION, [param: 'some_param'])
+                        .row()
+                        .button('Back', BACK_ACTION)
                 )
     }
 
