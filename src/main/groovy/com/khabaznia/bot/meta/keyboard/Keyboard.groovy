@@ -1,8 +1,10 @@
 package com.khabaznia.bot.meta.keyboard
 
+import groovy.transform.ToString
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
+@ToString
 abstract class Keyboard<T extends Button> {
 
     @Autowired

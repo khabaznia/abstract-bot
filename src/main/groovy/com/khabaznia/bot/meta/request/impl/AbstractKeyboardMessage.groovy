@@ -3,9 +3,11 @@ package com.khabaznia.bot.meta.request.impl
 import com.khabaznia.bot.meta.keyboard.Keyboard
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.impl.MessageResponse
+import groovy.transform.ToString
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
+@ToString
 abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRequest {
 
     @Autowired

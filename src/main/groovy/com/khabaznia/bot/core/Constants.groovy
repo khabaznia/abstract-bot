@@ -1,12 +1,12 @@
 package com.khabaznia.bot.core
 
 class Constants {
-    static final String PREVIOUS_PATH_DELIMITER = '|'
-    static final String COMMANDS_DELIMITER = '/'
-    static final String PARAMETERS_PREFIX = '::'
-    static final String PARAMETERS_DELIMITER = ';'
-    static final String PARAMETER_KEY_VALUE_DELIMITER = '='
-    static final String ENCRYPTED_PATH_PREFIX = '/encrypted'
+    public static final String PREVIOUS_PATH_DELIMITER = '|'
+    public static final String COMMANDS_DELIMITER = '/'
+    public static final String PARAMETERS_PREFIX = '::'
+    public static final String PARAMETERS_DELIMITER = ';'
+    public static final String PARAMETER_KEY_VALUE_DELIMITER = '='
+    public static final String ENCRYPTED_PATH_PREFIX = '/encrypted'
     public static final String DELETE_PATHS_WEEKS_COUNT = 'delete.paths.weeks.count'
 
     public static final String CONFIGS_DELIMITER = ','

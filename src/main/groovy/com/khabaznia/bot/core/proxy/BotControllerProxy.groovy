@@ -22,8 +22,11 @@ class BotControllerProxy {
     String process(final Update update) {
         log.info 'Executing method -> {} : {}', metaData.bean.class.simpleName, metaData.controllerPath
         metaData.beforeExecuteMethod.invoke(metaData.bean, metaData, update)
+        def params = updateService.getParametersFromUpdate(update)
+        log.trace 'Params -> {}', params
+        log.trace 'Metadata params -> {}', metaData.params
         def result = metaData.hasParameters
-                ? metaData.executeMethod.invoke(metaData.bean, updateService.getParametersFromUpdate(update))
+                ? metaData.executeMethod.invoke(metaData.bean, metaData.params.collect { params.get(it.value) } as Object[])
                 : metaData.executeMethod.invoke(metaData.bean)
         metaData.afterExecuteMethod.invoke(metaData.bean, metaData.currentPath)
         metaData.returnString ? result as String : null

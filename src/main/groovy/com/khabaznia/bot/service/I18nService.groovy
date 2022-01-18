@@ -45,8 +45,8 @@ class I18nService implements Configured {
     }
 
     String getFilledTemplate(String stringTemplateKey, Map<String, String> binding, String emoji) {
-        def engine = new GStringTemplateEngine()
-        def template = engine.createTemplate(getMessage(stringTemplateKey)).make(binding)
-        template + " " + emoji
+        emoji
+                ? getFilledTemplate(stringTemplateKey, binding) + " " + emoji
+                : getFilledTemplate(stringTemplateKey, binding)
     }
 }

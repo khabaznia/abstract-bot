@@ -8,7 +8,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@ToString(includeSuper = true)
+@ToString
 @Component(value = 'replyButton')
 @Scope(value = 'prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
@@ -18,4 +18,8 @@ class ReplyButton extends Button {
     String key
     Map<String, String> binding
     String emoji
+
+    ReplyButton() {
+        binding = [:]
+    }
 }

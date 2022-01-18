@@ -9,6 +9,7 @@ import java.lang.reflect.Method
 class ControllerMetaData {
 
     Object bean
+    Map<Integer, String> params
     Boolean hasParameters
     Method beforeExecuteMethod
     Method executeMethod

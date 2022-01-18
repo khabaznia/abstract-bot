@@ -46,18 +46,20 @@ abstract class AbstractBotController {
     }
 
     EditMessage getEditMessage() {
-        return null
+        def message = context.getBean 'editMessage'
+        requests.add(message)
+        message
     }
 
     void getDeleteMessages() {
     }
 
     InlineKeyboard getInlineKeyboard() {
-        return null
+        context.getBean 'inlineKeyboard'
     }
 
     ReplyKeyboard getReplyKeyboard() {
-        return null
+        context.getBean 'replyKeyboard'
     }
 
 

@@ -8,7 +8,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@ToString(includeSuper = true)
+@ToString
 @Component(value = 'inlineButton')
 @Scope(value = 'prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
@@ -20,4 +20,9 @@ class InlineButton extends Button {
     Map<String, String> params
     String emoji
     String callbackData
+
+    InlineButton() {
+        binding = [:]
+        params = [:]
+    }
 }

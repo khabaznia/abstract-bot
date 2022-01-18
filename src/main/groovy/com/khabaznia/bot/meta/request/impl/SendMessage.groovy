@@ -8,7 +8,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@ToString(includeSuper = true)
+@ToString
 @Component(value = 'sendMessage')
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')

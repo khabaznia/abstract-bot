@@ -9,6 +9,7 @@ import com.khabaznia.bot.security.Role
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.core.DefaultParameterNameDiscoverer
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ActionType
@@ -55,6 +56,7 @@ class ControllerMetaDataConverter {
         controllerMetaData.controllerPath = getPreviousPath(method) + PREVIOUS_PATH_DELIMITER + currentPath
         controllerMetaData.hasParameters = method.parameterCount > 0
         controllerMetaData.actionType = getActionType(method)
+        controllerMetaData.params = getParams(method)
         log.trace "Get meta data for controller. {} : {}", controllerMetaData.bean.class.simpleName, controllerMetaData.controllerPath
         controllerMetaData
     }
@@ -102,5 +104,12 @@ class ControllerMetaDataConverter {
         method.isAnnotationPresent(Action.class)
                 ? method.getAnnotation(Action.class)?.actionType()
                 : Action.class.getDeclaredMethod('actionType').getDefaultValue() as ActionType
+    }
+
+    private static Map<Integer, String> getParams(Method method){
+        int pos = 0
+        new DefaultParameterNameDiscoverer().getParameterNames(method).collectEntries{
+            [(pos++): it]
+        }
     }
 }

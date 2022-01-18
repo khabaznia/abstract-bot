@@ -12,7 +12,7 @@ import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 import static com.khabaznia.bot.meta.Emoji.*
 import static com.khabaznia.bot.core.Constants.PARAMETERS_PREFIX
 
-@ToString(includeSuper = true)
+@ToString
 @Component(value = 'inlineKeyboard')
 @Scope("prototype")
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
@@ -67,7 +67,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         def button = button.key(key)
                 .callbackData(callbackData)
                 .params((ENABLED): isEnabled.toString())
-                .emoji(isEnabled? CHECKED_MARK : CROSS_MARK)
+                .emoji(isEnabled ? CHECKED_MARK : CROSS_MARK)
         currentRow.add button
         this
     }
@@ -77,7 +77,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         def button = button.key(key)
                 .callbackData(callbackData)
                 .params(params)
-                .emoji(isEnabled? CHECKED_MARK : CROSS_MARK)
+                .emoji(isEnabled ? CHECKED_MARK : CROSS_MARK)
         currentRow.add button
         this
     }
@@ -127,6 +127,8 @@ class InlineKeyboard extends Keyboard<InlineButton> {
     List<List<InlineButton>> get() {
         row()
         rows
+                .findAll { it != null }
+                .findAll { it -> !it.isEmpty() }
     }
 
     @Override

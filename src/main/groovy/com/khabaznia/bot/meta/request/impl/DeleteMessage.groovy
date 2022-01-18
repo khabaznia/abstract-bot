@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
-@ToString(includeSuper = true)
+@ToString
 @Component(value = 'deleteMessage')
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')

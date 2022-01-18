@@ -51,7 +51,9 @@ class UpdateService {
     }
 
     static Map<String, String> getParametersFromMessage(final String message) {
-        message?.split(PARAMETERS_PREFIX)[1]?.split(PARAMETERS_DELIMITER)
+        def result = message?.split(PARAMETERS_PREFIX)[1]?.split(PARAMETERS_DELIMITER)
                 ?.collectEntries { [it.split(PARAMETER_KEY_VALUE_DELIMITER)[0], it.split(PARAMETER_KEY_VALUE_DELIMITER)[1]] }
+        log.debug "Params: {}", result
+        result
     }
 }

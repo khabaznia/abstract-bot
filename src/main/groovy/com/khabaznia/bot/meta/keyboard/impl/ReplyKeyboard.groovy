@@ -8,7 +8,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@ToString(includeSuper = true)
+@ToString
 @Component(value = 'replyKeyboard')
 @Scope("prototype")
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
@@ -52,7 +52,9 @@ class ReplyKeyboard extends Keyboard<ReplyButton> {
     List<List<ReplyButton>> get() {
         rows?.add currentRow
         rows?.addAll lastRows
-        return rows
+        rows
+                .findAll { it != null }
+                .findAll { it -> !it.isEmpty() }
     }
 
     @Override
