@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong
 @Service
 class MessageService {
 
-    AtomicLong nextId
+    private AtomicLong nextId
 
     @Autowired
     MessageRepository messageRepository
@@ -34,6 +34,12 @@ class MessageService {
     void removeMessagesOfType(MessageType type) {
         messageRepository.findByAndPaymentId(type, SessionUtil.currentChat.code)
                 .each { messageRepository.delete(it) }
+    }
+
+    void saveMessage(Message message) {
+        message.setCode(getUniqueCode())
+        log.trace "Saving message: {}", message
+        messageRepository.save(message)
     }
 
     void saveMessage(Message message, Long code) {

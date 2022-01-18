@@ -5,6 +5,7 @@ final class Constants {
     static final class BUTTON_PARAMETERS {
         public static final String ONE_TIME = 'oneTime'
         public static final String ENABLED = 'enabled'
+        public static final String MESSAGE_CODE = 'messageCode'
     }
 
     static final class COMMON {

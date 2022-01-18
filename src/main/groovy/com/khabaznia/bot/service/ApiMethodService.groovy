@@ -24,19 +24,9 @@ class ApiMethodService {
     ResponseMapper responseMapper
 
 
-    BaseResponse execute(BaseRequest request, Long messageCode) {
-        log.debug "Execution api method..."
-        addCodeToParams(request, messageCode)
-        getMappedResponse(sender.execute(getApiMethod(request)), request)
-    }
-
     BaseResponse execute(BaseRequest request){
         log.debug "Execution api method..."
         getMappedResponse(sender.execute(getApiMethod(request)), request)
-    }
-
-    void processResponse(BaseResponse response) {
-        log.debug "Processing response"
     }
 
     private BotApiMethod getApiMethod(BaseRequest request) {
@@ -52,9 +42,4 @@ class ApiMethodService {
         log.debug "Response after mapping -> {}", response
         response
     }
-
-    private void addCodeToParams(BaseRequest request, Long messageCode) {
-        //TODO
-    }
-
 }
