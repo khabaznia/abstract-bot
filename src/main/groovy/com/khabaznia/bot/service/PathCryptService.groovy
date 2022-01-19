@@ -27,14 +27,14 @@ class PathCryptService implements Configured {
         def key = ENCRYPTED_PATH_PREFIX + path.md5()
         repository.existsById(key)
                 ? key
-                : repository.save(new EncryptedPath(key: key, value: path))
+                : repository.save(new EncryptedPath(key: key, value: path)).key
     }
 
     String decryptPath(final String path) {
         log.trace 'Decryption of path -> {}', {}
         def encryptedPath = repository.findById(path)
         encryptedPath.ifPresent { repository.save(it) }
-        encryptedPath.get()
+        encryptedPath.get().value
     }
 
     void deleteExpiredPaths() {

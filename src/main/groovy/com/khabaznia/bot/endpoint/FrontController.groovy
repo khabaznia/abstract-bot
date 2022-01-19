@@ -41,7 +41,6 @@ class FrontController {
             def path = botController.process update
             botController = path ? commandMapper.getController(path) : null
         }
-
     }
 
     @ExceptionHandler(AccessDeniedException.class)

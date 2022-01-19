@@ -24,10 +24,10 @@ class DeleteMessagesEventListener {
     MessageService messageService
 
     @EventListener
-    void onApplicationEvent(final DeleteMessagesEvent event) {
+    void onApplicationEvent(DeleteMessagesEvent event) {
         def messageType = event.type ?: MessageType.DELETE
         def currentChatCode = SessionUtil.currentChat.code
-        def deleteMessageRequests = messageService.getMessagesForType(messageType)
+        def deleteMessageRequests = messageService.getMessagesForTypeAndChat(messageType, currentChatCode)
                 .collect { context.getBean('deleteMessage').messageId(it.messageId) }
                 .collect { methodExecutionService.execute(it) }
         log.info 'Delete {} messages from chat {}', deleteMessageRequests?.size(), currentChatCode

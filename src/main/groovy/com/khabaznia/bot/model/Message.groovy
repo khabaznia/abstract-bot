@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull
 class Message {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
     Long code
 

@@ -19,7 +19,10 @@ import static com.khabaznia.bot.core.Constants.PARAMETERS_PREFIX
 @TupleConstructor(includeSuperFields = true)
 class InlineKeyboard extends Keyboard<InlineButton> {
 
+    private Map<String, String> keyboardParams
+
     InlineKeyboard() {
+        this.keyboardParams = [:]
         this.rows = [[]]
         this.currentRow = []
     }
@@ -63,15 +66,6 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         this
     }
 
-    InlineKeyboard switchButton(String key, String callbackData, Boolean isEnabled) {
-        def button = button.key(key)
-                .callbackData(callbackData)
-                .params((ENABLED): isEnabled.toString())
-                .emoji(isEnabled ? CHECKED_MARK : CROSS_MARK)
-        currentRow.add button
-        this
-    }
-
     InlineKeyboard switchButton(String key, String callbackData, Boolean isEnabled, Map<String, String> params) {
         params.put(ENABLED, isEnabled.toString())
         def button = button.key(key)
@@ -82,23 +76,31 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         this
     }
 
-    InlineKeyboard oneTimeButton(String key, String callbackData) {
-        button(key, callbackData, [(ONE_TIME): 'true'])
+    void addKeyboardParam(String key, String value) {
+        keyboardParams.put(key, value)
     }
 
-    InlineKeyboard oneTimeButton(String key, String emoji, String callbackData) {
-        button(key, emoji, callbackData, [(ONE_TIME): 'true'])
+    Map<String, String> getKeyboardParams() {
+        keyboardParams
     }
-
-    InlineKeyboard oneTimeButton(String key, String callbackData, Map<String, String> params) {
-        params.put(ONE_TIME, 'true')
-        button(key, callbackData, params)
-    }
-
-    InlineKeyboard oneTimeButton(String key, String emoji, String callbackData, Map<String, String> params) {
-        params.put(ONE_TIME, 'true')
-        button(key, emoji, callbackData, params)
-    }
+//
+//    InlineKeyboard oneTimeButton(String key, String callbackData) {
+//        button(key, callbackData, [(ONE_TIME): 'true'])
+//    }
+//
+//    InlineKeyboard oneTimeButton(String key, String emoji, String callbackData) {
+//        button(key, emoji, callbackData, [(ONE_TIME): 'true'])
+//    }
+//
+//    InlineKeyboard oneTimeButton(String key, String callbackData, Map<String, String> params) {
+//        params.put(ONE_TIME, 'true')
+//        button(key, callbackData, params)
+//    }
+//
+//    InlineKeyboard oneTimeButton(String key, String emoji, String callbackData, Map<String, String> params) {
+//        params.put(ONE_TIME, 'true')
+//        button(key, emoji, callbackData, params)
+//    }
 
     InlineKeyboard deleteButtonForPath(final String buttonPath) {
         rows.each {

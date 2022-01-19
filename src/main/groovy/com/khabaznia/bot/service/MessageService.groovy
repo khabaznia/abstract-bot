@@ -15,45 +15,35 @@ import java.util.concurrent.atomic.AtomicLong
 @Service
 class MessageService {
 
-    private AtomicLong nextId
-
     @Autowired
     MessageRepository messageRepository
 
-    @PostConstruct
-    void initIdGenerator(){
-        nextId = new AtomicLong()
-    }
-
-    List<Message> getMessagesForType(MessageType type) {
-        def resultList = messageRepository.findByAndPaymentId(type, SessionUtil.currentChat.code)
+    List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
+        def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
         log.trace "List for type: {}", resultList
         resultList
     }
 
     void removeMessagesOfType(MessageType type) {
-        messageRepository.findByAndPaymentId(type, SessionUtil.currentChat.code)
+        messageRepository.findByTypeAndChatCode(type, SessionUtil.currentChat.code)
                 .each { messageRepository.delete(it) }
     }
 
     void saveMessage(Message message) {
-        message.setCode(getUniqueCode())
         log.trace "Saving message: {}", message
         messageRepository.save(message)
     }
 
-    void saveMessage(Message message, Long code) {
-        message.setCode(code)
-        log.trace "Saving message: {}", message
-        messageRepository.save(message)
+    Message getEmptyMessage() {
+        log.trace "Saving empty message: {}"
+        messageRepository.save(new Message(text: 'placeholder', messageId: 1))
     }
 
-    Long getUniqueCode() {
-        long value = nextId.getAndIncrement()
-        while (messageRepository.findById(value)) {
-            value = nextId.getAndIncrement()
-        }
-        log.trace "Unique id for message: {}", value
-        value
+    Message getMessageForCode (Long code){
+        messageRepository.findById(code).orElse(null)
+    }
+
+    void removeMessageForCode (Long code){
+        messageRepository.deleteById(code)
     }
 }

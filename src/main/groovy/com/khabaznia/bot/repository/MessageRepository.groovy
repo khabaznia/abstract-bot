@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MessageRepository extends JpaRepository<Message, Long> {
 
-    @Query(value = "SELECT m FROM message m JOIN m.chat c WHERE m.type=?1 AND c.code=?2 ORDER BY m.updateDate DESC ")
-    @EntityGraph(attributePaths = ["type", "chatId"])
-    List<Message> findByAndPaymentId(MessageType type, String chatId);
+    @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c WHERE m.type=?1 AND c.code=?2 ORDER BY m.updateDate DESC ")
+    List<Message> findByTypeAndChatCode(MessageType type, String chatCode)
 }

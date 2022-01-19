@@ -19,15 +19,15 @@ class ExecuteMethodsListener {
     RequestProcessingStrategyContainer strategyContainer
 
     @EventListener
-    void onApplicationEvent(final ExecuteMethodsEvent event) {
+    void onApplicationEvent(ExecuteMethodsEvent event) {
         log.debug 'Processing {} requests', event.requests.size()
         event.requests
                 .sort { it.order }
                 .each {
                     def strategy = strategyContainer.getStrategyForRequest(it)
-                    strategy.beforeProcess(it)
+                    def message = strategy.beforeProcess(it)
                     def response = strategy.process(it)
-                    strategy.afterProcess(response)
+                    strategy.afterProcess(response, message)
                 }
     }
 }

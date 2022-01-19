@@ -68,6 +68,7 @@ class SampleController extends AbstractBotController {
                         .row()
                         .button('Back', SAMPLE_CONTROLLER + BACK_ACTION)
                 )
+                .type(MessageType.DELETE)
     }
 
     @BotRequest(path = YES_ACTION)
@@ -78,8 +79,8 @@ class SampleController extends AbstractBotController {
     @BotRequest(path = NO_ACTION)
     noAction(String param, String other) {
         sendMessage.key('no')
-        sendMessage.key(param)
-        sendMessage.key(other)
+        sendMessage.key(param).type(MessageType.DELETE)
+        sendMessage.key(other).type(MessageType.DELETE)
     }
 
     @BotRequest(path = BACK_ACTION)

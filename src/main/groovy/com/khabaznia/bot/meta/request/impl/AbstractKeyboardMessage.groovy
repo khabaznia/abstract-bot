@@ -1,5 +1,6 @@
 package com.khabaznia.bot.meta.request.impl
 
+import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.meta.keyboard.Keyboard
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.impl.MessageResponse
@@ -17,6 +18,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
 
     AbstractKeyboardMessage keyboard(Keyboard keyboard) {
         this.keyboard = keyboard
+        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
         this
     }
 
@@ -41,6 +43,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
         def inlineKeyboard = context.getBean('inlineKeyboard')
         buttons.each { inlineKeyboard.button(it.key, it.value) }
         keyboard = inlineKeyboard
+        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
         this
     }
 
@@ -51,6 +54,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
             inlineKeyboard.row()
         }
         keyboard = inlineKeyboard
+        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
         this
     }
 }

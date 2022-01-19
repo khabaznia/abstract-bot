@@ -37,18 +37,26 @@ class KeyboardMapper {
                 : null
     }
 
-    private InlineKeyboardMarkup toInlineApiKeyboard(InlineKeyboard keyboard) {
-        log.trace 'Map inline keyboard: {}', keyboard
-        def result = new InlineKeyboardMarkup()
-        result.setKeyboard(keyboard.get().collect {
-            it.collect {
-                new InlineKeyboardButton(
-                        text: i18nService.getFilledTemplate(it.key, it.binding, it.emoji),
-                        callbackData: it.params.isEmpty() ? it.callbackData : it.callbackData.addParams(it.params))
-            }
-        })
-        log.trace 'After mapping. Markup: {}', result
-        result
+    InlineKeyboardMarkup toInlineApiKeyboard(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
+        if (keyboard instanceof InlineKeyboard) {
+            log.trace 'Map inline keyboard: {}', keyboard
+            def result = new InlineKeyboardMarkup()
+            result.setKeyboard(keyboard.get().collect {
+                it.each { it.params.putAll(keyboard.getKeyboardParams()) }
+                        .collect {
+                            new InlineKeyboardButton(
+                                    text: i18nService.getFilledTemplate(it.key, it.binding, it.emoji),
+                                    callbackData: getCallBackData(it))
+                        }
+            })
+            log.trace 'After mapping. Markup: {}', result
+            return result
+        }
+        null
+    }
+
+    private String getCallBackData(InlineButton button) {
+        pathCryptService.encryptPath(button.params.isEmpty() ? button.callbackData : button.callbackData.addParams(button.params))
     }
 
     private ReplyKeyboardMarkup toReplyApiKeyboard(ReplyKeyboard keyboard) {
@@ -64,24 +72,17 @@ class KeyboardMapper {
     }
 
     Keyboard toKeyboardModel(InlineKeyboardMarkup keyboardMarkup) {
-        log.trace 'Map inline keyboard to model: {}', keyboardMarkup
-        def result = new Keyboard(type: KeyboardType.INLINE,
-                rows: keyboardMarkup?.keyboard?.collect {
-                    new Row(buttons: it.collectEntries { [it.callbackData, it.text] } as Map<String, String>)
-                })
-        log.trace 'After mapping. Model: {}', result
-        result
+        if (keyboardMarkup) {
+            log.trace 'Map inline keyboard to model: {}', keyboardMarkup
+            def result = new Keyboard(type: KeyboardType.INLINE,
+                    rows: keyboardMarkup?.keyboard?.collect {
+                        new Row(buttons: it.collectEntries { [pathCryptService.decryptPath(it.callbackData), it.text] } as Map<String, String>)
+                    })
+            log.trace 'After mapping. Model: {}', result
+            return result
+        }
+        return null
     }
-
-//    Keyboard toKeyboardModel(ReplyKeyboardMarkup keyboardMarkup) {
-//        log.trace 'Map reply keyboard to model: {}', keyboardMarkup
-//        def result = new Keyboard(type: KeyboardType.INLINE,
-//                rows: keyboardMarkup?.keyboard?.collect {
-//                    new Row(buttons: it.collectEntries { [it.text, it.text] } as Map<String, String>)
-//                })
-//        log.trace 'After mapping. Model: {}', result
-//        result
-//    }
 
     com.khabaznia.bot.meta.keyboard.Keyboard keyboardFromModel(Keyboard source) {
         log.trace 'Map keyboard from model: {}', source

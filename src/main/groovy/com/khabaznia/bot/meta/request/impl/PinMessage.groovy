@@ -8,19 +8,13 @@ import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import org.telegram.telegrambots.meta.api.methods.ActionType
 
 @ToString
-@Component(value = 'sendChatAction')
+@Component(value = 'pinMessage')
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
-class SendChatAction extends BaseRequest<BooleanResponse> {
+class PinMessage extends BaseRequest<BooleanResponse> {
 
-    ActionType action
-
-    SendChatAction setAction(ActionType actionType) {
-        this.action = actionType
-        return this
-    }
+    String messageId
 }
