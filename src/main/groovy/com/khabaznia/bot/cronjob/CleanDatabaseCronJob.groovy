@@ -1,5 +1,6 @@
 package com.khabaznia.bot.cronjob
 
+import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.service.PathCryptService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,12 +14,15 @@ class CleanDatabaseCronJob {
 
     @Autowired
     PathCryptService pathCryptService
+    @Autowired
+    MessageService messageService
 
     @Scheduled(cron = '0 0 12 * * TUE') // Every Tuesday at noon
     @Async
     public void scheduleTaskUsingCronExpression() {
-        log.info '************* Running cronjob for deleting expired paths *************'
+        log.info '************* Running cronjob for deleting expired messages and paths *************'
         pathCryptService.deleteExpiredPaths()
-        log.info '************************       FINISHED       ************************'
+        messageService.deleteExpiredMessages()
+        log.info '******************************       FINISHED       ******************************'
     }
 }

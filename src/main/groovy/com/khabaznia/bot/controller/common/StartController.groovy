@@ -16,7 +16,7 @@ class StartController extends AbstractBotController {
 
     @BotRequest(path = START)
     String onStart() {
-        SAMPLE_CONTROLLER + GET_REPLY
+        GET_REPLY
     }
 
 }

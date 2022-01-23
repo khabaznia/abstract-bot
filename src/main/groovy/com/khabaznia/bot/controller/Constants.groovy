@@ -3,9 +3,9 @@ package com.khabaznia.bot.controller
 final class Constants {
 
     static final class BUTTON_PARAMETERS {
-        public static final String ONE_TIME = 'oneTime'
-        public static final String ENABLED = 'enabled'
         public static final String MESSAGE_CODE = 'messageCode'
+        public static final String ONE_TIME_KEYBOARD = 'oneTime'
+        public static final String BUTTON_ID = 'buttonId'
     }
 
     static final class COMMON {
@@ -23,8 +23,8 @@ final class Constants {
 
     static final class SETTINGS_CONTROLLER {
         static final String SETTINGS_CONTROLLER = '/settings'
-        static final String CHANGE_LANG_SETTING = '/display'
-        static final String BACK_BUTTON = '/back'
+        static final String CHANGE_LANG_SETTING = '/settings_display'
+        static final String BACK_BUTTON = '/settings_back'
     }
 
     static final class ADMIN_CONTROLLER {

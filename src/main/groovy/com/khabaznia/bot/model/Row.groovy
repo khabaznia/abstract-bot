@@ -2,6 +2,7 @@ package com.khabaznia.bot.model
 
 import groovy.transform.ToString
 
+import javax.persistence.CascadeType
 import javax.persistence.CollectionTable
 import javax.persistence.Column
 import javax.persistence.ElementCollection
@@ -13,6 +14,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.MapKeyColumn
+import javax.persistence.OneToMany
 
 @Entity(name = "row")
 @ToString(excludes = 'keyboard')
@@ -23,12 +25,9 @@ class Row {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @ElementCollection
-    @CollectionTable(name = "button_mapping",
-            joinColumns = [@JoinColumn(name = "row_id", referencedColumnName = "row_id")])
-    @MapKeyColumn(name = "callback_query")
-    @Column(name="text")
-    Map<String, String> buttons
+    @OneToMany(mappedBy = "row", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.EAGER)
+    @Column(name = "row_buttons")
+    List<Button> buttons
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keyboard_id")

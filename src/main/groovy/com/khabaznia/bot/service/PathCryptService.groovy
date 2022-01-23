@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 import static com.khabaznia.bot.core.Constants.ENCRYPTED_PATH_PREFIX
-import static com.khabaznia.bot.core.Constants.DELETE_PATHS_WEEKS_COUNT
+import static com.khabaznia.bot.core.Constants.DELETE_MESSAGES_WEEKS_COUNT
 
 @Slf4j
 @Service
@@ -44,6 +44,6 @@ class PathCryptService implements Configured {
     }
 
     private Date getExpirationDate() {
-        LocalDateTime.now().minusWeeks(getConfig(DELETE_PATHS_WEEKS_COUNT) as long).toDate()
+        LocalDateTime.now().minusWeeks(getConfig(DELETE_MESSAGES_WEEKS_COUNT) as long).toDate()
     }
 }

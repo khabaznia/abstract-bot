@@ -23,10 +23,15 @@ class ApiMethodService {
     @Autowired
     ResponseMapper responseMapper
 
-
-    BaseResponse execute(BaseRequest request){
+    BaseResponse execute(BaseRequest request) {
         log.debug "Execution api method..."
-        getMappedResponse(sender.execute(getApiMethod(request)), request)
+        try {
+            return getMappedResponse(sender.execute(getApiMethod(request)))
+        } catch (Exception ex) {
+            log.error 'Method failed to execute -> {}', request
+            ex.printStackTrace()
+        }
+        return null
     }
 
     private BotApiMethod getApiMethod(BaseRequest request) {
@@ -36,9 +41,9 @@ class ApiMethodService {
         botApiMethod
     }
 
-    private BaseResponse getMappedResponse(Serializable apiResponse, BaseRequest request) {
+    private BaseResponse getMappedResponse(Serializable apiResponse) {
         log.debug "Got response -> $apiResponse"
-        def response = responseMapper.toResponse(apiResponse, request.type)
+        def response = responseMapper.toResponse(apiResponse)
         log.debug "Response after mapping -> {}", response
         response
     }

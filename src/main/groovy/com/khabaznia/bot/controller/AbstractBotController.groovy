@@ -1,9 +1,11 @@
 package com.khabaznia.bot.controller
 
 import com.khabaznia.bot.core.proxy.ControllerMetaData
+import com.khabaznia.bot.enums.ButtonType
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.event.DeleteOneTimeKeyboardMessagesEvent
 import com.khabaznia.bot.event.ExecuteMethodsEvent
+import com.khabaznia.bot.event.UpdateKeyboardEvent
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
@@ -30,8 +32,8 @@ abstract class AbstractBotController {
     @Autowired
     UpdateService updateService
 
-    private Update update
-    private List<BaseRequest> requests
+    protected Update update
+    protected List<BaseRequest> requests
 
     @Autowired
     UserService userService
@@ -40,6 +42,7 @@ abstract class AbstractBotController {
         requests = new BotRequestList()
         this.update = update
         deleteMessages()
+        updateKeyboard()
     }
 
     void after(final String currentPath) {
@@ -60,11 +63,29 @@ abstract class AbstractBotController {
     }
 
     void deleteMessages() {
-        def deleteOneTimeKeyboardMessageCode = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_CODE)
-        if (deleteOneTimeKeyboardMessageCode){
-            publisher.publishEvent new DeleteOneTimeKeyboardMessagesEvent(code: deleteOneTimeKeyboardMessageCode as Long)
+        def isOneTime = updateService?.getParametersFromUpdate(update)?.get(ONE_TIME_KEYBOARD) as Boolean
+        if (isOneTime) {
+            def messageCode = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_CODE)
+            publisher.publishEvent new DeleteOneTimeKeyboardMessagesEvent(code: messageCode as Long)
         }
         publisher.publishEvent new DeleteMessagesEvent()
+    }
+
+    void updateKeyboard() {
+        if (hasSpecialButtonParams()) {
+            log.debug 'Try to update keyboard'
+            def messageCode = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_CODE)
+            def buttonId = updateService?.getParametersFromUpdate(update)?.get(BUTTON_ID)
+            publisher.publishEvent new UpdateKeyboardEvent(code: messageCode as Long, buttonId: buttonId)
+        }
+    }
+
+    private boolean hasSpecialButtonParams() {
+        !ButtonType.values()
+                .collect { it.paramKey }
+                .findAll { !it.isBlank() }
+                .findAll { updateService?.getParametersFromUpdate(update)?.containsKey(it) }
+                .isEmpty()
     }
 
     InlineKeyboard getInlineKeyboard() {

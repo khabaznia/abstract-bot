@@ -32,7 +32,6 @@ class Message {
     @Column(name = "message_id")
     Integer messageId
 
-    @NotNull
     @Column(name = "text")
     String text
 

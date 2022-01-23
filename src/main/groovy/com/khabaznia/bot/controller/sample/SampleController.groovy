@@ -5,6 +5,7 @@ import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -16,7 +17,7 @@ import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.SAMPLE_CO
 
 @Slf4j
 @Component
-@BotController(path = SAMPLE_CONTROLLER)
+@BotController()
 class SampleController extends AbstractBotController {
 
     @BotRequest(path = GET_REPLY)
@@ -38,10 +39,17 @@ class SampleController extends AbstractBotController {
     @Localized
     @BotRequest(path = ACTION_ONE)
     getFeatures() {
-        sendMessage.key('action one')
-                .keyboard(replyKeyboard.button(ACTION_TWO)
+        sendMessage.key('action two')
+                .keyboard(inlineKeyboard
+                        .button('button', '/query')
+                        .button('emoji', Emoji.AVOCADO, '/query')
+                        .buttonWithBinding('With bind: $binding', '/query', [binding: 'some'])
                         .row()
-                        .button(SAMPLE_CONTROLLER + BACK_ACTION))
+                        .oneTimeButton('OT button', '/query')
+                        .oneTimeButton('OT emoji', Emoji.BOAT, '/query')
+                        .oneTimeButton('OT param', '/queryWithParam', [someUniqueId: '34'])
+                        .row()
+                        .switchButton('SB with param', '/queryWithParam', true, [someUniqueId: '34']))
     }
 
     @Localized
@@ -50,12 +58,18 @@ class SampleController extends AbstractBotController {
         sendMessage.key('action two')
                 .inlineKeyboard([[button1: "/query", button2: "/query"],
                                  [button3: "/query", button4: "/query"],
-                                 [BACK: SAMPLE_CONTROLLER + BACK_ACTION]])
+                                 [BACK: BACK_ACTION]])
     }
 
     @BotRequest(path = '/query')
     query() {
-        sendMessage.key('ok')
+        sendMessage.key('<b>query</b> - ok')
+    }
+
+    @BotRequest(path = '/queryWithParam')
+    query(String someUniqueId) {
+        sendMessage.key('query - <i>ok</i>')
+        sendMessage.key(someUniqueId).type(MessageType.DELETE)
     }
 
     @Localized
@@ -63,12 +77,12 @@ class SampleController extends AbstractBotController {
     getInline() {
         sendMessage
                 .key('Main menu')
-                .keyboard(inlineKeyboard.button('yes, I confirm', SAMPLE_CONTROLLER + YES_ACTION)
-                        .button("no, don't confirm", SAMPLE_CONTROLLER + NO_ACTION, [param: 'some_param', other: 'other_param'])
+                .keyboard(inlineKeyboard.button('yes, I confirm', YES_ACTION)
+                        .button("no, don't confirm", NO_ACTION, [param: 'some_param', other: 'other_param'])
                         .row()
-                        .button('Back', SAMPLE_CONTROLLER + BACK_ACTION)
+                        .button('Back', BACK_ACTION)
                 )
-                .type(MessageType.DELETE)
+                .type(MessageType.ONE_TIME_INLINE_KEYBOARD)
     }
 
     @BotRequest(path = YES_ACTION)
@@ -86,6 +100,6 @@ class SampleController extends AbstractBotController {
     @BotRequest(path = BACK_ACTION)
     String backAction() {
         sendMessage.key('back')
-        SAMPLE_CONTROLLER + GET_REPLY
+        GET_REPLY
     }
 }

@@ -18,6 +18,50 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
 
     AbstractKeyboardMessage keyboard(Keyboard keyboard) {
         this.keyboard = keyboard
+        this.type = MessageType.INLINE_KEYBOARD
+        this
+    }
+
+    AbstractKeyboardMessage oneTimeKeyboard(Keyboard keyboard) {
+        this.keyboard = keyboard
+        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
+        this
+    }
+
+    AbstractKeyboardMessage keyboard(Map<String, String> buttons) {
+        def inlineKeyboard = context.getBean('inlineKeyboard')
+        buttons.each { inlineKeyboard.button(it.key, it.value) }
+        keyboard = inlineKeyboard
+        this.type = MessageType.INLINE_KEYBOARD
+        this
+    }
+
+    AbstractKeyboardMessage inlineKeyboard(List<Map<String, String>> buttons) {
+        def inlineKeyboard = context.getBean('inlineKeyboard')
+        buttons.each {
+            it.each { inlineKeyboard.button(it.key, it.value) }
+            inlineKeyboard.row()
+        }
+        keyboard = inlineKeyboard
+        this.type = MessageType.INLINE_KEYBOARD
+        this
+    }
+
+    AbstractKeyboardMessage oneTimeKeyboard(Map<String, String> buttons) {
+        def inlineKeyboard = context.getBean('inlineKeyboard')
+        buttons.each { inlineKeyboard.button(it.key, it.value) }
+        keyboard = inlineKeyboard
+        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
+        this
+    }
+
+    AbstractKeyboardMessage oneTimeKeyboard(List<Map<String, String>> buttons) {
+        def inlineKeyboard = context.getBean('inlineKeyboard')
+        buttons.each {
+            it.each { inlineKeyboard.button(it.key, it.value) }
+            inlineKeyboard.row()
+        }
+        keyboard = inlineKeyboard
         this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
         this
     }
@@ -36,25 +80,6 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
             replyKeyboard.row()
         }
         keyboard = replyKeyboard
-        this
-    }
-
-    AbstractKeyboardMessage keyboard(Map<String, String> buttons) {
-        def inlineKeyboard = context.getBean('inlineKeyboard')
-        buttons.each { inlineKeyboard.button(it.key, it.value) }
-        keyboard = inlineKeyboard
-        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
-        this
-    }
-
-    AbstractKeyboardMessage inlineKeyboard(List<Map<String, String>> buttons) {
-        def inlineKeyboard = context.getBean('inlineKeyboard')
-        buttons.each {
-            it.each { inlineKeyboard.button(it.key, it.value) }
-            inlineKeyboard.row()
-        }
-        keyboard = inlineKeyboard
-        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
         this
     }
 }

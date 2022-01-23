@@ -24,7 +24,8 @@ class RequestProcessingStrategyContainer {
         messageTypeStrategyMap.(MessageType.SKIP) = 'noActionRequestProcessingStrategy'
         messageTypeStrategyMap.(MessageType.PERSIST) = 'saveMessageRequestProcessingStrategy'
         messageTypeStrategyMap.(MessageType.DELETE) = 'saveMessageRequestProcessingStrategy'
-        messageTypeStrategyMap.(MessageType.ONE_TIME_INLINE_KEYBOARD) = 'oneTimeInlineKeyboardRequestProcessingStrategy'
+        messageTypeStrategyMap.(MessageType.INLINE_KEYBOARD) = 'inlineKeyboardRequestProcessingStrategy'
+        messageTypeStrategyMap.(MessageType.ONE_TIME_INLINE_KEYBOARD) = 'oneTimeKeyboardRequestProcessingStrategy'
         messageTypeStrategyMap.(MessageType.PINNED) = 'pinnedRequestProcessingStrategy'
         log.trace 'Strategies container: {}', messageTypeStrategyMap
     }

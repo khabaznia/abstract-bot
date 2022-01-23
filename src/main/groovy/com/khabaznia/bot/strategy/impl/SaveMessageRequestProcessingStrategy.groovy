@@ -13,15 +13,4 @@ import org.springframework.stereotype.Component
 @Slf4j
 @Component(value = 'saveMessageRequestProcessingStrategy')
 class SaveMessageRequestProcessingStrategy extends RequestProcessingStrategy<BaseRequest, BaseResponse> {
-
-    @Autowired
-    MessageService messageService
-
-    @Override
-    void afterProcess(BaseResponse response, Message message) {
-        if (response instanceof MessageResponse) {
-            log.debug 'Saving message with messageId: {}', response.result.messageId
-            messageService.saveMessage(response.result)
-        }
-    }
 }

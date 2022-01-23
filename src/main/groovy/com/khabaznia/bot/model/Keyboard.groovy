@@ -27,7 +27,7 @@ class Keyboard {
     @Column(name = "type")
     KeyboardType type
 
-    @OneToMany(mappedBy = "keyboard", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.LAZY)
-    @Column(name = "rows")
+    @OneToMany(mappedBy = "keyboard", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.EAGER)
+    @Column(name = "keyboard_rows")
     List<Row> rows
 }

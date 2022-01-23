@@ -10,12 +10,17 @@ abstract class Keyboard<T extends Button> {
     @Autowired
     ApplicationContext context
 
-    List<List<T>> rows
-    List<T> currentRow
+    protected List<List<T>> rows
+    protected List<T> currentRow
 
     abstract Keyboard row()
 
     abstract List<List<T>> get()
+
+    Keyboard setRows(List<List<T>> rows) {
+        this.rows = rows
+        this
+    }
 
     abstract protected T getButton()
 }

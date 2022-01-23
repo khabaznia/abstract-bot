@@ -25,12 +25,14 @@ public abstract class RequestMapper {
 
     @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toApiKeyboard(source.getKeyboard()))")
+    @Mapping(target = "parseMode", constant = "HTML")
     public abstract SendMessage toApiMethod(com.khabaznia.bot.meta.request.impl.SendMessage source);
 
     public abstract DeleteMessage toApiMethod(com.khabaznia.bot.meta.request.impl.DeleteMessage source);
 
     @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toInlineApiKeyboard(source.getKeyboard()))")
+    @Mapping(target = "parseMode", constant = "HTML")
     public abstract EditMessageText toApiMethod(EditMessage source);
 
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toInlineApiKeyboard(source.getKeyboard()))")
