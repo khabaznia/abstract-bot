@@ -4,12 +4,13 @@ import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.event.ExecuteMethodsEvent
 import com.khabaznia.bot.meta.request.BaseRequest
-import com.khabaznia.bot.strategy.RequestProcessingStrategyContainer
+import com.khabaznia.bot.strategy.RequestProcessingStrategy
 import com.khabaznia.bot.trait.Configured
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 import javax.transaction.Transactional
@@ -21,10 +22,11 @@ import static com.khabaznia.bot.core.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 class ExecuteMethodsListener implements Configured {
 
     @Autowired
-    RequestProcessingStrategyContainer strategyContainer
+    Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
     @Autowired
     ApplicationEventPublisher publisher
 
+    @Async
     @EventListener
     void onApplicationEvent(ExecuteMethodsEvent event) {
         log.debug 'Processing {} requests', event.requests.size()
@@ -44,10 +46,10 @@ class ExecuteMethodsListener implements Configured {
     }
 
     @Transactional
-    void executeApiMethod(BaseRequest it) {
-        def strategy = strategyContainer.getStrategyForRequest(it)
-        def message = strategy.beforeProcess(it)
-        def response = strategy.process(it)
+    void executeApiMethod(BaseRequest request) {
+        def strategy = requestProcessingStrategyMap.get(request.type)
+        def message = strategy.beforeProcess(request)
+        def response = strategy.process(request)
         if (response)
             strategy.afterProcess(response, message)
     }

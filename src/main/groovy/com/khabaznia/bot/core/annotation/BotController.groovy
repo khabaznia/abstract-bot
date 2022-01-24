@@ -12,5 +12,6 @@ import java.lang.annotation.Target
 @Component
 @interface BotController {
 
+    @Deprecated
     String path() default ''
 }

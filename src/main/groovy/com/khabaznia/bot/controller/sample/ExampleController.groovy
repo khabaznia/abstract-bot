@@ -9,26 +9,21 @@ import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.*
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.SAMPLE_CONTROLLER
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.SAMPLE_CONTROLLER
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.SAMPLE_CONTROLLER
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.SAMPLE_CONTROLLER
+import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
 
 @Slf4j
 @Component
 @BotController()
-class SampleController extends AbstractBotController {
+class ExampleController extends AbstractBotController {
 
-    @BotRequest(path = GET_REPLY)
+    @BotRequest(path = REPLY_KEYBOARD)
     getReply() {
         sendMessage
                 .key('hi')
                 .keyboard([ACTION_ONE, ACTION_TWO, GET_INLINE])
-                .type(MessageType.PERSIST)
     }
 
-    @BotRequest(path = '/next', after = GET_REPLY)
+    @BotRequest(path = NEXT, after = REPLY_KEYBOARD)
     getNext() {
         sendMessage
                 .key('hi')
@@ -100,6 +95,6 @@ class SampleController extends AbstractBotController {
     @BotRequest(path = BACK_ACTION)
     String backAction() {
         sendMessage.key('back')
-        GET_REPLY
+        REPLY_KEYBOARD
     }
 }

@@ -17,4 +17,6 @@ interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("SELECT m FROM message m where m.updateDate >= :updateTimeStamp")
     List<Message> findAllWithUpdateDateTimeAfter(@Param("updateTimeStamp") Date updateTimeStamp)
+
+    Message findByLabel(String label)
 }

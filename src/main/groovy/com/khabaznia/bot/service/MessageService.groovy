@@ -5,6 +5,7 @@ import com.khabaznia.bot.model.Button
 import com.khabaznia.bot.model.Keyboard
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.repository.ButtonRepository
+import com.khabaznia.bot.repository.EncryptedPathRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
 
@@ -28,6 +29,8 @@ class MessageService implements Configured {
     private ButtonRepository buttonRepository
     @Autowired
     private KeyboardRepository keyboardRepository
+    @Autowired
+    private EncryptedPathRepository encryptedPathRepository
 
     List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
         def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
@@ -55,18 +58,23 @@ class MessageService implements Configured {
         messageRepository.findById(code).orElse(null)
     }
 
-    void removeMessageForCode(Long code) {
-        messageRepository.deleteById(code)
+    Message getMessageForLabel(String label) {
+        messageRepository.findByLabel(label)
     }
 
-    void saveKeyboard(Keyboard keyboard){
-        keyboardRepository.saveAndFlush(keyboard)
+    void removeMessageForCode(Long code) {
+        messageRepository.deleteById(code)
     }
 
     void removeButton(Button button) {
         button.setKeyboard(null)
         buttonRepository.saveAndFlush(button)
         buttonRepository.delete(button)
+    }
+
+    private void deleteRelatedPaths(String buttonOrMessageCode) {
+        def relatedPaths = encryptedPathRepository.findByValueContaining(buttonOrMessageCode)
+        encryptedPathRepository.deleteAll(relatedPaths)
     }
 
     Button getButton(String id) {

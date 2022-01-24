@@ -70,6 +70,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
         def replyKeyboard = context.getBean('replyKeyboard')
         keys.each { replyKeyboard.button(it) }
         keyboard = replyKeyboard
+        this.type = MessageType.REPLY_KEYBOARD
         this
     }
 
@@ -80,6 +81,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
             replyKeyboard.row()
         }
         keyboard = replyKeyboard
+        this.type = MessageType.REPLY_KEYBOARD
         this
     }
 }

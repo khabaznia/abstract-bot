@@ -1,12 +1,13 @@
 package com.khabaznia.bot.listener
 
+import com.khabaznia.bot.enums.ButtonType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.UpdateKeyboardEvent
 import com.khabaznia.bot.meta.request.impl.EditMessageKeyboard
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.service.ApiMethodService
 import com.khabaznia.bot.service.MessageService
-import com.khabaznia.bot.strategy.ButtonProcessingStrategyContainer
+import com.khabaznia.bot.strategy.ButtonProcessingStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -26,7 +27,7 @@ class UpdateKeyboardEventListener {
     @Autowired
     MessageService messageService
     @Autowired
-    ButtonProcessingStrategyContainer strategyContainer
+    Map<ButtonType, ButtonProcessingStrategy> buttonProcessingStrategyMap
 
     @EventListener
     void onApplicationEvent(UpdateKeyboardEvent event) {
@@ -42,7 +43,7 @@ class UpdateKeyboardEventListener {
 
     private void processButton(UpdateKeyboardEvent event) {
         def button = messageService.getButton(event.buttonId)
-        strategyContainer.getStrategyForButton(button).processOnClick(button)
+        buttonProcessingStrategyMap.get(button.type).processOnClick(button)
     }
 
     private EditMessageKeyboard toEditKeyboardRequest(Message messageWithKeyboard) {

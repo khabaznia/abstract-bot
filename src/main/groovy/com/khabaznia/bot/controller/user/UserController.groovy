@@ -10,14 +10,15 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.*
 import static com.khabaznia.bot.controller.Constants.COMMON.*
+import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_START
 
 @Slf4j
 @Component
-@BotController(path = USER_CONTROLLER)
+@BotController
 class UserController extends AbstractBotController {
 
     @Secured(roles = Role.USER)
-    @BotRequest(path = START)
+    @BotRequest(path = USER_START)
     onStart() {
         log.debug "in user start"
     }

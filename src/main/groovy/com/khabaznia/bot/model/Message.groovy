@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -35,11 +36,14 @@ class Message {
     @Column(name = "text")
     String text
 
+    @Column(name = "label", unique = true)
+    String label
+
     @Column(name = "update_date")
     @UpdateTimestamp
     Date updateDate
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
     MessageType type
 

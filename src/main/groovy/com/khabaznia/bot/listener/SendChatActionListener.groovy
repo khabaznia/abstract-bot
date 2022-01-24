@@ -6,6 +6,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 @Slf4j
@@ -17,6 +18,7 @@ class SendChatActionListener {
     @Autowired
     ApiMethodService apiMethodService
 
+    @Async
     @EventListener
     void onApplicationEvent(SendChatActionEvent event) {
         log.trace 'Sending chat action {}', event.actionType

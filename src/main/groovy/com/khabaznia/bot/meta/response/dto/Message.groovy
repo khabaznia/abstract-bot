@@ -1,4 +1,4 @@
-package com.khabaznia.bot.meta.response.impl
+package com.khabaznia.bot.meta.response.dto
 
 import com.khabaznia.bot.enums.MessageType
 

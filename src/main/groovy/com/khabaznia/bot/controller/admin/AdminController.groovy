@@ -9,16 +9,17 @@ import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.*
+import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.ADMIN_START
 import static com.khabaznia.bot.controller.Constants.COMMON.*
 
 
 @Slf4j
 @Component
-@BotController(path = ADMIN_CONTROLLER)
+@BotController
 class AdminController extends AbstractBotController {
 
     @Secured(roles = Role.ADMIN)
-    @BotRequest(path = START)
+    @BotRequest(path = ADMIN_START)
     onStart() {
         log.debug "in admin start"
     }

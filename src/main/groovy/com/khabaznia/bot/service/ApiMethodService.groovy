@@ -8,6 +8,7 @@ import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.service.sender.Sender
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
@@ -35,7 +36,6 @@ class ApiMethodService {
     }
 
     private BotApiMethod getApiMethod(BaseRequest request) {
-//        log.debug "Request before mapping -> $request"
         def botApiMethod = requestMapper.toApiMethod(request)
         log.debug "Request after mapping -> {}", botApiMethod
         botApiMethod
@@ -43,8 +43,6 @@ class ApiMethodService {
 
     private BaseResponse getMappedResponse(Serializable apiResponse) {
         log.debug "Got response -> $apiResponse"
-        def response = responseMapper.toResponse(apiResponse)
-//        log.debug "Response after mapping -> {}", response
-        response
+        responseMapper.toResponse(apiResponse)
     }
 }

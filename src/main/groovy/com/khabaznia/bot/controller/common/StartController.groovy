@@ -7,7 +7,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.COMMON.*
-import static com.khabaznia.bot.controller.Constants.SAMPLE_CONTROLLER.*
+import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
 
 @Slf4j
 @Component
@@ -16,7 +16,12 @@ class StartController extends AbstractBotController {
 
     @BotRequest(path = START)
     String onStart() {
-        GET_REPLY
+        REPLY_KEYBOARD
+    }
+
+    @BotRequest(path = MENU)
+    String getMain() {
+        REPLY_KEYBOARD
     }
 
 }

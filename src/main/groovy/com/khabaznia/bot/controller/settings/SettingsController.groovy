@@ -11,7 +11,7 @@ import static com.khabaznia.bot.controller.Constants.SETTINGS_CONTROLLER.*
 
 @Slf4j
 @Component
-@BotController(path = SETTINGS_CONTROLLER)
+@BotController
 class SettingsController extends AbstractBotController {
 
     @Localized

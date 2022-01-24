@@ -38,6 +38,10 @@ class UserService implements Configured {
         userRepository.existsById(userCode) ? userRepository.getById(userCode) : createUser(userCode)
     }
 
+    User getUserForCode(String userCode, UserRole userRole) {
+        userRepository.existsById(userCode) ? userRepository.getById(userCode) : createUser(userCode, userRole)
+    }
+
     void setPreviousPath(String path) {
         def currentChat = SessionUtil.currentChat
         currentChat.lastAction = path
@@ -62,6 +66,14 @@ class UserService implements Configured {
         User user = new User()
         user.code = code
         user.role = getUserRole(code)
+
+        userRepository.save(user)
+    }
+
+    private User createUser(String code, UserRole userRole) {
+        User user = new User()
+        user.code = code
+        user.role = userRole
 
         userRepository.save(user)
     }

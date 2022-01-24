@@ -23,17 +23,16 @@ import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.meta.api.objects.Update
 
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
-import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j
 abstract class AbstractBotController implements Configured{
 
     @Autowired
-    ApplicationContext context
+    protected ApplicationContext context
     @Autowired
-    ApplicationEventPublisher publisher
+    protected ApplicationEventPublisher publisher
     @Autowired
-    UpdateService updateService
+    protected UpdateService updateService
 
     protected Update update
     protected List<BaseRequest> requests
@@ -42,8 +41,7 @@ abstract class AbstractBotController implements Configured{
     UserService userService
 
     void before(final ControllerMetaData metaData, final Update update) {
-        requests = new BotRequestList()
-        this.update = update
+        setUp(update)
         deleteMessages()
         cleanCurrentOneTimeKeyboard()
         updateCurrentKeyboard()
@@ -52,6 +50,7 @@ abstract class AbstractBotController implements Configured{
     void after(final String currentPath) {
         publisher.publishEvent new ExecuteMethodsEvent(requests: requests)
         userService.setPreviousPath currentPath
+
     }
 
     SendMessage getSendMessage() {
@@ -64,6 +63,19 @@ abstract class AbstractBotController implements Configured{
         def message = context.getBean 'editMessage'
         requests.add(message)
         message
+    }
+
+    InlineKeyboard getInlineKeyboard() {
+        context.getBean 'inlineKeyboard'
+    }
+
+    ReplyKeyboard getReplyKeyboard() {
+        context.getBean 'replyKeyboard'
+    }
+
+    private void setUp(Update update) {
+        requests = new BotRequestList()
+        this.update = update
     }
 
     void deleteMessages() {
@@ -94,14 +106,5 @@ abstract class AbstractBotController implements Configured{
                 .findAll { updateService?.getParametersFromUpdate(update)?.containsKey(it) }
                 .isEmpty()
     }
-
-    InlineKeyboard getInlineKeyboard() {
-        context.getBean 'inlineKeyboard'
-    }
-
-    ReplyKeyboard getReplyKeyboard() {
-        context.getBean 'replyKeyboard'
-    }
-
 
 }

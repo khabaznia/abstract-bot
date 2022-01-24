@@ -13,7 +13,7 @@ import static com.khabaznia.bot.controller.Constants.LANG_CONTROLLER.*
 
 @Slf4j
 @Component
-@BotController(path = LANG_CONTROLLER)
+@BotController
 class LangController extends AbstractBotController {
 
     @Autowired

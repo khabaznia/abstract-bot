@@ -31,13 +31,6 @@ class Keyboard {
     @Column(name = "type")
     KeyboardType type
 
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @CollectionTable(name = "buttons",
-//            joinColumns = [@JoinColumn(name = "keyboard_id", referencedColumnName = "id")])
-//    @MapKeyColumn(name = "button_position")
-//    @Column(name = "button")
-//    Map<String, Button> structure
-
     @OneToMany(mappedBy = "keyboard", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @Column(name = "buttons")
     List<Button> buttons

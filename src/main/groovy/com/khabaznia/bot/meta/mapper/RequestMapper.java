@@ -6,6 +6,7 @@ import com.khabaznia.bot.meta.request.impl.PinMessage;
 import com.khabaznia.bot.service.I18nService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.telegram.telegrambots.meta.api.methods.GetMe;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -29,6 +30,8 @@ public abstract class RequestMapper {
     public abstract SendMessage toApiMethod(com.khabaznia.bot.meta.request.impl.SendMessage source);
 
     public abstract DeleteMessage toApiMethod(com.khabaznia.bot.meta.request.impl.DeleteMessage source);
+
+    public abstract GetMe toApiMethod(com.khabaznia.bot.meta.request.impl.GetMe source);
 
     @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toInlineApiKeyboard(source.getKeyboard()))")
