@@ -35,7 +35,7 @@ class ApiMethodService {
     }
 
     private BotApiMethod getApiMethod(BaseRequest request) {
-        log.debug "Request before mapping -> $request"
+//        log.debug "Request before mapping -> $request"
         def botApiMethod = requestMapper.toApiMethod(request)
         log.debug "Request after mapping -> {}", botApiMethod
         botApiMethod
@@ -44,7 +44,7 @@ class ApiMethodService {
     private BaseResponse getMappedResponse(Serializable apiResponse) {
         log.debug "Got response -> $apiResponse"
         def response = responseMapper.toResponse(apiResponse)
-        log.debug "Response after mapping -> {}", response
+//        log.debug "Response after mapping -> {}", response
         response
     }
 }

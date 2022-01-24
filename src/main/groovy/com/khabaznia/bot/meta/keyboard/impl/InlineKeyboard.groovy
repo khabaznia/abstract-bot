@@ -93,6 +93,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .params(params)
                 .emoji(isEnabled ? CHECKED_MARK : CROSS_MARK)
                 .key(key)
+                .type(ButtonType.SWITCH)
         currentRow.add button as InlineButton
         this
     }

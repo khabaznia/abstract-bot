@@ -12,6 +12,6 @@ class OneTimeButtonProcessingStrategy extends ButtonProcessingStrategy {
     @Override
     void processOnClick(Button button) {
         log.debug "Deleting one-time button with id {}", button.id
-        messageService.removeButton(button.id)
+        messageService.removeButton(button)
     }
 }

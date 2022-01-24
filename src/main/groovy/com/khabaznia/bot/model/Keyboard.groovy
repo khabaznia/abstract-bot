@@ -4,7 +4,9 @@ import com.khabaznia.bot.enums.KeyboardType
 import groovy.transform.ToString
 
 import javax.persistence.CascadeType
+import javax.persistence.CollectionTable
 import javax.persistence.Column
+import javax.persistence.ElementCollection
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -12,6 +14,8 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.MapKeyColumn
 import javax.persistence.OneToMany
 
 @ToString
@@ -19,7 +23,7 @@ import javax.persistence.OneToMany
 class Keyboard {
 
     @Id
-    @Column(name = "keyboard_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
@@ -27,7 +31,14 @@ class Keyboard {
     @Column(name = "type")
     KeyboardType type
 
-    @OneToMany(mappedBy = "keyboard", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.EAGER)
-    @Column(name = "keyboard_rows")
-    List<Row> rows
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "buttons",
+//            joinColumns = [@JoinColumn(name = "keyboard_id", referencedColumnName = "id")])
+//    @MapKeyColumn(name = "button_position")
+//    @Column(name = "button")
+//    Map<String, Button> structure
+
+    @OneToMany(mappedBy = "keyboard", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @Column(name = "buttons")
+    List<Button> buttons
 }

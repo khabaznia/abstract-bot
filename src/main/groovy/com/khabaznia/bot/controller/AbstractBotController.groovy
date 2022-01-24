@@ -2,6 +2,7 @@ package com.khabaznia.bot.controller
 
 import com.khabaznia.bot.core.proxy.ControllerMetaData
 import com.khabaznia.bot.enums.ButtonType
+import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.event.DeleteOneTimeKeyboardMessagesEvent
 import com.khabaznia.bot.event.ExecuteMethodsEvent
@@ -14,6 +15,7 @@ import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.meta.utils.BotRequestList
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
+import com.khabaznia.bot.trait.Configured
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -21,9 +23,10 @@ import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.meta.api.objects.Update
 
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
+import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j
-abstract class AbstractBotController {
+abstract class AbstractBotController implements Configured{
 
     @Autowired
     ApplicationContext context
@@ -42,7 +45,8 @@ abstract class AbstractBotController {
         requests = new BotRequestList()
         this.update = update
         deleteMessages()
-        updateKeyboard()
+        cleanCurrentOneTimeKeyboard()
+        updateCurrentKeyboard()
     }
 
     void after(final String currentPath) {
@@ -63,15 +67,18 @@ abstract class AbstractBotController {
     }
 
     void deleteMessages() {
-        def isOneTime = updateService?.getParametersFromUpdate(update)?.get(ONE_TIME_KEYBOARD) as Boolean
+        publisher.publishEvent new DeleteMessagesEvent()
+    }
+
+    private void cleanCurrentOneTimeKeyboard() {
+        def isOneTime = Boolean.valueOf(updateService?.getParametersFromUpdate(update)?.get(ONE_TIME_KEYBOARD))
         if (isOneTime) {
             def messageCode = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_CODE)
             publisher.publishEvent new DeleteOneTimeKeyboardMessagesEvent(code: messageCode as Long)
         }
-        publisher.publishEvent new DeleteMessagesEvent()
     }
 
-    void updateKeyboard() {
+    void updateCurrentKeyboard() {
         if (hasSpecialButtonParams()) {
             log.debug 'Try to update keyboard'
             def messageCode = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_CODE)

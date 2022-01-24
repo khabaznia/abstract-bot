@@ -7,7 +7,7 @@ import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.repository.ButtonRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
-import com.khabaznia.bot.repository.RowRepository
+
 import com.khabaznia.bot.trait.Configured
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
@@ -28,8 +28,6 @@ class MessageService implements Configured {
     private ButtonRepository buttonRepository
     @Autowired
     private KeyboardRepository keyboardRepository
-    @Autowired
-    private RowRepository rowRepository
 
     List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
         def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
@@ -44,11 +42,13 @@ class MessageService implements Configured {
 
     Message saveMessage(Message message) {
         log.trace "Saving message: {}", message
-        messageRepository.saveAndFlush(message)
-    }
-
-    Keyboard saveKeyboard(Keyboard keyboard) {
-        keyboardRepository.saveAndFlush(keyboard)
+        if (message.keyboard) {
+            def keyboard = message.keyboard
+            keyboard.buttons.each {
+                it.setKeyboard(keyboard)
+            }
+        }
+        messageRepository.save(message)
     }
 
     Message getMessageForCode(Long code) {
@@ -59,8 +59,14 @@ class MessageService implements Configured {
         messageRepository.deleteById(code)
     }
 
-    void removeButton(String id) {
-        buttonRepository.deleteById(id)
+    void saveKeyboard(Keyboard keyboard){
+        keyboardRepository.saveAndFlush(keyboard)
+    }
+
+    void removeButton(Button button) {
+        button.setKeyboard(null)
+        buttonRepository.saveAndFlush(button)
+        buttonRepository.delete(button)
     }
 
     Button getButton(String id) {
@@ -68,7 +74,7 @@ class MessageService implements Configured {
     }
 
     Button saveButton(Button button) {
-        buttonRepository.save(button)
+        buttonRepository.saveAndFlush(button)
     }
 
     Keyboard getKeyboard(Long id) {

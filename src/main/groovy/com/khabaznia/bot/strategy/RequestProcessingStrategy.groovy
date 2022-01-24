@@ -24,16 +24,11 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
     Message beforeProcess(Request request) {
         log.debug 'Saving message before sending api request'
         Message message = getMessageFromRequest(request)
-        log.trace(message as String)
-        def result = messageService.saveMessage(message)
-        log.trace 'Saved message -> {}', result
+        log.trace 'Saved message with keyboard - > {}', message
         if (request instanceof AbstractKeyboardMessage) {
-            def keyboard = messageService.saveKeyboard(toKeyboardModel(request.keyboard))
-            message.setKeyboard(keyboard)
-            result = messageService.saveMessage(message)
-            log.trace 'Saved message with keyboard - > {}', result
+            message.setKeyboard(toKeyboardModel(request.keyboard))
         }
-        result
+        messageService.saveMessage(message)
     }
 
     Response process(Request request) {
@@ -50,7 +45,7 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
     }
 
     protected Message getMessageFromRequest(BaseRequest request) {
-        new Message(type: request.type,
+       new Message(type: request.type,
                 messageId: 1,
                 chat: SessionUtil.currentChat)
     }

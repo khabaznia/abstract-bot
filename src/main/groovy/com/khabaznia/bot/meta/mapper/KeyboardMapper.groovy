@@ -1,6 +1,6 @@
 package com.khabaznia.bot.meta.mapper
 
-import com.khabaznia.bot.meta.Emoji
+import com.khabaznia.bot.enums.KeyboardType
 import com.khabaznia.bot.meta.keyboard.Button
 import com.khabaznia.bot.meta.keyboard.impl.InlineButton
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
@@ -8,7 +8,7 @@ import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 
 import com.khabaznia.bot.model.Keyboard
-import com.khabaznia.bot.model.Row
+
 import com.khabaznia.bot.service.I18nService
 import com.khabaznia.bot.service.PathCryptService
 import groovy.util.logging.Slf4j
@@ -20,13 +20,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 
-import javax.annotation.PostConstruct
-
 @Slf4j
 @Component
 class KeyboardMapper {
-
-//    List<String> emojiList
 
     @Autowired
     PathCryptService pathCryptService
@@ -34,16 +30,6 @@ class KeyboardMapper {
     I18nService i18nService
     @Autowired
     ApplicationContext context
-
-//    @PostConstruct
-//    void setUpEmojiList() {
-//        Emoji.declaredFields.findAll { java.lang.reflect.Modifier.isStatic(it.getModifiers()) }
-//                .each { it.setAccessible(true) }
-//                .collect { it.get(com.khabaznia.bot.meta.Emoji.class) as java.lang.String }
-//                .findAll { it != null }
-//                .findAll { !it.matches(/[a-zA-Z]*/) }
-//        log.trace 'Emoji list: {}', emojiList
-//    }
 
     org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard toApiKeyboard(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
         keyboard ?
@@ -55,7 +41,6 @@ class KeyboardMapper {
 
     InlineKeyboardMarkup toInlineApiKeyboard(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
         if (keyboard instanceof InlineKeyboard) {
-            log.trace 'Map inline keyboard: {}', keyboard
             def result = new InlineKeyboardMarkup()
             result.setKeyboard(keyboard.get().collect {
                 it.each { it.params.putAll(keyboard.getKeyboardParams()) }
@@ -65,21 +50,19 @@ class KeyboardMapper {
                                     callbackData: getCallBackData(it))
                         }
             })
-            log.trace 'After mapping. Markup: {}', result
             return result
         }
         null
     }
 
     private ReplyKeyboardMarkup toReplyApiKeyboard(ReplyKeyboard keyboard) {
-        log.trace 'Map reply keyboard: {}', keyboard
         def result = new ReplyKeyboardMarkup()
         result.setKeyboard(keyboard.get().collect {
             def row = new KeyboardRow()
             row.addAll(it.collect { getButtonText(it) })
             row
         })
-        log.trace 'After mapping. Markup: {}', result
+        result.setResizeKeyboard(true)
         result
     }
 
@@ -92,27 +75,36 @@ class KeyboardMapper {
     }
 
     static Keyboard toKeyboardModel(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
-        log.trace 'Map keyboard from obj to model: {}', keyboard
-        def result = keyboard
-                ? new Keyboard(rows: keyboard.get().collect {
-                    new Row(buttons: it.collect { convertToButtonModel(it as Button) })
-                })
-                : null
-        log.trace 'After mapping. Model: {}', result
-        result
+        def rowPosition = 0
+        def buttonPosition = 0
+        !keyboard ? null :
+        new Keyboard(buttons: keyboard.get().collect {
+            def rowButtons = it.each {
+                if (it instanceof InlineButton) {
+                    it.params.putAll(keyboard.getKeyboardParams())
+                }
+            }
+                    .collect { convertToButtonModel((Button) it, rowPosition, buttonPosition++) }
+            rowPosition++
+            rowButtons
+            }.flatten(),
+                type: keyboard instanceof InlineKeyboard ? KeyboardType.INLINE : KeyboardType.REPLY)
     }
 
     static InlineKeyboard fromKeyboardModel(Keyboard keyboard) {
-        log.trace 'Map keyboard from model to object: {}', keyboard
-        def result = keyboard
+        !keyboard.buttons.isEmpty()
                 ? new InlineKeyboard().setRows(
-                    keyboard.rows.collect { it.buttons.collect { convertButton(it) } }) as InlineKeyboard
+                keyboard.buttons
+                        .groupBy { it.rowPosition }
+                        .collect {
+                            it.value
+                                    .sort { it.position }
+                                    .collect { convertButton(it) }
+                        }) as InlineKeyboard
                 : null
-        log.trace 'After mapping. Model: {}', result
-        result
     }
 
-    static com.khabaznia.bot.model.Button convertToButtonModel(Button source) {
+    static com.khabaznia.bot.model.Button convertToButtonModel(Button source, Integer rowPosition, Integer buttonPosition) {
         new com.khabaznia.bot.model.Button(
                 id: source.id,
                 key: source.key,
@@ -120,7 +112,9 @@ class KeyboardMapper {
                 binding: source.binding,
                 callbackData: source instanceof InlineButton ? source.callbackData : '',
                 params: source instanceof InlineButton ? source.params : [:],
-                type: source.type)
+                type: source.type,
+                position: buttonPosition,
+                rowPosition: rowPosition)
     }
 
     static InlineButton convertButton(com.khabaznia.bot.model.Button source) {

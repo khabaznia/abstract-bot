@@ -19,17 +19,13 @@ class OneTimeKeyboardRequestProcessingStrategy extends RequestProcessingStrategy
 
     @Override
     Message beforeProcess(BaseRequest request) {
-        Message message = getMessageFromRequest(request)
-        log.trace(message as String)
-        def result = messageService.saveMessage(message)
-        log.trace 'Saved message without keyboard -> {}', result
+        def message = super.beforeProcess(request)
         if (request instanceof AbstractKeyboardMessage && request.keyboard instanceof InlineKeyboard) {
             (request.keyboard as InlineKeyboard).addKeyboardParam(MESSAGE_CODE, message.code.toString())
             (request.keyboard as InlineKeyboard).addKeyboardParam(ONE_TIME_KEYBOARD, 'true')
-            result.setKeyboard(messageService.saveKeyboard(toKeyboardModel(request.keyboard)))
-            result = messageService.saveMessage(message)
-            log.trace 'Saved message with keyboard -> {}', result
+            message.setKeyboard(toKeyboardModel(request.keyboard))
         }
-        return result
+        log.trace 'Saved message with keyboard -> {}', message
+        messageService.saveMessage(message)
     }
 }

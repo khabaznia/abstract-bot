@@ -9,14 +9,13 @@ import javax.persistence.ElementCollection
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.MapKeyColumn
 
 @Entity(name = "button")
-@ToString(excludes = 'row')
+@ToString(excludes = 'keyboard')
 class Button {
 
     @Id
@@ -31,6 +30,12 @@ class Button {
 
     @Column(name = "callback_data")
     String callbackData
+
+    @Column(name="button_position")
+    Integer position
+
+    @Column(name="row_position")
+    Integer rowPosition
 
     @ElementCollection
     @CollectionTable(name = "binding_mapping",
@@ -50,7 +55,7 @@ class Button {
     @Column(name = "type")
     ButtonType type
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "row_id")
-    Row row
+    @ManyToOne
+    @JoinColumn(name = "keyboard_id")
+    Keyboard keyboard
 }
