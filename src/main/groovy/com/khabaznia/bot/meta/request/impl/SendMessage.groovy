@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component
 class SendMessage extends AbstractKeyboardMessage<MessageResponse> {
 
     String key
+    String emoji
     Map<String, String> binding
 
     SendMessage() {

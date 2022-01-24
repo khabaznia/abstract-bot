@@ -10,8 +10,9 @@ class Constants {
 
     public static final String CONFIGS_DELIMITER = ','
     public static final String CONFIG_KEYS_PREFIX = 'config.'
+    public static final String SWITCHABLE_CONFIG_KEYS_PREFIX = 'switchable.'
 
     public static final String DELETE_MESSAGES_WEEKS_COUNT = 'delete.paths.weeks.count'
-    public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'delete.previous.inline.keyboards'
+    public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.delete.previous.inline.keyboards'
 
 }

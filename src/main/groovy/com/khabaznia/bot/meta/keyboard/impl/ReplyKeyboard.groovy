@@ -22,15 +22,27 @@ class ReplyKeyboard extends Keyboard<ReplyButton> {
         this.currentRow = []
     }
 
-    ReplyKeyboard button(final String key) {
+    ReplyKeyboard button(String key) {
         def button = button.key(key)
-        currentRow.add button
+        currentRow.add button as ReplyButton
         this
     }
 
-    ReplyKeyboard button(final String key, final Map<String, String> binding) {
+    ReplyKeyboard button(String key, String emoji) {
+        def button = button.key(key).emoji(emoji)
+        currentRow.add button as ReplyButton
+        this
+    }
+
+    ReplyKeyboard button(String key, Map<String, String> binding) {
         def button = button.key(key).binding(binding)
-        currentRow.add button
+        currentRow.add button as ReplyButton
+        this
+    }
+
+    ReplyKeyboard button(String key, String emoji, Map<String, String> binding) {
+        def button = button.key(key).emoji(emoji).binding(binding)
+        currentRow.add button as ReplyButton
         this
     }
 

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ConfigRepository extends JpaRepository<Config, String>{
+
+    List<Config> findByKeyStartsWith(String prefix)
 }

@@ -68,7 +68,7 @@ class ControllerMetaDataConverter {
     private static List<String> getPathsFromMethod(Method method) {
         def pathFromMethod = method.getAnnotation(BotRequest.class).path()
         hasLocalizedPath(method)
-                ? availableLocales.collect { getLocalizedPath(pathFromMethod, it) }.unique()
+                ? availableLocales.collect { getLocalizedPath(pathFromMethod, it) }.unique() << pathFromMethod
                 : Stream.of(pathFromMethod).collect(Collectors.toList())
     }
 
@@ -89,7 +89,7 @@ class ControllerMetaDataConverter {
     }
 
     private static List<String> getRoles(Method method) {
-        (method.getAnnotation(Secured.class)?.roles() ?: defaultRoles)*.toString()
+        ((method.getAnnotation(Secured.class)?.roles() ?: defaultRoles)*.toString()) << Role.BOT.toString()
     }
 
     private static Role[] getDefaultRoles() {
@@ -106,9 +106,9 @@ class ControllerMetaDataConverter {
                 : Action.class.getDeclaredMethod('actionType').getDefaultValue() as ActionType
     }
 
-    private static Map<Integer, String> getParams(Method method){
+    private static Map<Integer, String> getParams(Method method) {
         int pos = 0
-        new DefaultParameterNameDiscoverer().getParameterNames(method).collectEntries{
+        new DefaultParameterNameDiscoverer().getParameterNames(method).collectEntries {
             [(pos++): it]
         }
     }

@@ -20,9 +20,6 @@ class Config {
     @Column(name = "value")
     String value
 
-    @Column(name = "is_switchable")
-    Boolean isSwitchable
-
     @Column(name = "name")
     String name
 }

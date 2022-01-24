@@ -21,7 +21,7 @@ class BotControllerProxy {
     @SecuredBotMethod
     String process(Update update) {
         log.info 'Executing method -> {} : {}', metaData.bean.class.simpleName, metaData.controllerPath
-        metaData.beforeExecuteMethod.invoke(metaData.bean, metaData, update)
+        metaData.beforeExecuteMethod.invoke(metaData.bean, update)
         def params = updateService.getParametersFromUpdate(update)
         log.trace 'Params from update: {} || Params in controller: {}', params, metaData.params
         def result = metaData.hasParameters

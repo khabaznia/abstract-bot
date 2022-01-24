@@ -25,7 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 
 @Slf4j
-abstract class AbstractBotController implements Configured{
+abstract class AbstractBotController implements Configured {
 
     @Autowired
     protected ApplicationContext context
@@ -40,14 +40,14 @@ abstract class AbstractBotController implements Configured{
     @Autowired
     UserService userService
 
-    void before(final ControllerMetaData metaData, final Update update) {
+    void before(Update update) {
         setUp(update)
         deleteMessages()
         cleanCurrentOneTimeKeyboard()
         updateCurrentKeyboard()
     }
 
-    void after(final String currentPath) {
+    void after(String currentPath) {
         publisher.publishEvent new ExecuteMethodsEvent(requests: requests)
         userService.setPreviousPath currentPath
 
@@ -80,6 +80,10 @@ abstract class AbstractBotController implements Configured{
 
     void deleteMessages() {
         publisher.publishEvent new DeleteMessagesEvent()
+    }
+
+    void deleteMessages(MessageType type) {
+        publisher.publishEvent new DeleteMessagesEvent(type: type)
     }
 
     private void cleanCurrentOneTimeKeyboard() {

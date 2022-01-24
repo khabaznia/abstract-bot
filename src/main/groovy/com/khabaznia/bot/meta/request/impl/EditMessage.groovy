@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component
 class EditMessage extends AbstractKeyboardMessage<MessageResponse> {
 
     String key
+    String emoji
     Integer messageId
     Map<String, String> binding
 }

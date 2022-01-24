@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment
 
 import static com.khabaznia.bot.core.Constants.CONFIGS_DELIMITER
 import static com.khabaznia.bot.core.Constants.CONFIG_KEYS_PREFIX
+import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 
 @Slf4j
 trait Configured {
@@ -15,30 +16,40 @@ trait Configured {
     @Autowired
     Environment env
     @Autowired
-    ConfigRepository configRepository
+    private ConfigRepository configRepository
 
-    String getConfig(final String key) {
+    String getConfig(String key) {
         getConfigParam(key)
     }
 
-    Collection<String> getConfigs(final String key) {
+    Collection<String> getConfigs(String key) {
         getConfigParam(key)?.split(CONFIGS_DELIMITER)?.collect()
     }
 
-    Boolean isEnabled(final String key) {
+    Boolean isEnabled(String key) {
         Boolean.valueOf(getConfigParam(key))
     }
 
-    private String getConfigParam(final String key) {
+    void setConfig(String key, String value) {
+        def config = configRepository.getById(key)
+        config.setValue(value)
+        configRepository.save(config)
+    }
+
+    List<Config> getSwitchableConfigs() {
+        configRepository.findByKeyStartsWith(SWITCHABLE_CONFIG_KEYS_PREFIX)
+    }
+
+    private String getConfigParam(String key) {
         log.trace 'Get config param for key -> {}', key
         configRepository.existsById(key)
                 ? configRepository.getById(key).value
                 : getPropertyFromFileAndSave(key)
     }
 
-    private String getPropertyFromFileAndSave(final String key) {
+    private String getPropertyFromFileAndSave(String key) {
         log.trace 'Not found in database. Try to resolve key {} from properties file', key
-        def property = new Config(key: key, value: env.getProperty(key), isSwitchable: false, name: CONFIG_KEYS_PREFIX + key)
+        def property = new Config(key: key, value: env.getProperty(key), name: CONFIG_KEYS_PREFIX + key)
         configRepository.save(property)
         property.value
     }

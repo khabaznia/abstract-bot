@@ -63,6 +63,8 @@ class KeyboardMapper {
             row
         })
         result.setResizeKeyboard(true)
+        result.setOneTimeKeyboard(false)
+        result.setInputFieldPlaceholder(i18nService.getFilledTemplate('reply.keyboard.placeholder',[:]))
         result
     }
 
@@ -76,9 +78,9 @@ class KeyboardMapper {
 
     static Keyboard toKeyboardModel(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
         def rowPosition = 0
-        def buttonPosition = 0
         !keyboard ? null :
         new Keyboard(buttons: keyboard.get().collect {
+            def buttonPosition = 0
             def rowButtons = it.each {
                 if (it instanceof InlineButton) {
                     it.params.putAll(keyboard.getKeyboardParams())
@@ -92,16 +94,21 @@ class KeyboardMapper {
     }
 
     static InlineKeyboard fromKeyboardModel(Keyboard keyboard) {
-        !keyboard.buttons.isEmpty()
+        log.trace "Update keyboard ->>>>>>>>>>>>>>>>>>> {}", keyboard
+        def result = !keyboard.buttons.isEmpty()
                 ? new InlineKeyboard().setRows(
                 keyboard.buttons
                         .groupBy { it.rowPosition }
+                        .sort { it.key }
                         .collect {
                             it.value
                                     .sort { it.position }
                                     .collect { convertButton(it) }
                         }) as InlineKeyboard
                 : null
+
+        log.trace "After mapping keyboard ->>>>>>>>>>>>>>>>>>> {}", result
+        result
     }
 
     static com.khabaznia.bot.model.Button convertToButtonModel(Button source, Integer rowPosition, Integer buttonPosition) {

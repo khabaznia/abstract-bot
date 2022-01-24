@@ -2,6 +2,7 @@ package com.khabaznia.bot.meta.request.impl
 
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.meta.keyboard.Keyboard
+import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.impl.MessageResponse
 import groovy.transform.ToString
@@ -18,7 +19,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
 
     AbstractKeyboardMessage keyboard(Keyboard keyboard) {
         this.keyboard = keyboard
-        this.type = MessageType.INLINE_KEYBOARD
+        this.type = keyboard instanceof InlineKeyboard ? MessageType.INLINE_KEYBOARD : MessageType.REPLY_KEYBOARD
         this
     }
 

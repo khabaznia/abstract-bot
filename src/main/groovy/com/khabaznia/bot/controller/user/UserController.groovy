@@ -4,13 +4,16 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Secured
+import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.security.Role
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.*
 import static com.khabaznia.bot.controller.Constants.COMMON.*
-import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_START
+import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.*
+import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
+import static com.khabaznia.bot.meta.Emoji.GEAR
+import static com.khabaznia.bot.meta.Emoji.SCREAMING_FACE
 
 @Slf4j
 @Component
@@ -19,7 +22,17 @@ class UserController extends AbstractBotController {
 
     @Secured(roles = Role.USER)
     @BotRequest(path = USER_START)
-    onStart() {
-        log.debug "in user start"
+    String onStart() {
+        sendMessage.key('message.user.greeting')
+                .emoji(SCREAMING_FACE)
+        USER_TO_MAIN
+    }
+
+    @Secured(roles = Role.USER)
+    @BotRequest(path = USER_TO_MAIN)
+    userMenu() {
+        sendMessage.key('message.choose.action')
+                .emoji(FINGER_DOWN)
+                .keyboard(replyKeyboard.button(SETTINGS, GEAR))
     }
 }

@@ -24,7 +24,7 @@ public abstract class RequestMapper {
     @Autowired
     protected KeyboardMapper keyboardMapper;
 
-    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding()))")
+    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toApiKeyboard(source.getKeyboard()))")
     @Mapping(target = "parseMode", constant = "HTML")
     public abstract SendMessage toApiMethod(com.khabaznia.bot.meta.request.impl.SendMessage source);
