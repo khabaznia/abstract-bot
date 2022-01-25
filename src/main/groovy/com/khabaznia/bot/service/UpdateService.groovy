@@ -51,8 +51,8 @@ class UpdateService {
     }
 
     static Map<String, String> getParametersFromMessage(final String message) {
-        def result = message?.split(PARAMETERS_PREFIX)[1]?.split(PARAMETERS_DELIMITER)
-                ?.collectEntries { [it.split(PARAMETER_KEY_VALUE_DELIMITER)[0], it.split(PARAMETER_KEY_VALUE_DELIMITER)[1]] }
+        def result = message?.tokenize(PARAMETERS_PREFIX)[1]?.tokenize(PARAMETERS_DELIMITER)
+                ?.collectEntries { [it.tokenize(PARAMETER_KEY_VALUE_DELIMITER)[0], it.tokenize(PARAMETER_KEY_VALUE_DELIMITER)[1]] }
         log.debug "Params: {}", result
         result
     }

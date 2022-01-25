@@ -44,6 +44,10 @@ class MessageService implements Configured {
     }
 
     Message saveMessage(Message message) {
+        if (message.label && messageRepository.existsByLabel(message.label)) {
+            def existingMessage = getMessageForLabel(message.label)
+            messageRepository.deleteById(existingMessage.getCode())
+        }
         log.trace "Saving message: {}", message
         if (message.keyboard) {
             def keyboard = message.keyboard
@@ -60,6 +64,10 @@ class MessageService implements Configured {
 
     Message getMessageForLabel(String label) {
         messageRepository.findByLabel(label)
+    }
+
+    Message getMessageForMessageId(Integer messageId) {
+        messageRepository.findByMessageId(messageId)
     }
 
     void removeMessageForCode(Long code) {

@@ -13,4 +13,6 @@ import org.springframework.stereotype.Component
 @Slf4j
 @Component(value = 'saveMessageRequestProcessingStrategy')
 class SaveMessageRequestProcessingStrategy extends RequestProcessingStrategy<BaseRequest, BaseResponse> {
+
+
 }

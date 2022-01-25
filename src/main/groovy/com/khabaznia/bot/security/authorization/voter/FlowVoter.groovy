@@ -40,7 +40,7 @@ class FlowVoter extends AbstractBotAuthorizationVoter {
     }
 
     private List<String> getLocalizedPaths(String previousPath) {
-        environment.getProperty(AVAILABLE_LOCALES).split(CONFIGS_DELIMITER)
+        environment.getProperty(AVAILABLE_LOCALES).tokenize(CONFIGS_DELIMITER)
                 .collect { context.getMessage(previousPath, null, new Locale(it)) }.unique()
 
     }

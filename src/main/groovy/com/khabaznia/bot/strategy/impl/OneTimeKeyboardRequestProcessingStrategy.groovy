@@ -1,7 +1,6 @@
 package com.khabaznia.bot.strategy.impl
 
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
-import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.model.Message
@@ -15,12 +14,12 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 
 @Slf4j
 @Component(value = 'oneTimeKeyboardRequestProcessingStrategy')
-class OneTimeKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<BaseRequest, BaseResponse> {
+class OneTimeKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<AbstractKeyboardMessage, BaseResponse> {
 
     @Override
-    Message beforeProcess(BaseRequest request) {
+    Message beforeProcess(AbstractKeyboardMessage request) {
         def message = super.beforeProcess(request)
-        if (request instanceof AbstractKeyboardMessage && request.keyboard instanceof InlineKeyboard) {
+        if (request.keyboard instanceof InlineKeyboard) {
             (request.keyboard as InlineKeyboard).addKeyboardParam(MESSAGE_CODE, message.code.toString())
             (request.keyboard as InlineKeyboard).addKeyboardParam(ONE_TIME_KEYBOARD, 'true')
             message.setKeyboard(toKeyboardModel(request.keyboard))

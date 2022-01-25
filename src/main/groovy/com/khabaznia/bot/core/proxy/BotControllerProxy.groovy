@@ -28,7 +28,7 @@ class BotControllerProxy {
                 ? metaData.executeMethod.invoke(metaData.bean, metaData.params
                     .collect { params.get(it.value) } as Object[])
                 : metaData.executeMethod.invoke(metaData.bean)
-        metaData.afterExecuteMethod.invoke(metaData.bean, metaData.currentPath)
+        metaData.afterExecuteMethod.invoke(metaData.bean, metaData.originalPath)
         metaData.returnString ? result as String : null
     }
 }

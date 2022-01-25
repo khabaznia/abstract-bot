@@ -12,7 +12,8 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.util.PathParamsUtil.addParamsToCallbackData
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addParamsToCallbackData
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addEmojiToKeyMessage
 
 @Slf4j
 @Component
@@ -39,5 +40,6 @@ class OnStartupListener implements Configured {
     private static void addMethods() {
         log.debug 'Adding methods'
         String.metaClass.static.addParams << { Map<String, String> map -> addParamsToCallbackData(delegate, map) }
+        String.metaClass.static.addEmoji << { String emoji -> addEmojiToKeyMessage(delegate, emoji) }
     }
 }

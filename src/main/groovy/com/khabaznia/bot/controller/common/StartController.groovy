@@ -45,7 +45,7 @@ class StartController extends AbstractBotController {
         }
         sendMessage.key('message.choose.action')
                 .emoji(FINGER_DOWN)
-                .keyboard(replyKeyboard.button(SETTINGS, GEAR))
+                .keyboard([SETTINGS.addEmoji(GEAR)])
                 .type(MessageType.DELETE)
         DEFAULT
     }

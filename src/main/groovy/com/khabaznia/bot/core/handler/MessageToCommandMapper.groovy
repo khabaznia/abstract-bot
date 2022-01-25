@@ -31,7 +31,7 @@ class MessageToCommandMapper {
         def controllerPath = updateService.getMessageFromUpdate(update)
         log.info 'Full path -> {}', controllerPath
         if (controllerPath?.startsWith(COMMANDS_DELIMITER)) {
-            controllerPath = controllerPath.split(PARAMETERS_PREFIX)[0]
+            controllerPath = controllerPath.tokenize(PARAMETERS_PREFIX)[0]
         }
         controllerPath
     }

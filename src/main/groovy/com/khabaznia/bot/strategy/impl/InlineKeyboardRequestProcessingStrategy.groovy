@@ -14,12 +14,12 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 
 @Slf4j
 @Component(value = 'inlineKeyboardRequestProcessingStrategy')
-class InlineKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<BaseRequest, BaseResponse> {
+class InlineKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<AbstractKeyboardMessage, BaseResponse> {
 
     @Override
-    Message beforeProcess(BaseRequest request) {
+    Message beforeProcess(AbstractKeyboardMessage request) {
         def message = messageService.saveMessage(getMessageFromRequest(request))
-        if (request instanceof AbstractKeyboardMessage && request.keyboard instanceof InlineKeyboard) {
+        if (request.keyboard instanceof InlineKeyboard) {
             (request.keyboard as InlineKeyboard).addKeyboardParam(MESSAGE_CODE, message.code.toString())
             message.setKeyboard(toKeyboardModel(request.keyboard))
         }

@@ -1,12 +1,13 @@
 package com.khabaznia.bot.meta.keyboard.impl
 
 import com.khabaznia.bot.meta.keyboard.Keyboard
-import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
+
+import static com.khabaznia.bot.core.Constants.PARAMETERS_PREFIX
 
 @Component(value = 'replyKeyboard')
 @Scope("prototype")
@@ -22,10 +23,18 @@ class ReplyKeyboard extends Keyboard<ReplyButton> {
         this.currentRow = []
     }
 
-    ReplyKeyboard button(String key) {
-        def button = button.key(key)
+    ReplyKeyboard button(String text) {
+        def button = getButton().key(getKeyFromText(text)).emoji(getEmojiFromText(text))
         currentRow.add button as ReplyButton
         this
+    }
+
+    private static getKeyFromText(String text) {
+        text.tokenize(PARAMETERS_PREFIX)[0] ?: text
+    }
+
+    private static getEmojiFromText(String text) {
+        text.tokenize(PARAMETERS_PREFIX)[1]
     }
 
     ReplyKeyboard button(String key, String emoji) {

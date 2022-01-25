@@ -43,7 +43,7 @@ class ControllerMetaDataConverter {
                 .collect { createControllerData(bean, method, it) }
     }
 
-    private static ControllerMetaData createControllerData(Object bean, Method method, String currentPath) {
+    private static ControllerMetaData createControllerData(Object bean, Method method, String localizedPath) {
         def controllerMetaData = new ControllerMetaData()
         controllerMetaData.bean = bean
         controllerMetaData.executeMethod = method
@@ -52,8 +52,9 @@ class ControllerMetaDataConverter {
         controllerMetaData.afterExecuteMethod = getMethod(bean, AFTER_METHOD)
         controllerMetaData.roles = getRoles(method)
         controllerMetaData.previousPath = getPreviousPath(method)
-        controllerMetaData.currentPath = currentPath
-        controllerMetaData.controllerPath = getPreviousPath(method) + PREVIOUS_PATH_DELIMITER + currentPath
+        controllerMetaData.localizedPath = localizedPath
+        controllerMetaData.originalPath = getOriginalPath(method)
+        controllerMetaData.controllerPath = getPreviousPath(method) + PREVIOUS_PATH_DELIMITER + localizedPath
         controllerMetaData.hasParameters = method.parameterCount > 0
         controllerMetaData.actionType = getActionType(method)
         controllerMetaData.params = getParams(method)
@@ -66,14 +67,18 @@ class ControllerMetaDataConverter {
     }
 
     private static List<String> getPathsFromMethod(Method method) {
-        def pathFromMethod = method.getAnnotation(BotRequest.class).path()
+        def pathFromMethod = getOriginalPath(method)
         hasLocalizedPath(method)
                 ? availableLocales.collect { getLocalizedPath(pathFromMethod, it) }.unique() << pathFromMethod
                 : Stream.of(pathFromMethod).collect(Collectors.toList())
     }
 
-    private static String[] getAvailableLocales() {
-        environment.getProperty(AVAILABLE_LOCALES).split(CONFIGS_DELIMITER)
+    private static String getOriginalPath(Method method) {
+        method.getAnnotation(BotRequest.class).path()
+    }
+
+    private static List<String> getAvailableLocales() {
+        environment.getProperty(AVAILABLE_LOCALES).tokenize(CONFIGS_DELIMITER)
     }
 
     private static String getLocalizedPath(String path, String localeKey) {

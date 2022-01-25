@@ -2,6 +2,7 @@ package com.khabaznia.bot.listener
 
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
+import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.service.ApiMethodService
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.service.UserService
@@ -25,12 +26,16 @@ class DeleteMessagesEventListener {
 
     @EventListener
     void onApplicationEvent(DeleteMessagesEvent event) {
-        def messageType = event.type ?: MessageType.DELETE
+        def messageTypes = event.type ? [event.type] : [MessageType.DELETE, MessageType.EDIT_AND_DELETE]
         def currentChatCode = SessionUtil.currentChat.code
-        def deleteMessageRequests = messageService.getMessagesForTypeAndChat(messageType, currentChatCode)
+        def deleteMessageRequests = messageTypes
+                .collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }
+                .flatten()
+                .collect { it as Message }
+                .findAll { it.messageId > 0 }
                 .collect { context.getBean('deleteMessage').messageId(it.messageId) }
                 .each { methodExecutionService.execute(it) }
         log.info 'Delete {} messages from chat {}', deleteMessageRequests?.size(), currentChatCode
-        messageService.removeMessagesOfType(messageType)
+        messageTypes.each { messageService.removeMessagesOfType(it) }
     }
 }

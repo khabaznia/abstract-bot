@@ -8,5 +8,7 @@ enum MessageType {
     INLINE_KEYBOARD, // Regular inline keyboard, that can be updated
     REPLY_KEYBOARD, // Current reply keyboard
     ONE_TIME_INLINE_KEYBOARD, // Message with inline keyboard that should be deleted after any button press
-    PINNED // Pinned message
+    PINNED, // Pinned message
+    EDIT, // Edit existing message. Updates in db
+    EDIT_AND_DELETE // Edit existing message. Updates in db. Deleted with next message
 }

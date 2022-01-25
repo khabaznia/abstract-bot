@@ -11,7 +11,7 @@ import static com.khabaznia.bot.meta.Emoji.CROSS_MARK
 
 @Slf4j
 @Component(value = 'switchButtonProcessingStrategy')
-class SwitchButtonProcessingStrategy extends ButtonProcessingStrategy{
+class SwitchButtonProcessingStrategy extends ButtonProcessingStrategy {
 
     @Override
     void processOnClick(Button button) {

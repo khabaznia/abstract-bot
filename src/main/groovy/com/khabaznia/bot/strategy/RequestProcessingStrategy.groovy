@@ -2,6 +2,7 @@ package com.khabaznia.bot.strategy
 
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.AbstractKeyboardMessage
+import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.meta.response.impl.MessageResponse
 import com.khabaznia.bot.model.Message
@@ -45,8 +46,10 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
     }
 
     protected Message getMessageFromRequest(BaseRequest request) {
-       new Message(type: request.type,
-                messageId: 1,
-                chat: SessionUtil.currentChat)
+        def label = request instanceof SendMessage ? request.label : null
+        new Message(type: request.type,
+                messageId: -1,
+                chat: SessionUtil.currentChat,
+                label: label)
     }
 }

@@ -2,7 +2,7 @@ package com.khabaznia.bot.util
 
 import static com.khabaznia.bot.core.Constants.*
 
-class PathParamsUtil {
+class MessageTextsModifyingUtil {
 
     static String addParamsToCallbackData(Object callbackData, Map<String, String> params) {
         if (!(callbackData instanceof String)) {
@@ -14,5 +14,12 @@ class PathParamsUtil {
                 ? callbackData + PARAMETERS_DELIMITER
                 : callbackData + PARAMETERS_PREFIX
         return pathWithPrefix + paramsAsString
+    }
+
+    static String addEmojiToKeyMessage(Object key, String emoji) {
+        if (!(key instanceof String)) {
+            return null
+        }
+        return (key.contains(PARAMETERS_PREFIX) ? key + " " : key + PARAMETERS_PREFIX).concat(emoji)
     }
 }

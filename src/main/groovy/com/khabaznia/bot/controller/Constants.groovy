@@ -14,6 +14,7 @@ final class Constants {
 
     static final class COMMON {
         static final String DEFAULT = '/default'
+        static final String EMPTY_PATH = '/emptyPath'
         static final String START = '/start'
         static final String TO_MAIN = 'path.main'
         static final String SETTINGS = 'path.settings.display'

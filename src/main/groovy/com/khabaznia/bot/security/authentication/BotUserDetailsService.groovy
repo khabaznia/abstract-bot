@@ -17,8 +17,8 @@ class BotUserDetailsService implements UserDetailsService {
 
     @Override
     UserDetails loadUserByUsername(String code) throws UsernameNotFoundException {
-        def user = userService.getUserForCode(code.split(CHAT_ID_DELIMITER)[1])
-        def chat = userService.getChatForCode(code.split(CHAT_ID_DELIMITER)[0], code.split(CHAT_ID_DELIMITER)[1]);
+        def user = userService.getUserForCode(code.tokenize(CHAT_ID_DELIMITER)[1])
+        def chat = userService.getChatForCode(code.tokenize(CHAT_ID_DELIMITER)[0], code.tokenize(CHAT_ID_DELIMITER)[1]);
         new BotUserPrincipal(fromChat: chat, fromUser: user)
     }
 }

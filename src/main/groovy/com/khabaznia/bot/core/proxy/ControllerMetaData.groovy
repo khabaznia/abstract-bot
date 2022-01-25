@@ -16,7 +16,8 @@ class ControllerMetaData {
     Method afterExecuteMethod
     ActionType actionType
     List<String> roles
-    String currentPath
+    String localizedPath
+    String originalPath
     String previousPath
     String controllerPath
     Boolean returnString

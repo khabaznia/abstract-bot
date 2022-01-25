@@ -47,6 +47,7 @@ class ExecuteMethodsListener implements Configured {
 
     @Transactional
     void executeApiMethod(BaseRequest request) {
+        log.trace request as String
         def strategy = requestProcessingStrategyMap.get(request.type)
         def message = strategy.beforeProcess(request)
         def response = strategy.process(request)

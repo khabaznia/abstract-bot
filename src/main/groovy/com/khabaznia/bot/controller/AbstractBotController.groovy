@@ -47,9 +47,9 @@ abstract class AbstractBotController implements Configured {
         updateCurrentKeyboard()
     }
 
-    void after(String currentPath) {
+    void after(String originalPath) {
         publisher.publishEvent new ExecuteMethodsEvent(requests: requests)
-        userService.setPreviousPath currentPath
+        userService.setPreviousPath originalPath
 
     }
 

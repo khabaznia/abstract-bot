@@ -23,7 +23,7 @@ trait Configured {
     }
 
     Collection<String> getConfigs(String key) {
-        getConfigParam(key)?.split(CONFIGS_DELIMITER)?.collect()
+        getConfigParam(key)?.tokenize(CONFIGS_DELIMITER)
     }
 
     Boolean isEnabled(String key) {

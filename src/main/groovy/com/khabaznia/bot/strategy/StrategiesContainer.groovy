@@ -25,6 +25,8 @@ class StrategiesContainer {
         map[MessageType.ONE_TIME_INLINE_KEYBOARD] = context.getBean('oneTimeKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
         map[MessageType.PINNED] = context.getBean('pinnedRequestProcessingStrategy') as RequestProcessingStrategy
         map[MessageType.REPLY_KEYBOARD] = context.getBean('replyKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageType.EDIT] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageType.EDIT_AND_DELETE] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
         log.debug 'Request strategies map: {}', map
         map
     }

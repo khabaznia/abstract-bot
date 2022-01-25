@@ -1,6 +1,7 @@
 package com.khabaznia.bot.meta.request
 
 import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.meta.request.impl.EditMessage
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.trait.Localized
 import com.khabaznia.bot.util.SessionUtil
@@ -24,6 +25,11 @@ abstract class BaseRequest<T extends BaseResponse> {
 
     MessageType getType() {
         type ?: MessageType.SKIP
+    }
+
+    BaseRequest delete() {
+        type = MessageType.DELETE
+        this
     }
 
 }

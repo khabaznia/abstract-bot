@@ -40,7 +40,7 @@ class AdminController extends AbstractBotController {
         deleteMessages(MessageType.ONE_TIME_INLINE_KEYBOARD)
         sendMessage.key('message.choose.action')
                 .emoji(FINGER_DOWN)
-                .keyboard(replyKeyboard.button(EXAMPLE, MEDITATE).row().button(FEATURES_LIST, CHECK).row().button(SETTINGS, GEAR))
+                .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])
     }
 
     @Secured(roles = Role.ADMIN)

@@ -27,11 +27,23 @@ class ExampleController extends AbstractBotController {
     }
 
     @BotRequest(path = NEXT, after = EXAMPLE)
-    getNext() {
-        sendMessage
-                .key('Another reply keyboard')
-                .replyKeyboard([[ACTION_TWO, MODIFIABLE_INLINE_KEYBOARD],
-                                [ONE_TIME_INLINE_KEYBOARD]])
+    getAfterExampleNext() {
+        sendMessage.key('Only after localized example').delete()
+    }
+
+    @BotRequest(path = NEXT, after = NEXT)
+    getAfterNextNext() {
+        sendMessage.key('NEXT that only after NEXT').delete()
+    }
+
+    @BotRequest(after = NEXT)
+    getAfterNextEmptyString() {
+        sendMessage.key('Simple string after NEXT').delete()
+    }
+
+    @BotRequest(after = EXAMPLE)
+    getAfterExampleEmptyString() {
+        sendMessage.key('Simple string after EXAMPLE').delete()
     }
 
     @Localized
@@ -53,20 +65,33 @@ class ExampleController extends AbstractBotController {
     @Localized
     @BotRequest(path = ACTION_TWO)
     actionTwo() {
-        sendMessage.key('Localized ')
-                .inlineKeyboard([['example.button.one': "/query", 'example.button.two': "/query"],
+        sendMessage.key('Edit message ')
+                .inlineKeyboard([['example.button.one': "/exampleMessage", 'example.button.two': "/editExampleMessage"],
                                  [('button.example.back'): BACK_ACTION]])
+    }
+
+    @BotRequest(path = '/exampleMessage')
+    exampleMessage() {
+        sendMessage.key('<b>Some example message</b> - this part will be edited')
+                .label('messageToEdit')
+    }
+
+    @BotRequest(path = '/editExampleMessage')
+    editExampleMessage() {
+        editMessage.key('<b>Some example message</b> - !edited!')
+                .label('messageToEdit')
+                .delete()
     }
 
     @BotRequest(path = '/query')
     query() {
-        sendMessage.key('<b>query</b> - ok').type(MessageType.DELETE)
+        sendMessage.key('<b>query</b> - ok').delete()
     }
 
     @BotRequest(path = '/queryWithParam')
     query(String someUniqueId) {
-        sendMessage.key('query - <i>ok</i>').type(MessageType.DELETE)
-        sendMessage.key(someUniqueId).type(MessageType.DELETE)
+        sendMessage.key('query - <i>ok</i>').delete()
+        sendMessage.key(someUniqueId).delete()
     }
 
     @Localized
@@ -90,7 +115,7 @@ class ExampleController extends AbstractBotController {
     @BotRequest(path = NO_ACTION)
     noAction(String param, String other) {
         sendMessage.key('no')
-        sendMessage.key(param).type(MessageType.DELETE)
+        sendMessage.key(param).delete()
         sendMessage.key(other).type(MessageType.DELETE)
     }
 
