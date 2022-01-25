@@ -17,6 +17,10 @@ final class Emoji {
     public static final String LEFT_ARROW = "⬅️"
     public static final String CHECK = "✔️"
 
+    public static final String LOG_WARNING = "❗"
+    public static final String LOG_INFO = "🟢"
+    public static final String LOG_DEBUG = "⚪"
+
     // FROM exapmle controller
     public static final String MEDITATE = "🛀🏿 🧘🏼 🛌🏿"
     public static final String AVOCADO = " 🥑 🍝 🍲"

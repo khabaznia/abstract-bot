@@ -19,8 +19,4 @@ class SendChatAction extends BaseRequest<BooleanResponse> {
 
     ActionType action
 
-    SendChatAction setAction(ActionType actionType) {
-        this.action = actionType
-        return this
-    }
 }

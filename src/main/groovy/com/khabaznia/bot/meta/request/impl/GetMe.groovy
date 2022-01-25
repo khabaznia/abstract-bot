@@ -15,11 +15,6 @@ import org.springframework.stereotype.Component
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
 class GetMe extends BaseRequest<UserResponse> {
-
-    Integer messageId
-
-    GetMe setMessageId(Integer messageId){
-        this.messageId = messageId
-        return this
+    GetMe() {
     }
 }

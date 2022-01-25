@@ -16,6 +16,7 @@ import com.khabaznia.bot.meta.utils.BotRequestList
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
 import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Logged
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -25,7 +26,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 
 @Slf4j
-abstract class AbstractBotController implements Configured {
+abstract class AbstractBotController implements Configured, Logged{
 
     @Autowired
     protected ApplicationContext context

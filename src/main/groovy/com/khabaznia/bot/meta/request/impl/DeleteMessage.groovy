@@ -18,9 +18,4 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 class DeleteMessage extends BaseRequest<BooleanResponse> {
 
     Integer messageId
-
-    DeleteMessage setMessageId(Integer messageId){
-        this.messageId = messageId
-        return this
-    }
 }

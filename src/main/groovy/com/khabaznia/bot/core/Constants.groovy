@@ -12,7 +12,15 @@ class Constants {
     public static final String CONFIG_KEYS_PREFIX = 'config.'
     public static final String SWITCHABLE_CONFIG_KEYS_PREFIX = 'switchable.'
 
+    public static final String ADMIN_CHAT_ID = 'bot.admin.chat.id'
+    public static final String LOGGING_CHAT_ID = 'bot.logging.chat.id'
+    public static final String DEBUG_LOGGING = 'switchable.debug.logging.enabled'
+    public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.duplicate.warn.logging.to.admin'
+
+
     public static final String DELETE_MESSAGES_WEEKS_COUNT = 'delete.paths.weeks.count'
     public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.delete.previous.inline.keyboards'
+
+
 
 }

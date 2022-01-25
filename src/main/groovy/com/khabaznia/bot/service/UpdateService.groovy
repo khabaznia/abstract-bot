@@ -28,19 +28,19 @@ class UpdateService {
     }
 
 
-    String getMessageFromUpdate(final Update update) {
+    String getMessageFromUpdate(Update update) {
         def message = update.hasCallbackQuery() ? update?.callbackQuery?.data : getMessage(update)?.text
         pathCryptService.isEncrypted(message) ? pathCryptService.decryptPath(message) : message?:''
     }
 
-    Map<String, String> getParametersFromUpdate(final Update update) {
+    Map<String, String> getParametersFromUpdate(Update update) {
         def message = getMessageFromUpdate(update)
         message?.contains(PARAMETERS_PREFIX)
                 ? getParametersFromMessage(message)
                 : [:]
     }
 
-    private static Message getMessage(final Update update) {
+    private static Message getMessage(Update update) {
         if (update.hasMessage())
             return update?.message
         if (update.hasCallbackQuery())
@@ -50,7 +50,7 @@ class UpdateService {
         return null
     }
 
-    static Map<String, String> getParametersFromMessage(final String message) {
+    static Map<String, String> getParametersFromMessage(String message) {
         def result = message?.tokenize(PARAMETERS_PREFIX)[1]?.tokenize(PARAMETERS_DELIMITER)
                 ?.collectEntries { [it.tokenize(PARAMETER_KEY_VALUE_DELIMITER)[0], it.tokenize(PARAMETER_KEY_VALUE_DELIMITER)[1]] }
         log.debug "Params: {}", result

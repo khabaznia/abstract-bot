@@ -7,5 +7,4 @@ import org.springframework.context.annotation.ImportResource
 @Configuration
 @ImportResource('classpath*:context.xml')
 class PersistenceConfiguration {
-
 }

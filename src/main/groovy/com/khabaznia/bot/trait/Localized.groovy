@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 trait Localized {
 
     @Autowired
-    I18nService i18nService
+    private I18nService i18nService
 
     String getText(final String key, final Map binding) {
         i18nService.getFilledTemplate(key, binding)

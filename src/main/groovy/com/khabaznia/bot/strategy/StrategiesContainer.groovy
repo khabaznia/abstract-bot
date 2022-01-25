@@ -1,6 +1,7 @@
 package com.khabaznia.bot.strategy
 
 import com.khabaznia.bot.enums.ButtonType
+import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.MessageType
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,6 +39,16 @@ class StrategiesContainer {
         map[ButtonType.ONE_TIME] = context.getBean('oneTimeButtonProcessingStrategy') as ButtonProcessingStrategy
         map[ButtonType.SWITCH] = context.getBean('switchButtonProcessingStrategy') as ButtonProcessingStrategy
         log.debug 'Button strategies map: {}', map
+        map
+    }
+
+    @Bean(name = 'loggingStrategyMap')
+    Map<LogType, LoggingStrategy> loggingStrategyMap() {
+        Map<LogType, LoggingStrategy> map = [:]
+        map[LogType.DEBUG] = context.getBean('debugLoggingStrategy') as LoggingStrategy
+        map[LogType.INFO] = context.getBean('defaultLoggingStrategy') as LoggingStrategy
+        map[LogType.WARN] = context.getBean('warnLoggingStrategy') as LoggingStrategy
+        log.debug 'Logging strategies map: {}', map
         map
     }
 

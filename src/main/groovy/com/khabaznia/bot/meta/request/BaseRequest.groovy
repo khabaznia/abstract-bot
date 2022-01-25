@@ -16,20 +16,11 @@ import groovy.transform.builder.SimpleStrategy
 abstract class BaseRequest<T extends BaseResponse> {
 
     Integer order
-    String chatId
-    MessageType type
-
-    String getChatId() {
-        chatId ?: SessionUtil.currentChat.code
-    }
-
-    MessageType getType() {
-        type ?: MessageType.SKIP
-    }
+    String chatId = SessionUtil.currentChat?.code
+    MessageType type = MessageType.SKIP
 
     BaseRequest delete() {
         type = MessageType.DELETE
         this
     }
-
 }

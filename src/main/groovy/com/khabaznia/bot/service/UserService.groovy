@@ -1,27 +1,26 @@
 package com.khabaznia.bot.service
 
 import com.khabaznia.bot.enums.ChatRole
-
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.model.Chat
-import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.model.User
 import com.khabaznia.bot.repository.ChatRepository
 import com.khabaznia.bot.repository.ConfigRepository
 import com.khabaznia.bot.repository.UserRepository
 import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Logged
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
+import static com.khabaznia.bot.core.Constants.LOGGING_CHAT_ID
+
 @Slf4j
 @Service
-class UserService implements Configured {
-
-    public static final String ADMIN_CHAT_ID = 'bot.admin.chat.id'
-    public static final String LOGGING_CHAT_ID = 'bot.logging.chat.id'
+class UserService implements Configured, Logged {
 
     @Autowired
     private UserRepository userRepository
@@ -63,6 +62,7 @@ class UserService implements Configured {
     }
 
     private User createUser(String code) {
+        botLog('New user for code', LogType.INFO)
         User user = new User()
         user.code = code
         user.role = getUserRole(code)
@@ -71,6 +71,7 @@ class UserService implements Configured {
     }
 
     private User createUser(String code, UserRole userRole) {
+        botLog("New user for code: $code, userRole: ${userRole.toString()}", LogType.INFO)
         User user = new User()
         user.code = code
         user.role = userRole

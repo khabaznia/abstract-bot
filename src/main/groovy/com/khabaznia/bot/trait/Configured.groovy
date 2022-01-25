@@ -14,7 +14,7 @@ import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 trait Configured {
 
     @Autowired
-    Environment env
+    private Environment env
     @Autowired
     private ConfigRepository configRepository
 

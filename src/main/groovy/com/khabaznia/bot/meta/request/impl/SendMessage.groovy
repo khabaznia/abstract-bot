@@ -20,12 +20,9 @@ class SendMessage extends AbstractKeyboardMessage<MessageResponse> {
 
     String key
     String emoji
-    Map<String, String> binding
+    Map<String, String> binding = [:]
     String label
 
-    SendMessage() {
-        binding = [:]
-    }
 
     MessageType getType() {
         label && FORCE_DELETE_MESSAGE_TYPES.contains(super.type) ? MessageType.PERSIST : super.type

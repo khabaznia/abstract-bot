@@ -27,6 +27,7 @@ class ApiMethodService {
     BaseResponse execute(BaseRequest request) {
         log.debug "Execution api method..."
         try {
+            sleep(1000)
             return getMappedResponse(sender.execute(getApiMethod(request)))
         } catch (Exception ex) {
             log.error 'Method failed to execute -> {}', request

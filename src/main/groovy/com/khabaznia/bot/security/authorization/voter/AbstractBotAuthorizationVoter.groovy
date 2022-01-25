@@ -2,6 +2,9 @@ package com.khabaznia.bot.security.authorization.voter
 
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.core.proxy.ControllerMetaData
+import com.khabaznia.bot.enums.LogType
+import com.khabaznia.bot.trait.Logged
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.aop.framework.ReflectiveMethodInvocation
@@ -12,7 +15,7 @@ import org.springframework.stereotype.Component
 
 @Slf4j
 @Component
-abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter {
+abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter implements Logged {
 
     protected abstract int voteInternal(Authentication authentication, MethodInvocation method)
 
@@ -21,6 +24,9 @@ abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter {
         def result = ACCESS_DENIED
         if (object instanceof ReflectiveMethodInvocation && object.target?.class == BotControllerProxy.class) {
             result = voteInternal(authentication, object)
+        }
+        if (result == ACCESS_DENIED) {
+            botLog("Access denied.", LogType.WARN)
         }
         result
     }

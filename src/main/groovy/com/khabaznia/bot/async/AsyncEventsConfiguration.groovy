@@ -11,6 +11,7 @@ import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.web.context.request.RequestContextListener
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 import java.util.concurrent.Executor

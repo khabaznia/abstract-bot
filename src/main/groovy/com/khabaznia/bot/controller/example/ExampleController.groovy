@@ -4,6 +4,7 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
+import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
@@ -28,6 +29,7 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = NEXT, after = EXAMPLE)
     getAfterExampleNext() {
+        botLog('Test warn', LogType.WARN)
         sendMessage.key('Only after localized example').delete()
     }
 
@@ -72,12 +74,14 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = '/exampleMessage')
     exampleMessage() {
+        botLog'Send example message'
         sendMessage.key('<b>Some example message</b> - this part will be edited')
                 .label('messageToEdit')
     }
 
     @BotRequest(path = '/editExampleMessage')
     editExampleMessage() {
+        adminLog'Edited example message'
         editMessage.key('<b>Some example message</b> - !edited!')
                 .label('messageToEdit')
                 .delete()
