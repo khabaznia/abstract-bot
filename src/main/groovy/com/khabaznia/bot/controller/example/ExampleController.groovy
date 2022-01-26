@@ -6,8 +6,10 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.integration.StubService
 import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
@@ -18,28 +20,36 @@ import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
 @BotController()
 class ExampleController extends AbstractBotController {
 
+    @Autowired
+    private StubService stubService
+
     @Localized
     @BotRequest(path = EXAMPLE)
     getReply() {
         sendMessage
                 .key('Here is your reply keyboard')
-                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, ACTION_TWO, ONE_TIME_INLINE_KEYBOARD], [TO_MAIN]])
-        sendMessage.key(NEXT)
+                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD], [TO_MAIN]])
+        sendMessage.key(NEXT).delete()
+        sendMessage.key('/anything').delete()
     }
 
     @BotRequest(path = NEXT, after = EXAMPLE)
     getAfterExampleNext() {
-        botLog('Test warn', LogType.WARN)
+        botLog 'Send example message'
         sendMessage.key('Only after localized example').delete()
+        sendMessage.key(NEXT).delete()
     }
 
     @BotRequest(path = NEXT, after = NEXT)
     getAfterNextNext() {
+        botLog('Test warn', LogType.WARN)
         sendMessage.key('NEXT that only after NEXT').delete()
+        sendMessage.key('/anything').delete()
     }
 
     @BotRequest(after = NEXT)
     getAfterNextEmptyString() {
+        adminLog 'Edited example message'
         sendMessage.key('Simple string after NEXT').delete()
     }
 
@@ -65,7 +75,7 @@ class ExampleController extends AbstractBotController {
     }
 
     @Localized
-    @BotRequest(path = ACTION_TWO)
+    @BotRequest(path = EDITING_MESSAGES)
     actionTwo() {
         sendMessage.key('Edit message ')
                 .inlineKeyboard([['example.button.one': "/exampleMessage", 'example.button.two': "/editExampleMessage"],
@@ -74,14 +84,12 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = '/exampleMessage')
     exampleMessage() {
-        botLog'Send example message'
         sendMessage.key('<b>Some example message</b> - this part will be edited')
                 .label('messageToEdit')
     }
 
     @BotRequest(path = '/editExampleMessage')
     editExampleMessage() {
-        adminLog'Edited example message'
         editMessage.key('<b>Some example message</b> - !edited!')
                 .label('messageToEdit')
                 .delete()
@@ -99,12 +107,12 @@ class ExampleController extends AbstractBotController {
     }
 
     @Localized
-    @BotRequest(path = ONE_TIME_INLINE_KEYBOARD)
+    @BotRequest(path = INTEGRATION_TESTS_KEYBOARD)
     getInline() {
         sendMessage
-                .key('Main menu')
-                .keyboard(inlineKeyboard.button('Yes, I confirm', YES_ACTION)
-                        .button("No, don't confirm", NO_ACTION, [param: 'some_param', other: 'other_param'])
+                .key('Get random stub api?')
+                .keyboard(inlineKeyboard.button('Yes', YES_ACTION)
+                        .button("No, just count", NO_ACTION, [category: 'science'])
                         .row()
                         .button('button.example.back', BACK_ACTION)
                 )
@@ -113,14 +121,15 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = YES_ACTION)
     yesAction() {
-        sendMessage.key('yes')
+        sendMessage.key('Random result from integration ->')
+        sendMessage.key(stubService.random().toString())
     }
 
     @BotRequest(path = NO_ACTION)
-    noAction(String param, String other) {
-        sendMessage.key('no')
-        sendMessage.key(param).delete()
-        sendMessage.key(other).type(MessageType.DELETE)
+    noAction(String category) {
+        sendMessage.key('Count of entries for category $category').binding([category: category])
+        def count = stubService.entries(category)
+        sendMessage.key('Key count -> $count').binding([count: count as String])
     }
 
     @BotRequest(path = BACK_ACTION)

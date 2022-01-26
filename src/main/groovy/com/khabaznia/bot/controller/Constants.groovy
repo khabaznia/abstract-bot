@@ -44,8 +44,8 @@ final class Constants {
 
     static final class EXAMPLE_CONTROLLER {
         static final String MODIFIABLE_INLINE_KEYBOARD = 'path.example.action.one'
-        static final String ACTION_TWO = 'path.example.action_two'
-        static final String ONE_TIME_INLINE_KEYBOARD = 'path.example.get.inline'
+        static final String EDITING_MESSAGES = 'path.example.action_two'
+        static final String INTEGRATION_TESTS_KEYBOARD = 'path.example.get.inline'
         static final String EXAMPLE = 'path.example'
         static final String NEXT = '/next'
         static final String YES_ACTION = '/yes'

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component
 class CleanDatabaseCronJob {
 
     @Autowired
-    PathCryptService pathCryptService
+    private PathCryptService pathCryptService
     @Autowired
-    MessageService messageService
+    private MessageService messageService
 
     @Scheduled(cron = '0 0 12 * * TUE') // Every Tuesday at noon
     @Async

@@ -1,6 +1,5 @@
 package com.khabaznia.bot.controller
 
-import com.khabaznia.bot.core.proxy.ControllerMetaData
 import com.khabaznia.bot.enums.ButtonType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
@@ -26,7 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 
 @Slf4j
-abstract class AbstractBotController implements Configured, Logged{
+abstract class AbstractBotController implements Configured, Logged {
 
     @Autowired
     protected ApplicationContext context
