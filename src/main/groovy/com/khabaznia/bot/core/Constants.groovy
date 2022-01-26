@@ -9,17 +9,17 @@ class Constants {
     public static final String ENCRYPTED_PATH_PREFIX = '/encrypted'
 
     public static final String CONFIGS_DELIMITER = ','
-    public static final String CONFIG_KEYS_PREFIX = 'config.'
+    public static final String CONFIG_KEYS_PREFIX = 'name.'
     public static final String SWITCHABLE_CONFIG_KEYS_PREFIX = 'switchable.'
 
     public static final String ADMIN_CHAT_ID = 'bot.admin.chat.id'
     public static final String LOGGING_CHAT_ID = 'bot.logging.chat.id'
-    public static final String DEBUG_LOGGING = 'switchable.debug.logging.enabled'
-    public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.duplicate.warn.logging.to.admin'
+    public static final String DEBUG_LOGGING = 'switchable.config.debug.logging.enabled'
+    public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.config.duplicate.warn.logging.to.admin'
 
 
     public static final String DELETE_MESSAGES_WEEKS_COUNT = 'delete.paths.weeks.count'
-    public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.delete.previous.inline.keyboards'
+    public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.config.delete.previous.inline.keyboards'
 
 
 

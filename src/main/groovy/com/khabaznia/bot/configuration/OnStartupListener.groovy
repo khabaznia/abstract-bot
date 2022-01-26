@@ -1,5 +1,6 @@
 package com.khabaznia.bot.configuration
 
+import com.khabaznia.bot.core.Constants
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.meta.request.impl.GetMe
 import com.khabaznia.bot.meta.response.impl.UserResponse
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addParamsToCallbackData
 import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addEmojiToKeyMessage
+import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 
 @Slf4j
 @Component
@@ -23,12 +25,15 @@ class OnStartupListener implements Configured {
     private ApiMethodService apiMethodService
     @Autowired
     private UserService userService
+    @Autowired
+    private Map<String, String> switchableConfigs
 
     @EventListener
     void onApplicationEvent(final ContextRefreshedEvent event) {
         log.debug 'Context refreshed'
         addMethods()
         createBotUser()
+        configs()
     }
 
     private void createBotUser() {
@@ -42,4 +47,12 @@ class OnStartupListener implements Configured {
         String.metaClass.static.addParams << { Map<String, String> map -> addParamsToCallbackData(delegate, map) }
         String.metaClass.static.addEmoji << { String emoji -> addEmojiToKeyMessage(delegate, emoji) }
     }
+
+    private void configs() {
+        switchableConfigs.each {
+            def fullName = SWITCHABLE_CONFIG_KEYS_PREFIX + 'config.' + it.key
+            log.trace '{} : {}', fullName, getConfig(fullName)
+        }
+    }
+
 }
