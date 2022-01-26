@@ -1,6 +1,5 @@
 package com.khabaznia.bot.configuration
 
-import com.khabaznia.bot.core.Constants
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.meta.request.impl.GetMe
 import com.khabaznia.bot.meta.response.impl.UserResponse
@@ -15,6 +14,10 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addParamsToCallbackData
 import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addEmojiToKeyMessage
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextItalic
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextBold
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextUnderline
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextStrikethrough
 import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 
 @Slf4j
@@ -46,6 +49,10 @@ class OnStartupListener implements Configured {
         log.debug 'Adding methods'
         String.metaClass.static.addParams << { Map<String, String> map -> addParamsToCallbackData(delegate, map) }
         String.metaClass.static.addEmoji << { String emoji -> addEmojiToKeyMessage(delegate, emoji) }
+        String.metaClass.static.italic << { makeTextItalic(delegate) }
+        String.metaClass.static.bold << { makeTextBold(delegate) }
+        String.metaClass.static.underline << { makeTextUnderline(delegate) }
+        String.metaClass.static.strikethrough << { makeTextStrikethrough(delegate) }
     }
 
     private void configs() {

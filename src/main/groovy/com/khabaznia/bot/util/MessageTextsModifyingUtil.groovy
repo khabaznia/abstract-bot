@@ -22,4 +22,20 @@ class MessageTextsModifyingUtil {
         }
         return (key.contains(PARAMETERS_PREFIX) ? key + " " : key + PARAMETERS_PREFIX).concat(emoji)
     }
+
+    static String makeTextItalic(Object key) {
+        key instanceof String ? "<i>$key</i>" : null
+    }
+
+    static String makeTextBold(Object key) {
+        key instanceof String ? "<b>$key</b>" : null
+    }
+
+    static String makeTextUnderline(Object key) {
+        key instanceof String ? "<u>$key</u>" : null
+    }
+
+    static String makeTextStrikethrough(Object key) {
+        key instanceof String ? "<s>$key</s>" : null
+    }
 }

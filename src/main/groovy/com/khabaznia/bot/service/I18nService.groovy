@@ -17,9 +17,15 @@ import static com.khabaznia.bot.configuration.CustomLocaleResolver.DEFAULT_LOCAL
 class I18nService implements Configured {
 
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
     @Autowired
-    ChatRepository chatRepository
+    private ChatRepository chatRepository
+
+    private def markdownTextMap = [(/<b>.*<\/b>/): { it.bold() },
+                                   (/<i>.*<\/i>/): { it.italic() },
+                                   (/<u>.*<\/u>/): { it.underline() },
+                                   (/<s>.*<\/s>/): { it.strikethrough() },
+    ]
 
     boolean changeLocale(String localeKey) {
         log.debug 'Try to change locale to -> {}', localeKey
@@ -34,6 +40,24 @@ class I18nService implements Configured {
     }
 
     String getMessage(String key) {
+        log.trace '================================================='
+        log.trace "Key to process - {}", key
+        boolean hasMarkdown = key.matches(/<[bius]>.*<\/[bius]>/)
+        log.trace "Has markdown - {}", hasMarkdown
+        def markdownMethod = hasMarkdown
+                ? markdownTextMap.find { key.matches(it.key) }.value
+                : null
+        def keyWithoutMarkdown = hasMarkdown ? key - ~/<[bius]>/ - ~/<\/[bius]>/ : key
+        log.trace "Key without markdown - {}", keyWithoutMarkdown
+        def localizedMessage = getLocalized(keyWithoutMarkdown)
+        log.trace "Localized message - {}", localizedMessage
+        def result = hasMarkdown ? markdownMethod(localizedMessage) : localizedMessage
+        log.trace "Result - {}", result
+        log.trace '================================================='
+        result
+    }
+
+    private String getLocalized(String key) {
         def localeFromChat = new Locale(SessionUtil.currentChat?.lang ?: DEFAULT_LOCALE)
         context.getMessage(key, null, localeFromChat)
     }

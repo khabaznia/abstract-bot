@@ -7,6 +7,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.core.Constants.DEBUG_LOGGING
+import static com.khabaznia.bot.meta.Emoji.LOG_DEBUG
 
 @Slf4j
 @Component(value = 'debugLoggingStrategy')
@@ -20,6 +21,6 @@ class DebugLoggingStrategy extends LoggingStrategy {
 
     @Override
     String getLogEmoji() {
-        ':'
+        LOG_DEBUG
     }
 }

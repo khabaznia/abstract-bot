@@ -47,7 +47,7 @@ final class Constants {
         static final String EDITING_MESSAGES = 'path.example.action_two'
         static final String INTEGRATION_TESTS_KEYBOARD = 'path.example.get.inline'
         static final String EXAMPLE = 'path.example'
-        static final String NEXT = '/next'
+        static final String TEST_LOGS = '/test_logs'
         static final String YES_ACTION = '/yes'
         static final String NO_ACTION = '/no'
         static final String BACK_ACTION = '/back'

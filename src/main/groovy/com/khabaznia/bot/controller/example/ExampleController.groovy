@@ -4,7 +4,6 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
-import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.integration.StubService
 import com.khabaznia.bot.meta.Emoji
@@ -28,34 +27,50 @@ class ExampleController extends AbstractBotController {
     getReply() {
         sendMessage
                 .key('Here is your reply keyboard')
-                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD], [TO_MAIN]])
-        sendMessage.key(NEXT).delete()
-        sendMessage.key('/anything').delete()
+                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
+                                [EXAMPLE], [TO_MAIN]])
+        sendMessage.key(TEST_LOGS + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
+        sendMessage.key('/anyString - ' + 'pins next message'.italic()).delete()
+        sendMessage.key('/checkTexts').delete()
     }
 
-    @BotRequest(path = NEXT, after = EXAMPLE)
+    @BotRequest(path = '/checkTexts')
+    checkTexts() {
+        sendMessage.key('some bold'.bold())
+        sendMessage.key('some italic'.italic())
+        sendMessage.key('some underline'.underline())
+        sendMessage.key('some strikethrough'.strikethrough())
+
+        sendMessage.key('test.bold'.bold())
+        sendMessage.key('test.italic'.italic())
+        sendMessage.key('test.underline'.underline())
+        sendMessage.key('test.strikethrough'.strikethrough())
+    }
+
+    @BotRequest(path = TEST_LOGS, after = EXAMPLE)
     getAfterExampleNext() {
-        sendLog 'Send example message'
-        sendMessage.key('Only after localized example').delete()
-        sendMessage.key(NEXT).delete()
+        sendLog 'Example message log message.'.strikethrough()
+        sendMessage.key('Only after localized example'.underline()).delete()
+        sendMessage.key(TEST_LOGS + ' - ' + 'sends warn logs'.italic()).delete()
     }
 
-    @BotRequest(path = NEXT, after = NEXT)
+    @BotRequest(path = TEST_LOGS, after = TEST_LOGS)
     getAfterNextNext() {
-        sendWarnLog('Test warn')
-        sendMessage.key('NEXT that only after NEXT').delete()
-        sendMessage.key('/anything').delete()
+        sendWarnLog('Warn log message'.strikethrough())
+        sendMessage.key('Works only after /test_logs'.underline()).delete()
+        sendMessage.key('/anyString - ' + 'should send log message only for admin'.italic()).delete()
     }
 
-    @BotRequest(after = NEXT)
+    @BotRequest(after = TEST_LOGS)
     getAfterNextEmptyString() {
-        sendLogToAdmin 'Edited example message'
-        sendMessage.key('Simple string after NEXT').delete()
+        sendLogToAdmin 'Admin log message'.strikethrough()
+        sendMessage.key('Any string after /test_logs').delete()
     }
 
     @BotRequest(after = EXAMPLE)
     getAfterExampleEmptyString() {
-        sendMessage.key('Simple string after EXAMPLE').delete()
+        sendMessage.key('Any string after localized example'.underline()).delete()
+        sendMessage.key('This message should be pinned').type(MessageType.PINNED)
     }
 
     @Localized

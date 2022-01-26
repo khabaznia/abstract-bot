@@ -1,4 +1,4 @@
-package com.khabaznia.bot.async
+package com.khabaznia.bot.configuration.async
 
 import groovy.util.logging.Slf4j
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
@@ -8,7 +8,7 @@ import java.lang.reflect.Method
 
 @Slf4j
 @Component
-class AsyncEventsExceptionHandler implements AsyncUncaughtExceptionHandler {
+class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Override
     void handleUncaughtException(final Throwable throwable, final Method method, final Object... obj) {

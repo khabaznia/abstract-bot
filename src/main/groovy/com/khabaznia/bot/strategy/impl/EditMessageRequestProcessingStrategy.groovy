@@ -20,6 +20,10 @@ class EditMessageRequestProcessingStrategy extends RequestProcessingStrategy<Edi
                 ? messageService.getMessageForMessageId(request.messageId)
                 : messageService.getMessageForLabel(request.label)
         log.debug "Message to edit -> {}", messageToEdit
+        messageToEdit ? populatedMessage(request, messageToEdit) : null
+    }
+
+    private void populatedMessage(EditMessage request, Message messageToEdit) {
         populate(request, messageToEdit)
         messageToEdit
     }

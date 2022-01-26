@@ -4,6 +4,7 @@ import com.khabaznia.bot.core.handler.MessageToCommandMapper
 import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.event.LogEvent
 import com.khabaznia.bot.event.SendChatActionEvent
+import com.khabaznia.bot.exception.BotExecutionApiMethodException
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.trait.Logged
 import groovy.util.logging.Slf4j
@@ -74,6 +75,14 @@ class FrontController implements Logged {
         e.printStackTrace()
         log.error e.message
         sendWarnLog("Exception occured -> $e.message")
+        new ResponseEntity(HttpStatus.OK)
+    }
+
+    @ExceptionHandler(BotExecutionApiMethodException.class)
+    ResponseEntity handleException(BotExecutionApiMethodException e) {
+        e.printStackTrace()
+        log.error e.message
+        sendWarnLog("$e.message")
         new ResponseEntity(HttpStatus.OK)
     }
 }

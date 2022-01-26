@@ -37,7 +37,7 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
     }
 
     void afterProcess(Response response, Message message) {
-        if (response instanceof MessageResponse) {
+        if (response && response instanceof MessageResponse) {
             message.setMessageId(response.result.messageId)
             message.setText(response.result.text)
             log.debug 'Saving message with messageId: {}', response.result.messageId

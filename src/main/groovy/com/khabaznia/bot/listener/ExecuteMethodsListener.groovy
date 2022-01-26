@@ -51,7 +51,6 @@ class ExecuteMethodsListener implements Configured {
         def strategy = requestProcessingStrategyMap.get(request.type)
         def message = strategy.beforeProcess(request)
         def response = strategy.process(request)
-        if (response)
-            strategy.afterProcess(response, message)
+        strategy.afterProcess(response, message)
     }
 }

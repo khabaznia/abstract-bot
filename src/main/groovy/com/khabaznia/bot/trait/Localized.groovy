@@ -10,11 +10,11 @@ trait Localized {
     @Autowired
     private I18nService i18nService
 
-    String getText(final String key, final Map binding) {
+    String getText(String key, Map binding) {
         i18nService.getFilledTemplate(key, binding)
     }
 
-    String getText(final String key) {
+    String getText(String key) {
         i18nService.getMessage(key)
     }
 }
