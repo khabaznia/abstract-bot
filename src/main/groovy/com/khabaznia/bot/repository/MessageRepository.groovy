@@ -15,8 +15,8 @@ interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c WHERE m.type=?1 AND c.code=?2 ORDER BY m.updateDate DESC ")
     List<Message> findByTypeAndChatCode(MessageType type, String chatCode)
 
-    @Query("SELECT m FROM message m where m.updateDate >= :updateTimeStamp")
-    List<Message> findAllWithUpdateDateTimeAfter(@Param("updateTimeStamp") Date updateTimeStamp)
+    @Query("SELECT m FROM message m where m.updateDate <= :updateTimeStamp")
+    List<Message> findAllWithUpdateDateTimeBefore(@Param("updateTimeStamp") Date updateTimeStamp)
 
     Message findByLabel(String label)
 

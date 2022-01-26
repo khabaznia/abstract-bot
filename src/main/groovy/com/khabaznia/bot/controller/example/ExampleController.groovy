@@ -35,21 +35,21 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = NEXT, after = EXAMPLE)
     getAfterExampleNext() {
-        botLog 'Send example message'
+        sendLog 'Send example message'
         sendMessage.key('Only after localized example').delete()
         sendMessage.key(NEXT).delete()
     }
 
     @BotRequest(path = NEXT, after = NEXT)
     getAfterNextNext() {
-        botLog('Test warn', LogType.WARN)
+        sendWarnLog('Test warn')
         sendMessage.key('NEXT that only after NEXT').delete()
         sendMessage.key('/anything').delete()
     }
 
     @BotRequest(after = NEXT)
     getAfterNextEmptyString() {
-        adminLog 'Edited example message'
+        sendLogToAdmin 'Edited example message'
         sendMessage.key('Simple string after NEXT').delete()
     }
 

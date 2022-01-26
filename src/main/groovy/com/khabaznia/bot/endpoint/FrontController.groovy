@@ -2,10 +2,10 @@ package com.khabaznia.bot.endpoint
 
 import com.khabaznia.bot.core.handler.MessageToCommandMapper
 import com.khabaznia.bot.enums.LogType
+import com.khabaznia.bot.event.LogEvent
 import com.khabaznia.bot.event.SendChatActionEvent
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.trait.Logged
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -37,7 +37,7 @@ class FrontController implements Logged {
 
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {
-        log(updateService.getMessageFromUpdate(update))
+        sendLog(new LogEvent(text: updateService.getMessageFromUpdate(update), logType: LogType.DEBUG))
         log.trace "Got update -> $update"
         def botController = commandMapper.getController(update)
         while (botController) {
@@ -57,7 +57,7 @@ class FrontController implements Logged {
     ResponseEntity handleRestClientException(RestClientException e) {
         e.printStackTrace()
         log.error e.message
-        botLog("Exception occured -> $e.message", LogType.WARN)
+        sendWarnLog("Exception occured -> $e.message")
         new ResponseEntity(HttpStatus.OK)
     }
 
@@ -65,7 +65,7 @@ class FrontController implements Logged {
     ResponseEntity handleBotException(TelegramApiException e) {
         e.printStackTrace()
         log.error e.message
-        botLog("Exception occured -> $e.message", LogType.WARN)
+        sendWarnLog("Exception occured -> $e.message")
         new ResponseEntity(HttpStatus.OK)
     }
 
@@ -73,7 +73,7 @@ class FrontController implements Logged {
     ResponseEntity handleException(Exception e) {
         e.printStackTrace()
         log.error e.message
-        botLog("Exception occured -> $e.message", LogType.WARN)
+        sendWarnLog("Exception occured -> $e.message")
         new ResponseEntity(HttpStatus.OK)
     }
 }

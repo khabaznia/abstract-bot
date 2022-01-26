@@ -15,43 +15,20 @@ trait Logged {
     @Autowired
     private ApplicationEventPublisher publisher
 
-    void botLog(String text) {
+    void sendLog(String text) {
         publisher.publishEvent(new LogEvent(text: text))
     }
 
-    void botLog(SendMessage request) {
-        publisher.publishEvent(new LogEvent(request: request))
+    void sendWarnLog(String text) {
+        publisher.publishEvent(new LogEvent(text: text, logType: LogType.WARN))
     }
 
-    void botLog(String text, LogType type) {
-        publisher.publishEvent(new LogEvent(text: text, logType: type))
-    }
-
-    void botLog(SendMessage request, LogType type) {
-        publisher.publishEvent(new LogEvent(request: request, logType: type))
-    }
-
-    void adminLog(String text) {
-        publisher.publishEvent(new LogEvent(text: text, logChat: LoggingChat.ADMIN))
-    }
-
-    void adminLog(SendMessage request) {
-        publisher.publishEvent(new LogEvent(request: request, logChat: LoggingChat.ADMIN))
-    }
-
-    void adminLog(String text, LogType type) {
-        publisher.publishEvent(new LogEvent(text: text, logType: type, logChat: LoggingChat.ADMIN))
-    }
-
-    void adminLog(SendMessage request, LogType type) {
-        publisher.publishEvent(new LogEvent(request: request, logType: type, logChat: LoggingChat.ADMIN))
-    }
-
-    void log(LogEvent event) {
+    void sendLog(LogEvent event) {
         publisher.publishEvent(event)
     }
 
-    void log(String updateMessage){
-        publisher.publishEvent(new LogEvent(text: updateMessage, logType: LogType.DEBUG))
+    void sendLogToAdmin(String text) {
+        publisher.publishEvent(new LogEvent(text: text, logChat: LoggingChat.ADMIN))
     }
+
 }

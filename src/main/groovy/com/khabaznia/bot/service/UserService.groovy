@@ -62,7 +62,7 @@ class UserService implements Configured, Logged {
     }
 
     private User createUser(String code) {
-        botLog('New user for code', LogType.INFO)
+        sendLog('New user for code')
         User user = new User()
         user.code = code
         user.role = getUserRole(code)
@@ -71,7 +71,7 @@ class UserService implements Configured, Logged {
     }
 
     private User createUser(String code, UserRole userRole) {
-        botLog("New user for code: $code, userRole: ${userRole.toString()}", LogType.INFO)
+        sendLog("New user for code: $code, userRole: ${userRole.toString()}")
         User user = new User()
         user.code = code
         user.role = userRole

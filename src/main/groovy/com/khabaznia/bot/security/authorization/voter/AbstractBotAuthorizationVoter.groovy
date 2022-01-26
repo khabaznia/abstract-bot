@@ -4,7 +4,6 @@ import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.core.proxy.ControllerMetaData
 import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.trait.Logged
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.aop.framework.ReflectiveMethodInvocation
@@ -26,7 +25,7 @@ abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter implements
             result = voteInternal(authentication, object)
         }
         if (result == ACCESS_DENIED) {
-            botLog("Access denied.", LogType.WARN)
+            sendWarnLog("Access denied.")
         }
         result
     }

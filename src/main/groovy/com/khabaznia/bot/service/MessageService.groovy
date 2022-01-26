@@ -97,10 +97,18 @@ class MessageService implements Configured {
         keyboardRepository.getById(id)
     }
 
-    void deleteExpiredMessages() {
-        def messages = messageRepository.findAllWithUpdateDateTimeAfter(expirationDate)
-        log.trace 'Deleting {} expired encrypted messages', messages?.size()
+    Integer deleteExpiredMessages() {
+        def messages = messageRepository.findAllWithUpdateDateTimeBefore(expirationDate)
+        log.info 'Deleting {} expired messages', messages?.size()
         messageRepository.deleteAll messages
+        messages?.size()
+    }
+
+    Integer deleteOrphanedKeyboards() {
+        def keyboards = keyboardRepository.findAllOrphaned()
+        log.info'Deleting {} orphaned messages', keyboards?.size()
+        keyboardRepository.deleteAll keyboards
+        keyboards?.size()
     }
 
     private Date getExpirationDate() {

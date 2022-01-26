@@ -10,4 +10,5 @@ class LogEvent {
     LoggingChat logChat = LoggingChat.DEFAULT
     SendMessage request
     String text
+    Boolean skipMetaInfo = false
 }

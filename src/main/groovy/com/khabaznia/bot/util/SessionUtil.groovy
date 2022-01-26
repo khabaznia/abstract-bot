@@ -9,8 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 @Slf4j
 class SessionUtil {
 
-    private static final String UPDATE_PARAM = 'update'
-
     static Chat getCurrentChat() {
         SecurityContextHolder.context?.authentication?.principal?.fromChat as Chat
     }
