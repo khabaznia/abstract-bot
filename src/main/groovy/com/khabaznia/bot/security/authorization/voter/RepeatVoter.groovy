@@ -1,7 +1,7 @@
 package com.khabaznia.bot.security.authorization.voter
 
 import com.khabaznia.bot.service.UpdateService
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import io.micrometer.core.instrument.util.StringUtils
@@ -19,7 +19,7 @@ import static com.khabaznia.bot.core.Constants.BLOCK_DUPLICATE_REQUESTS
 
 @Slf4j
 @Component
-class RepeatVoter extends AbstractBotAuthorizationVoter implements Configured {
+class RepeatVoter extends AbstractBotAuthorizationVoter implements Configurable {
 
     @Autowired
     ApplicationContext context

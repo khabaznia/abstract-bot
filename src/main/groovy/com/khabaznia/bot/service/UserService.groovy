@@ -7,8 +7,8 @@ import com.khabaznia.bot.model.User
 import com.khabaznia.bot.repository.ChatRepository
 import com.khabaznia.bot.repository.ConfigRepository
 import com.khabaznia.bot.repository.UserRepository
-import com.khabaznia.bot.trait.Configured
-import com.khabaznia.bot.trait.Logged
+import com.khabaznia.bot.trait.Configurable
+import com.khabaznia.bot.trait.Loggable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +21,7 @@ import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_M
 
 @Slf4j
 @Service
-class UserService implements Configured, Logged {
+class UserService implements Configurable, Loggable {
 
     @Autowired
     private UserRepository userRepository

@@ -13,8 +13,8 @@ import com.khabaznia.bot.meta.request.impl.EditMessage
 import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
-import com.khabaznia.bot.trait.Configured
-import com.khabaznia.bot.trait.Logged
+import com.khabaznia.bot.trait.Configurable
+import com.khabaznia.bot.trait.Loggable
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -25,7 +25,7 @@ import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 import static com.khabaznia.bot.core.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 
 @Slf4j
-abstract class AbstractBotController implements Configured, Logged {
+abstract class AbstractBotController implements Configurable, Loggable {
 
     @Autowired
     protected ApplicationContext context

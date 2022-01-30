@@ -6,7 +6,7 @@ import com.khabaznia.bot.event.LogEvent
 import com.khabaznia.bot.event.SendChatActionEvent
 import com.khabaznia.bot.exception.BotExecutionApiMethodException
 import com.khabaznia.bot.service.UpdateService
-import com.khabaznia.bot.trait.Logged
+import com.khabaznia.bot.trait.Loggable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +29,7 @@ import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_I
 
 @Slf4j
 @RestController
-class FrontController implements Logged {
+class FrontController implements Loggable {
 
     @Autowired
     Environment env

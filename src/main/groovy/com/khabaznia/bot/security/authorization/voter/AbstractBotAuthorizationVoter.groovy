@@ -2,8 +2,7 @@ package com.khabaznia.bot.security.authorization.voter
 
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.core.proxy.ControllerMetaData
-import com.khabaznia.bot.enums.LogType
-import com.khabaznia.bot.trait.Logged
+import com.khabaznia.bot.trait.Loggable
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.aop.framework.ReflectiveMethodInvocation
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component
 
 @Slf4j
 @Component
-abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter implements Logged {
+abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter implements Loggable {
 
     protected abstract int voteInternal(Authentication authentication, MethodInvocation method)
 

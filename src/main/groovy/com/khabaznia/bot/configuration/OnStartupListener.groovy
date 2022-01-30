@@ -5,7 +5,7 @@ import com.khabaznia.bot.meta.request.impl.GetMe
 import com.khabaznia.bot.meta.response.impl.UserResponse
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.UserService
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.event.ContextRefreshedEvent
@@ -22,7 +22,7 @@ import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 
 @Slf4j
 @Component
-class OnStartupListener implements Configured {
+class OnStartupListener implements Configurable {
 
     @Autowired
     private BotRequestService apiMethodService

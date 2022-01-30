@@ -11,7 +11,7 @@ import static com.khabaznia.bot.core.Constants.CONFIG_KEYS_PREFIX
 import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 
 @Slf4j
-trait Configured {
+trait Configurable {
 
     @Autowired
     private Environment env

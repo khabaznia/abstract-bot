@@ -1,7 +1,7 @@
 package com.khabaznia.bot.service
 
 import com.khabaznia.bot.repository.ChatRepository
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.text.GStringTemplateEngine
 import groovy.util.logging.Slf4j
@@ -14,7 +14,7 @@ import static com.khabaznia.bot.configuration.CustomLocaleResolver.DEFAULT_LOCAL
 
 @Slf4j
 @Component
-class I18nService implements Configured {
+class I18nService implements Configurable {
 
     @Autowired
     private ApplicationContext context

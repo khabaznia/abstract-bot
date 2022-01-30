@@ -19,24 +19,27 @@ class ApiMethodExecutionTask {
 
     @Scheduled(fixedRateString = '${requests.per.second}')
     void executeRequestTask() {
+
         if (!queueContainer.hasRequest.getAndSet(false))
             return
-
 
         long currentTime = System.currentTimeMillis()
         queuesWithRequests = []
 
-        queueContainer.requestsMap.collect { it.value }.each {
-            switch (it.getState(currentTime)) {
-                case BotRequestQueueState.INACTIVE:
-                    queueContainer.requestsMap.remove(it)
-                    break
-                case BotRequestQueueState.READY:
-                    queuesWithRequests << it
-                case BotRequestQueueState.WAIT:
-                    queueContainer.hasRequest.set(true)
-            }
-        }
+        queueContainer.requestsMap.collect { it.value }
+                .each { log.trace('Queue for chat {}: status - {}, waiting messages for - {}', it.chatId, it.getState(currentTime), it.size()) }
+                .each {
+                    switch (it.getState(currentTime)) {
+                        case BotRequestQueueState.INACTIVE:
+                            queueContainer.requestsMap.remove(it)
+                            break
+                        case BotRequestQueueState.READY:
+                            queuesWithRequests << it
+                        case BotRequestQueueState.WAIT:
+                            queueContainer.hasRequest.set(true)
+                    }
+                }
+
         queuesWithRequests.sort(Comparator.comparingLong(BotRequestQueue::getLastPutTime))
         def requestToExecute = queuesWithRequests?.find()?.getRequest(currentTime)
         if (requestToExecute != null) {

@@ -3,12 +3,12 @@ package com.khabaznia.bot.strategy
 import com.khabaznia.bot.event.LogEvent
 import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.service.UpdateService
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
-abstract class LoggingStrategy implements Configured {
+abstract class LoggingStrategy implements Configurable {
 
     @Autowired
     protected ApplicationContext context

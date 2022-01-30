@@ -28,13 +28,13 @@ class Message {
     @Column(name = "uid")
     String uid
 
-    @Column(name = "message_id", unique = true)
+    @Column(name = "message_id")
     Integer messageId
 
     @Column(name = "text")
     String text
 
-    @Column(name = "label", unique = true)
+    @Column(name = "label")
     String label
 
     @Column(name = "update_date")

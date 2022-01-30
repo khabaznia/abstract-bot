@@ -2,7 +2,7 @@ package com.khabaznia.bot.service
 
 import com.khabaznia.bot.model.EncryptedPath
 import com.khabaznia.bot.repository.EncryptedPathRepository
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,7 +14,7 @@ import static com.khabaznia.bot.core.Constants.DELETE_MESSAGES_WEEKS_COUNT
 
 @Slf4j
 @Service
-class PathCryptService implements Configured {
+class PathCryptService implements Configurable {
 
     @Autowired
     EncryptedPathRepository repository

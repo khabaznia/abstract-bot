@@ -1,18 +1,14 @@
 package com.khabaznia.bot.sender
 
 import com.khabaznia.bot.meta.request.BaseRequest
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.ConcurrentMap
-import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.atomic.AtomicInteger
 
 import static com.khabaznia.bot.core.Constants.*
 
@@ -20,7 +16,7 @@ import static com.khabaznia.bot.core.Constants.*
 @Component(value = 'botRequestQueue')
 @Scope(value = 'prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
-class BotRequestQueue implements Configured {
+class BotRequestQueue implements Configurable {
 
     String chatId
     private volatile long lastSendTime
@@ -52,7 +48,6 @@ class BotRequestQueue implements Configured {
 
     def isExpiredLimitForSingleChatPerMinute() {
         (callTime) -> {
-            log.trace 'Is waiting by chat messages limit {}. Current waiting messages {}', false, requestQueue.size().toLong()
             true
         }
     }
@@ -84,6 +79,10 @@ class BotRequestQueue implements Configured {
     void setToManyRequestsLimit(long seconds) {
         log.trace 'To many requests for chat {}. Setting limit to {} seconds', chatId, seconds
         toManyRequestsLimit = (System.currentTimeMillis() + (seconds * 1000))
+    }
+
+    Integer size() {
+        requestQueue.size()
     }
 
 }

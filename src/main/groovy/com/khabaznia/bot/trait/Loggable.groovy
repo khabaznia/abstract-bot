@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.meta.api.objects.Update
 
 @Slf4j
-trait Logged {
+trait Loggable {
 
     @Autowired
     private ApplicationEventPublisher publisher

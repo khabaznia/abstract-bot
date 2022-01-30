@@ -32,10 +32,7 @@ class DeleteMessagesEventListener {
                 .collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }
                 .flatten()
                 .collect { it as Message }
-                .each { log.debug('====================== message to delete -> {} ', it.toString()) }
-                .each { log.debug('====================== message to delete messageId -> {} ', it.messageId.toString()) }
-                .each { log.debug('====================== message to delete -> messageCode {} ', it.uid.toString()) }
-                .findAll { it.messageId != 0 }
+                .findAll { it.messageId != null && it.messageId != 0 }
                 .collect { context.getBean('deleteMessage').messageId(it.messageId) }
                 .each { requestService.executeInQueue(it) }
         log.info 'Delete {} messages from chat {}', deleteMessageRequests?.size(), currentChatCode

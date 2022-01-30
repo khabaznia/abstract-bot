@@ -8,7 +8,7 @@ import com.khabaznia.bot.repository.ButtonRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
 
-import com.khabaznia.bot.trait.Configured
+import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +20,7 @@ import static com.khabaznia.bot.core.Constants.DELETE_MESSAGES_WEEKS_COUNT
 
 @Slf4j
 @Service
-class MessageService implements Configured {
+class MessageService implements Configurable {
 
     @Autowired
     private MessageRepository messageRepository

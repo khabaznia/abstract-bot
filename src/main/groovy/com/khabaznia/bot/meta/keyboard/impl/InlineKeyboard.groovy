@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.meta.Emoji.CHECKED_MARK
 import static com.khabaznia.bot.meta.Emoji.CROSS_MARK
+import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
 
 @Component(value = 'inlineKeyboard')
 @Scope("prototype")
@@ -88,6 +89,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
 
     InlineKeyboard switchButton(String key, String callbackData, Boolean isEnabled, Map<String, String> params) {
         params.put(ButtonType.SWITCH.paramKey, isEnabled as String)
+        params.put(UNLIMITED_CALL, true.toString())
         def button = button
                 .callbackData(callbackData)
                 .params(params)
