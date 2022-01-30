@@ -2,7 +2,7 @@ package com.khabaznia.bot.listener
 
 import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.event.LogEvent
-import com.khabaznia.bot.service.ApiMethodService
+import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.strategy.LoggingStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,7 @@ class LogListener {
     @Autowired
     Map<LogType, LoggingStrategy> loggingStrategyMap
     @Autowired
-    ApiMethodService apiMethodService
+    BotRequestService apiMethodService
 
     @Async
     @EventListener
@@ -25,6 +25,6 @@ class LogListener {
         def strategy = loggingStrategyMap.get(event.logType)
         def requests = strategy.getRequestForEvent(event)
         log.debug 'Log event: {}', requests[0]?.key
-        requests.each {apiMethodService.execute it}
+        requests.each {apiMethodService.executeInQueue it}
     }
 }

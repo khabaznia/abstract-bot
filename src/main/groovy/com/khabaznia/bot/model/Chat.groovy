@@ -29,6 +29,9 @@ class Chat {
     @Column(name = "last_action")
     String lastAction
 
+    @Column(name = "last_action_full_path")
+    String lastActionFullPath
+
     @Column(name = "type")
     String type
 

@@ -7,6 +7,7 @@ import com.khabaznia.bot.event.SendChatActionEvent
 import com.khabaznia.bot.exception.BotExecutionApiMethodException
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.trait.Logged
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher

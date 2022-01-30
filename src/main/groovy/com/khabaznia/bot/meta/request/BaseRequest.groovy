@@ -18,6 +18,7 @@ abstract class BaseRequest<T extends BaseResponse> {
     Integer order
     String chatId = SessionUtil.currentChat?.code
     MessageType type = MessageType.SKIP
+    String relatedMessageUid
 
     BaseRequest delete() {
         type = MessageType.DELETE

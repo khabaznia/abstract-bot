@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface MessageRepository extends JpaRepository<Message, Long> {
+interface MessageRepository extends JpaRepository<Message, String> {
 
     @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c WHERE m.type=?1 AND c.code=?2 ORDER BY m.updateDate DESC ")
     List<Message> findByTypeAndChatCode(MessageType type, String chatCode)

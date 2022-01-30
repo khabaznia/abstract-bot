@@ -5,7 +5,6 @@ import com.khabaznia.bot.model.Button
 import com.khabaznia.bot.model.Keyboard
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.repository.ButtonRepository
-import com.khabaznia.bot.repository.EncryptedPathRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
 
@@ -29,12 +28,9 @@ class MessageService implements Configured {
     private ButtonRepository buttonRepository
     @Autowired
     private KeyboardRepository keyboardRepository
-    @Autowired
-    private EncryptedPathRepository encryptedPathRepository
 
     List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
         def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
-        log.trace "List for type: {}", resultList
         resultList
     }
 
@@ -45,8 +41,8 @@ class MessageService implements Configured {
 
     Message saveMessage(Message message) {
         if (message.label && messageRepository.existsByLabel(message.label)) {
-            def existingMessage = getMessageForLabel(message.label)
-            messageRepository.deleteById(existingMessage.getCode())
+            def existingMessage = getMessage(message.label)
+            messageRepository.deleteById(existingMessage.getUid())
         }
         log.trace "Saving message: {}", message
         if (message.keyboard) {
@@ -58,19 +54,21 @@ class MessageService implements Configured {
         messageRepository.save(message)
     }
 
-    Message getMessageForCode(Long code) {
-        messageRepository.findById(code).orElse(null)
+    Message getMessage(String uniqueId) {
+        messageRepository.findById(uniqueId).orElse(messageRepository.findByLabel(uniqueId))
+                ?: getByMessageId(uniqueId)
     }
 
-    Message getMessageForLabel(String label) {
-        messageRepository.findByLabel(label)
+    private Message getByMessageId(String uniqueId) {
+        try {
+            return messageRepository.findByMessageId(Integer.parseInt(uniqueId))
+        } catch (NumberFormatException e) {
+            log.trace "Can't find message with message id - {}. Possibly it's uid or label, ant it's message was deleted", uniqueId
+        }
+        return null
     }
 
-    Message getMessageForMessageId(Integer messageId) {
-        messageRepository.findByMessageId(messageId)
-    }
-
-    void removeMessageForCode(Long code) {
+    void removeMessageForUid(String code) {
         messageRepository.deleteById(code)
     }
 
@@ -78,11 +76,6 @@ class MessageService implements Configured {
         button.setKeyboard(null)
         buttonRepository.saveAndFlush(button)
         buttonRepository.delete(button)
-    }
-
-    private void deleteRelatedPaths(String buttonOrMessageCode) {
-        def relatedPaths = encryptedPathRepository.findByValueContaining(buttonOrMessageCode)
-        encryptedPathRepository.deleteAll(relatedPaths)
     }
 
     Button getButton(String id) {
@@ -106,12 +99,12 @@ class MessageService implements Configured {
 
     Integer deleteOrphanedKeyboards() {
         def keyboards = keyboardRepository.findAllOrphaned()
-        log.info'Deleting {} orphaned messages', keyboards?.size()
+        log.info 'Deleting {} orphaned messages', keyboards?.size()
         keyboardRepository.deleteAll keyboards
         keyboards?.size()
     }
 
     private Date getExpirationDate() {
-        LocalDateTime.now().minusWeeks(getConfig(DELETE_MESSAGES_WEEKS_COUNT) as long).toDate()
+        LocalDateTime.now().minusWeeks(getLongConfig(DELETE_MESSAGES_WEEKS_COUNT)).toDate()
     }
 }

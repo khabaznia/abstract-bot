@@ -7,7 +7,7 @@ import static com.khabaznia.bot.meta.Emoji.LANG_UK
 final class Constants {
 
     static final class BUTTON_PARAMETERS {
-        public static final String MESSAGE_CODE = 'messageCode'
+        public static final String MESSAGE_UID = 'messageUid'
         public static final String ONE_TIME_KEYBOARD = 'oneTime'
         public static final String BUTTON_ID = 'buttonId'
     }

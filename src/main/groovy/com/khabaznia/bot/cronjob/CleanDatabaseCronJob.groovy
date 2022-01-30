@@ -25,17 +25,21 @@ class CleanDatabaseCronJob {
     @Autowired
     private ApplicationEventPublisher publisher
 
-    @Scheduled(cron = '0 0 12 * * *') // Every day at noon
+    @Scheduled(cron = '${clean.up.database.cron.expression}')
     @Async
-    void scheduleTaskUsingCronExpression() {
+    void cleanUpTask() {
         log.info '***********************************************************************************'
         log.info '************* Running cronjob for deleting expired messages and paths *************'
         log.info '***********************************************************************************'
+
+
         def deletedPaths = pathCryptService.deleteExpiredPaths()
         def deletedMessages = messageService.deleteExpiredMessages()
         def deletedKeyboards = messageService.deleteOrphanedKeyboards()
         publisher.publishEvent(new LogEvent(logChat: LoggingChat.ADMIN, skipMetaInfo: true,
                 text: "${TRIANGLE_RIGHT}Clean-up job${TRIANGLE_LEFT} \n$deletedPaths paths\n$deletedMessages messages\n$deletedKeyboards orhaned keyboards"))
+
+
         log.info '***********************************************************************************'
         log.info '*******************************       FINISHED       ******************************'
         log.info '***********************************************************************************'

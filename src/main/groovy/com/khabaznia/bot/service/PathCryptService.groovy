@@ -31,7 +31,6 @@ class PathCryptService implements Configured {
     }
 
     String decryptPath(final String path) {
-        log.trace 'Decryption of path -> {}', {}
         def encryptedPath = repository.findById(path)
         encryptedPath.ifPresent { repository.save(it) }
         encryptedPath.get().value
@@ -39,13 +38,12 @@ class PathCryptService implements Configured {
 
     Integer deleteExpiredPaths() {
         def paths = repository.findAllWithUpdateDateTimeBefore(expirationDate)
-        log.info 'Deleting {} expired encrypted paths. Expiration date - {}', paths?.size(), expirationDate
         repository.deleteAll paths
         paths?.size()
     }
 
     private Date getExpirationDate() {
-        def expDate = LocalDateTime.now().minusWeeks(getConfig(DELETE_MESSAGES_WEEKS_COUNT) as long).toDate()
+        def expDate = LocalDateTime.now().minusWeeks(getLongConfig(DELETE_MESSAGES_WEEKS_COUNT)).toDate()
         expDate
     }
 }

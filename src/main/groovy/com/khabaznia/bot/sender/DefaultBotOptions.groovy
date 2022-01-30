@@ -1,4 +1,4 @@
-package com.khabaznia.bot.service.sender
+package com.khabaznia.bot.sender
 
 import org.springframework.stereotype.Component
 

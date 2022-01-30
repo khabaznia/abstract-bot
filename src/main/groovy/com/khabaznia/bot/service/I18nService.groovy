@@ -40,20 +40,13 @@ class I18nService implements Configured {
     }
 
     String getMessage(String key) {
-        log.trace '================================================='
-        log.trace "Key to process - {}", key
         boolean hasMarkdown = key.matches(/<[bius]>.*<\/[bius]>/)
-        log.trace "Has markdown - {}", hasMarkdown
         def markdownMethod = hasMarkdown
                 ? markdownTextMap.find { key.matches(it.key) }.value
                 : null
         def keyWithoutMarkdown = hasMarkdown ? key - ~/<[bius]>/ - ~/<\/[bius]>/ : key
-        log.trace "Key without markdown - {}", keyWithoutMarkdown
         def localizedMessage = getLocalized(keyWithoutMarkdown)
-        log.trace "Localized message - {}", localizedMessage
         def result = hasMarkdown ? markdownMethod(localizedMessage) : localizedMessage
-        log.trace "Result - {}", result
-        log.trace '================================================='
         result
     }
 

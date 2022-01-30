@@ -22,6 +22,10 @@ trait Configured {
         getConfigParam(key)
     }
 
+    Long getLongConfig(String key) {
+        Long.parseLong(getConfigParam(key))
+    }
+
     Collection<String> getConfigs(String key) {
         getConfigParam(key)?.tokenize(CONFIGS_DELIMITER)
     }
@@ -41,7 +45,6 @@ trait Configured {
     }
 
     private String getConfigParam(String key) {
-        log.trace 'Get config param for key -> {}', key
         configRepository.existsById(key)
                 ? configRepository.getById(key).value
                 : getPropertyFromFileAndSave(key)

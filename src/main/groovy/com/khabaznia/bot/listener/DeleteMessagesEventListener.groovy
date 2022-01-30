@@ -3,11 +3,11 @@ package com.khabaznia.bot.listener
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.model.Message
-import com.khabaznia.bot.service.ApiMethodService
+import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
-import com.khabaznia.bot.service.UserService
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
+import io.micrometer.core.instrument.util.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
 class DeleteMessagesEventListener {
 
     @Autowired
-    ApiMethodService methodExecutionService
+    BotRequestService requestService
     @Autowired
     ApplicationContext context
     @Autowired
@@ -32,9 +32,9 @@ class DeleteMessagesEventListener {
                 .collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }
                 .flatten()
                 .collect { it as Message }
-                .findAll { it.messageId > 0 }
+                .findAll { it.messageId != 0 }
                 .collect { context.getBean('deleteMessage').messageId(it.messageId) }
-                .each { methodExecutionService.execute(it) }
+                .each { requestService.executeInQueue(it) }
         log.info 'Delete {} messages from chat {}', deleteMessageRequests?.size(), currentChatCode
         messageTypes.each { messageService.removeMessagesOfType(it) }
     }

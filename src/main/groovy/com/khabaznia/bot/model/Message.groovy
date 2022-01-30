@@ -25,12 +25,10 @@ import javax.validation.constraints.NotNull
 class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "code")
-    Long code
+    @Column(name = "uid")
+    String uid
 
-    @NotNull
-    @Column(name = "message_id")
+    @Column(name = "message_id", unique = true)
     Integer messageId
 
     @Column(name = "text")

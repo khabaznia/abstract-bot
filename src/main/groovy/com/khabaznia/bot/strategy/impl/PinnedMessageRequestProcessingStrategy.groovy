@@ -22,9 +22,9 @@ class PinnedMessageRequestProcessingStrategy extends RequestProcessingStrategy<B
     ApplicationEventPublisher publisher
 
     @Override
-    void afterProcess(BaseResponse response, Message message) {
+    void processResponse(BaseResponse response) {
         if (response instanceof MessageResponse) {
-            super.afterProcess(response, message)
+            super.processResponse(response)
             log.trace 'Send pin event'
             publisher.publishEvent new PinMessageEvent(messageId: response.result.messageId)
         }

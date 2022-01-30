@@ -18,14 +18,11 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 class ReplyKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<AbstractKeyboardMessage, BaseResponse> {
 
     @Autowired
-    ApplicationEventPublisher publisher
+    private ApplicationEventPublisher publisher
 
     @Override
-    Message beforeProcess(AbstractKeyboardMessage request) {
+    void prepare(AbstractKeyboardMessage request) {
         messageService.removeMessagesOfType(MessageType.REPLY_KEYBOARD)
-        def message = messageService.saveMessage(getMessageFromRequest(request))
-        message.setKeyboard(toKeyboardModel(request.keyboard))
-        log.trace 'Saved message with reply keyboard -> {}', message
-        messageService.saveMessage(message)
+        super.prepare(request)
     }
 }

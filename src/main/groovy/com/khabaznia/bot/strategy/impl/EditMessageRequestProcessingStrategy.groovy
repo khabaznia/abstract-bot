@@ -15,12 +15,11 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 @Component(value = 'editMessageRequestProcessingStrategy')
 class EditMessageRequestProcessingStrategy extends RequestProcessingStrategy<EditMessage, BaseResponse> {
 
-    Message beforeProcess(EditMessage request) {
-        def messageToEdit = request.messageId
-                ? messageService.getMessageForMessageId(request.messageId)
-                : messageService.getMessageForLabel(request.label)
+    void prepare(EditMessage request) {
+        def messageToEdit = messageService.getMessage(request.label ?: request.messageId.toString())
         log.debug "Message to edit -> {}", messageToEdit
-        messageToEdit ? populatedMessage(request, messageToEdit) : null
+        populatedMessage(request, messageToEdit)
+        request.setRelatedMessageUid(messageToEdit?.uid)
     }
 
     private void populatedMessage(EditMessage request, Message messageToEdit) {

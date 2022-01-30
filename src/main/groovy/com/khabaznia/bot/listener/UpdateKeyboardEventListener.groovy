@@ -5,7 +5,7 @@ import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.UpdateKeyboardEvent
 import com.khabaznia.bot.meta.request.impl.EditMessageKeyboard
 import com.khabaznia.bot.model.Message
-import com.khabaznia.bot.service.ApiMethodService
+import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.strategy.ButtonProcessingStrategy
 import groovy.util.logging.Slf4j
@@ -21,7 +21,7 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.fromKeyboardModel
 class UpdateKeyboardEventListener {
 
     @Autowired
-    ApiMethodService methodExecutionService
+    BotRequestService methodExecutionService
     @Autowired
     ApplicationContext context
     @Autowired
@@ -31,13 +31,13 @@ class UpdateKeyboardEventListener {
 
     @EventListener
     void onApplicationEvent(UpdateKeyboardEvent event) {
-        def messageWithKeyboard = messageService.getMessageForCode(event.code)
+        def messageWithKeyboard = messageService.getMessage(event.messageUid)
         if (messageWithKeyboard?.type == MessageType.INLINE_KEYBOARD) {
             processButton(event)
             log.trace 'Message to edit -> {}', messageWithKeyboard
             def editMessageRequest = toEditKeyboardRequest(messageWithKeyboard)
             log.info 'Editing keyboard from messageId {} from chat {}', messageWithKeyboard?.messageId, messageWithKeyboard.chat.code
-            methodExecutionService.execute(editMessageRequest)
+            methodExecutionService.executeInQueue(editMessageRequest)
         }
     }
 

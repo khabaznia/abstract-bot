@@ -21,6 +21,8 @@ class Constants {
     public static final String DELETE_MESSAGES_WEEKS_COUNT = 'delete.paths.weeks.count'
     public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.config.delete.previous.inline.keyboards'
 
-
+    public static final String REQUESTS_LIMIT_PER_MINUTE_IN_SINGLE_CHAT = 'requests.limit.per.minute.in.single.chat'
+    public static final String REQUESTS_DELAY_LIMIT_IN_SINGLE_CHAT = 'requests.delay.limit.in.single.chat'
+    public static final String CHAT_INACTIVE_MINUTES = 'chat.inactive.minutes'
 
 }

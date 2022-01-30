@@ -1,4 +1,4 @@
-package com.khabaznia.bot.service.sender
+package com.khabaznia.bot.sender
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
@@ -7,12 +7,12 @@ import org.telegram.telegrambots.bots.DefaultAbsSender
 import org.telegram.telegrambots.bots.DefaultBotOptions
 
 @Component
-class Sender extends DefaultAbsSender {
+class ApiMethodSender extends DefaultAbsSender {
 
     @Autowired
     Environment env
 
-    Sender(DefaultBotOptions options) {
+    ApiMethodSender(DefaultBotOptions options) {
         super(options)
     }
 

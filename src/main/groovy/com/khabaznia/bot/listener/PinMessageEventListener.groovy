@@ -3,7 +3,8 @@ package com.khabaznia.bot.listener
 import com.khabaznia.bot.event.PinMessageEvent
 import com.khabaznia.bot.meta.request.impl.EditMessage
 import com.khabaznia.bot.meta.request.impl.PinMessage
-import com.khabaznia.bot.service.ApiMethodService
+import com.khabaznia.bot.model.Message
+import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
@@ -19,26 +20,27 @@ class PinMessageEventListener {
     @Autowired
     private ApplicationContext context
     @Autowired
-    private ApiMethodService apiMethodService
+    private BotRequestService apiMethodService
     @Autowired
     private MessageService messageService
 
     @EventListener
     void onApplicationEvent(PinMessageEvent event) {
         log.trace 'Pin message with id {}', event.messageId
-        apiMethodService.execute SessionUtil.currentChat.type == 'private'
-                ? getEditMessage(event.messageId)
+        def message = messageService.getMessage(event.messageId)
+        def pinRequest = message.chat.type == 'private'
+                ? getEditMessage(event.messageId, message)
                 : getPinMessage(event.messageId)
+        pinRequest.setChatId(message.chat.code)
+        apiMethodService.executeInQueue(pinRequest)
     }
 
-    private EditMessage getEditMessage(String messageId) {
+    private EditMessage getEditMessage(String messageId, Message message) {
         log.trace 'Editing message with id {}', messageId
-        def message = messageService.getMessageForMessageId(Integer.valueOf(messageId))
-        def boldText = "<b>${message.getText()}</b>"
-        message.setText(boldText)
+        message.setText(message.getText().bold())
         messageService.saveMessage(message)
         context.getBean('editMessage')
-                .key(boldText)
+                .key(message.getText().bold())
                 .messageId(Integer.valueOf(messageId))
     }
 

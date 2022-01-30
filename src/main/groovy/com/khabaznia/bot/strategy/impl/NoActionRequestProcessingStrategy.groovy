@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component
 class NoActionRequestProcessingStrategy extends RequestProcessingStrategy<BaseRequest, BaseResponse> {
 
     @Override
-    Message beforeProcess(BaseRequest request) {
+    void prepare(BaseRequest request) {
         log.debug 'No action'
     }
 
     @Override
-    void afterProcess(BaseResponse response, Message message) {
+    void processResponse(BaseResponse response) {
         log.debug 'No action'
     }
 }
