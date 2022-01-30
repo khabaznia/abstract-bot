@@ -11,12 +11,10 @@ import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.EditMessage
 import com.khabaznia.bot.meta.request.impl.SendMessage
-import com.khabaznia.bot.meta.utils.BotRequestList
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
 import com.khabaznia.bot.trait.Configured
 import com.khabaznia.bot.trait.Logged
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -76,7 +74,7 @@ abstract class AbstractBotController implements Configured, Logged {
     }
 
     private void setUp(Update update) {
-        requests = new BotRequestList()
+        requests = []
         this.update = update
     }
 

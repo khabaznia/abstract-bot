@@ -2,6 +2,7 @@ package com.khabaznia.bot.cronjob
 
 import com.khabaznia.bot.enums.LoggingChat
 import com.khabaznia.bot.event.LogEvent
+import com.khabaznia.bot.sender.BotRequestQueueContainer
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.service.PathCryptService
 import groovy.util.logging.Slf4j
@@ -32,7 +33,7 @@ class CleanDatabaseCronJob {
         log.info '************* Running cronjob for deleting expired messages and paths *************'
         log.info '***********************************************************************************'
 
-
+        BotRequestQueueContainer.requestOrder.set(0)
         def deletedPaths = pathCryptService.deleteExpiredPaths()
         def deletedMessages = messageService.deleteExpiredMessages()
         def deletedKeyboards = messageService.deleteOrphanedKeyboards()

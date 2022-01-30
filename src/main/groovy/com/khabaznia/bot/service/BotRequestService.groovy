@@ -7,6 +7,7 @@ import com.khabaznia.bot.meta.mapper.ResponseMapper
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.sender.ApiMethodSender
+import com.khabaznia.bot.sender.BotRequestQueue
 import com.khabaznia.bot.sender.BotRequestQueueContainer
 import com.khabaznia.bot.strategy.RequestProcessingStrategy
 import groovy.util.logging.Slf4j
@@ -14,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
-
-import javax.validation.constraints.NotNull
 
 
 @Slf4j
@@ -38,20 +37,32 @@ class BotRequestService {
 
     void executeInQueue(BaseRequest request) {
         if (request == null) return
+        def queue = getQueueForChat(request.chatId)
+        putRequestToQueue(queue, request)
+    }
 
-        def chatId = request.chatId
-        def queue = queueContainer?.requestsMap?.containsKey(chatId)
-                ? queueContainer.requestsMap.get(request.chatId)
-                : context.getBean('botRequestQueue').chatId(chatId)
+    void executeInQueueWithLimit(BaseRequest request, long limit) {
+        if (request == null) return
+        def queue = getQueueForChat(request.chatId)
+        queue.setToManyRequestsLimit(limit)
+        putRequestToQueue(queue, request)
+    }
+
+    private void putRequestToQueue(BotRequestQueue queue, BaseRequest request) {
+        log.debug 'Put request to queue of chat {} -> {}', request.chatId, request
         queue.putRequest(request)
-        queueContainer.requestsMap.putIfAbsent(chatId, queue)
+        queueContainer.requestsMap.putIfAbsent(request.chatId, queue)
         queueContainer.hasRequest.set(true)
+    }
+
+    private BotRequestQueue getQueueForChat(String chatId) {
+        queueContainer?.requestsMap?.containsKey(chatId)
+                ? queueContainer.requestsMap.get(chatId)
+                : context.getBean('botRequestQueue').chatId(chatId)
     }
 
     void execute(BaseRequest request) {
         if (request == null) return
-
-        log.trace "Execution api method..."
         try {
             def response = mapAndExecute(request)
             if (request.relatedMessageUid) {
@@ -60,16 +71,24 @@ class BotRequestService {
             }
         } catch (Exception e) {
             log.error 'Method failed to execute -> {}', request
-            processToManyRequests(e.message, request)
-            throw new BotExecutionApiMethodException("Api method failed to execute -> $e.message", e)
+            if (e.message ==~ /.*\[429].*/) {
+                log.error 'To many requests. Send request back to queue'
+                executeInQueueWithLimit(request, getLimitFromMessage(e.message))
+            } else {
+                throw new BotExecutionApiMethodException("Api method failed to execute -> $e.message", e)
+            }
         }
     }
 
-    void processToManyRequests(String errorMessage, BaseRequest request) {
-        if (errorMessage ==~ /\[429].*/) {
-            log.error 'To many requests. Send request back to queue'
-            executeInQueue(request)
+    private static long getLimitFromMessage(String errorMessage) {
+        def result = 30
+        try {
+            def splited = errorMessage.split('retry after ')[1]?.strip()
+            result = Long.parseLong(splited)
+        } catch (NumberFormatException ex) {
+            log.debug 'Can\'t parse real limit from API. Set {} seconds', result
         }
+        result
     }
 
     BaseResponse mapAndExecute(BaseRequest request) {

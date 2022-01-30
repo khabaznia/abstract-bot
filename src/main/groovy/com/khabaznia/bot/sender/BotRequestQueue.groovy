@@ -8,7 +8,11 @@ import groovy.util.logging.Slf4j
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.atomic.AtomicInteger
 
 import static com.khabaznia.bot.core.Constants.*
 
@@ -19,52 +23,51 @@ import static com.khabaznia.bot.core.Constants.*
 class BotRequestQueue implements Configured {
 
     String chatId
-    long lastSendTime
+    private volatile long lastSendTime
+    private volatile long toManyRequestsLimit
     private volatile long lastPutTime
-    private final ConcurrentLinkedQueue<Long> sendRequestTime = new ConcurrentLinkedQueue<>()
 
     final ConcurrentLinkedQueue<BaseRequest> requestQueue = new ConcurrentLinkedQueue<>()
     private Map<BotRequestQueueState, List<Closure<Boolean>>> requestQueueStateMap = [
-            (BotRequestQueueState.READY)   : [isQueueNotEmpty(), isExpiredLimitBetweenMessages(), isExpiredLimitForSingleChatPerMinute()],
+            (BotRequestQueueState.READY)   : [isQueueNotEmpty(), isExpiredLimitBetweenMessages(), isExpiredLimitForSingleChatPerMinute(), isToManyRequestLimitExpired()],
             (BotRequestQueueState.INACTIVE): [isQueueEmpty(), isChatInactive()],
             (BotRequestQueueState.EMPTY)   : [isQueueEmpty()],
     ]
 
     def isQueueEmpty() {
-        (interval) -> { requestQueue.isEmpty() }
+        (callTime) -> { requestQueue.isEmpty() }
     }
 
     def isQueueNotEmpty() {
-        (interval) -> { !requestQueue.isEmpty() }
+        (callTime) -> { !requestQueue.isEmpty() }
     }
 
     def isExpiredLimitBetweenMessages() {
-        (interval) -> { (interval - lastSendTime) > getLongConfig(REQUESTS_DELAY_LIMIT_IN_SINGLE_CHAT) }
+        (callTime) -> { (callTime - lastSendTime) > getLongConfig(REQUESTS_DELAY_LIMIT_IN_SINGLE_CHAT) }
     }
 
     def isChatInactive() {
-        (interval) -> { (interval - lastSendTime) > getLongConfig(CHAT_INACTIVE_MINUTES) * 60 * 1000 }
+        (callTime) -> { (callTime - lastSendTime) > getLongConfig(CHAT_INACTIVE_MINUTES) * 60 * 1000 }
     }
 
     def isExpiredLimitForSingleChatPerMinute() {
-        (interval) -> {
-            sendRequestTime.size().toLong() <= getLongConfig(REQUESTS_LIMIT_PER_MINUTE_IN_SINGLE_CHAT) ||
-                    interval > ((sendRequestTime.peek() ?: 0) + (60 * 1000))
+        (callTime) -> {
+            log.trace 'Is waiting by chat messages limit {}. Current waiting messages {}', false, requestQueue.size().toLong()
+            true
         }
     }
 
+    def isToManyRequestLimitExpired() {
+        (callTime) -> { callTime > toManyRequestsLimit }
+    }
 
     synchronized void putRequest(BaseRequest request) {
-        requestQueue.add(request)
+        requestQueue.offer(request)
         lastPutTime = System.currentTimeMillis()
     }
 
     synchronized BaseRequest getRequest(long currentTime) {
         lastSendTime = currentTime
-        sendRequestTime.add(lastSendTime)
-        if (sendRequestTime.size() >= getLongConfig(REQUESTS_LIMIT_PER_MINUTE_IN_SINGLE_CHAT)) {
-            sendRequestTime.poll()
-        }
         requestQueue.poll()
     }
 
@@ -76,6 +79,11 @@ class BotRequestQueue implements Configured {
 
     Long getLastPutTime() {
         lastPutTime
+    }
+
+    void setToManyRequestsLimit(long seconds) {
+        log.trace 'To many requests for chat {}. Setting limit to {} seconds', chatId, seconds
+        toManyRequestsLimit = (System.currentTimeMillis() + (seconds * 1000))
     }
 
 }

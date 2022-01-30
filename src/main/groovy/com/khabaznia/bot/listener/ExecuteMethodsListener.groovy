@@ -25,18 +25,14 @@ class ExecuteMethodsListener {
     @Autowired
     BotRequestService requestService
 
-    @Async
     @EventListener
     void onApplicationEvent(ExecuteMethodsEvent event) {
         log.debug 'Processing {} requests', event.requests.size()
 
-        event.requests.sort { it.order }
-                .each { executeApiMethod(it) }
-    }
-
-    void executeApiMethod(BaseRequest request) {
-        log.trace request as String
-        requestProcessingStrategyMap.get(request.type).prepare(request)
-        requestService.executeInQueue(request)
+        event.requests.each {
+            log.trace it as String
+            requestProcessingStrategyMap.get(it.type).prepare(it)
+            requestService.executeInQueue(it)
+        }
     }
 }

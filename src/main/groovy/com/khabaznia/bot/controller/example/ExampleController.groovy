@@ -46,6 +46,10 @@ class ExampleController extends AbstractBotController {
         sendMessage.key('test.italic'.italic())
         sendMessage.key('test.underline'.underline())
         sendMessage.key('test.strikethrough'.strikethrough())
+
+        for (int i = 0; i < 30; i++) {
+            sendMessage.key('Message '.strikethrough() + i)
+        }
     }
 
     @BotRequest(path = TEST_LOGS, after = EXAMPLE)
@@ -79,7 +83,7 @@ class ExampleController extends AbstractBotController {
     getFeatures() {
         sendMessage.key('action two')
                 .keyboard(inlineKeyboard
-                        .button('example.simple.button', '/query', [(UNLIMITED_CALL):'true'])
+                        .button('example.simple.button', '/query', [(UNLIMITED_CALL): 'true'])
                         .button('example.emoji.button', Emoji.AVOCADO, '/query')
                         .buttonWithBinding('example.binding.button', '/query', [binding: 'some'])
                         .row()
