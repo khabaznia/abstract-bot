@@ -2,7 +2,6 @@ package com.khabaznia.bot.service
 
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.exception.BotExecutionApiMethodException
-import com.khabaznia.bot.meta.mapper.RequestMapper
 import com.khabaznia.bot.meta.mapper.ResponseMapper
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.BaseResponse
@@ -26,18 +25,16 @@ class BotRequestService {
     @Autowired
     private ApiMethodSender sender
     @Autowired
-    private RequestMapper requestMapper
-    @Autowired
     private ResponseMapper responseMapper
     @Autowired
     private Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
     @Autowired
     private BotRequestQueueContainer queueContainer
 
-
     void executeInQueue(BaseRequest request) {
         if (request == null) return
         def queue = getQueueForChat(request.chatId)
+        requestProcessingStrategyMap.get(request.type).updateWithMappedApiMethod(request)
         putRequestToQueue(queue, request)
     }
 
@@ -64,7 +61,7 @@ class BotRequestService {
     void execute(BaseRequest request) {
         if (request == null) return
         try {
-            def response = mapAndExecute(request)
+            def response = executeMapped(request)
             if (request.relatedMessageUid) {
                 response.setRelatedMessageUid(request.relatedMessageUid)
                 requestProcessingStrategyMap.get(request.type).processResponse(response)
@@ -91,14 +88,8 @@ class BotRequestService {
         result
     }
 
-    BaseResponse mapAndExecute(BaseRequest request) {
-        getMappedResponse(sender.execute(getApiMethod(request)))
-    }
-
-    private BotApiMethod getApiMethod(BaseRequest request) {
-        def botApiMethod = requestMapper.toApiMethod(request)
-        log.debug "Request after mapping -> {}", botApiMethod
-        botApiMethod
+    BaseResponse executeMapped(BaseRequest request) {
+        getMappedResponse(sender.execute(request.apiMethod as BotApiMethod))
     }
 
     private BaseResponse getMappedResponse(Serializable apiResponse) {

@@ -1,5 +1,6 @@
 package com.khabaznia.bot.strategy
 
+import com.khabaznia.bot.meta.mapper.RequestMapper
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bot.meta.request.impl.SendMessage
@@ -10,6 +11,7 @@ import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
 import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 
@@ -17,12 +19,18 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 abstract class RequestProcessingStrategy<Request extends BaseRequest, Response extends BaseResponse> {
 
     @Autowired
-    MessageService messageService
+    protected MessageService messageService
+    @Autowired
+    protected RequestMapper requestMapper
 
     void prepare(Request request) {
         log.debug 'Saving message before sending api request'
         Message message = getMessageFromRequest(request)
         messageService.saveMessage(message)
+    }
+
+    void updateWithMappedApiMethod(Request request) {
+        request.setApiMethod(getApiMethod(request))
     }
 
     void processResponse(Response response) {
@@ -35,7 +43,13 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
         }
     }
 
-    protected Message getMessageFromRequest(BaseRequest request) {
+    private BotApiMethod getApiMethod(BaseRequest request) {
+        def botApiMethod = requestMapper.toApiMethod(request)
+        log.debug "Request after mapping -> {}", botApiMethod
+        botApiMethod
+    }
+
+    protected static Message getMessageFromRequest(BaseRequest request) {
         def label = request instanceof SendMessage ? request.label : null
         def uid = UUID.randomUUID().toString()
         def keyboard = request instanceof AbstractKeyboardMessage ? toKeyboardModel(request.keyboard) : null

@@ -25,7 +25,7 @@ class BotRequestQueue implements Configurable {
 
     final ConcurrentLinkedQueue<BaseRequest> requestQueue = new ConcurrentLinkedQueue<>()
     private Map<BotRequestQueueState, List<Closure<Boolean>>> requestQueueStateMap = [
-            (BotRequestQueueState.READY)   : [isQueueNotEmpty(), isExpiredLimitBetweenMessages(), isExpiredLimitForSingleChatPerMinute(), isToManyRequestLimitExpired()],
+            (BotRequestQueueState.READY)   : [isQueueNotEmpty(), isExpiredLimitBetweenMessages(), isToManyRequestLimitExpired()],
             (BotRequestQueueState.INACTIVE): [isQueueEmpty(), isChatInactive()],
             (BotRequestQueueState.EMPTY)   : [isQueueEmpty()],
     ]
@@ -44,12 +44,6 @@ class BotRequestQueue implements Configurable {
 
     def isChatInactive() {
         (callTime) -> { (callTime - lastSendTime) > getLongConfig(CHAT_INACTIVE_MINUTES) * 60 * 1000 }
-    }
-
-    def isExpiredLimitForSingleChatPerMinute() {
-        (callTime) -> {
-            true
-        }
     }
 
     def isToManyRequestLimitExpired() {
