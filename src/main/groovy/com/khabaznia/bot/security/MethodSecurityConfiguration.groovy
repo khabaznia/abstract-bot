@@ -19,11 +19,11 @@ class MethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
     RoleVoter roleVoter
     @Resource
     FlowVoter flowVoter
-//    @Resource
-//    RepeatVoter repeatVoter
+    @Resource
+    RepeatVoter repeatVoter
 
     @Override
     AccessDecisionManager accessDecisionManager() {
-        new UnanimousBased([roleVoter, flowVoter])
+        new UnanimousBased([roleVoter, flowVoter, repeatVoter])
     }
 }

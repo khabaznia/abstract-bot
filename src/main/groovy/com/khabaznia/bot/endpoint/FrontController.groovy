@@ -23,6 +23,9 @@ import org.springframework.web.client.RestClientException
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID_ATTR
+
 
 @Slf4j
 @RestController
@@ -39,6 +42,7 @@ class FrontController implements Logged {
 
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {
+        setUpdateMessageToSession(update)
         sendLog(new LogEvent(text: updateService.getMessageFromUpdate(update), logType: LogType.DEBUG))
         log.trace "Got update -> $update"
         def botController = commandMapper.getController(update)
@@ -47,6 +51,11 @@ class FrontController implements Logged {
             def path = botController.process update
             botController = path ? commandMapper.getController(path) : null
         }
+    }
+
+    private setUpdateMessageToSession(Update update) {
+        SessionUtil.setAttribute(UPDATE_MESSAGE_ATTR, updateService.getMessageFromUpdate(update))
+        SessionUtil.setAttribute(UPDATE_ID_ATTR, update.updateId.toString())
     }
 
     @ExceptionHandler(AccessDeniedException.class)

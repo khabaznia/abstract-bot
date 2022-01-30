@@ -19,13 +19,15 @@ class SessionUtil {
         SecurityContextHolder.context?.authentication?.principal?.fromUser as User
     }
 
-//    static void setAttribute(String name, String value) {
-//        RequestContextHolder.getRequestAttributes().setAttribute(name, value, SCOPE_SESSION)
-//    }
+    static void setAttribute(String name, String value) {
+        log.trace 'Setting to session {} {}', name, value
+        RequestContextHolder.getRequestAttributes().setAttribute(name, value, SCOPE_SESSION)
+    }
 
-//    static String getAttribute(String name) {
-//        def result = RequestContextHolder.getRequestAttributes().getAttribute(name, SCOPE_SESSION)
-//        result
-//    }
+    static String getAttribute(String name) {
+        def result = RequestContextHolder.getRequestAttributes().getAttribute(name, SCOPE_SESSION)
+        log.trace 'Session config for name {} -> {}', name, result
+        result
+    }
 
 }

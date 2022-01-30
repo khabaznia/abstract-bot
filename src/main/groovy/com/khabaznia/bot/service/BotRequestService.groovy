@@ -36,7 +36,9 @@ class BotRequestService {
     private BotRequestQueueContainer queueContainer
 
 
-    void executeInQueue(@NotNull BaseRequest request) {
+    void executeInQueue(BaseRequest request) {
+        if (request == null) return
+
         def chatId = request.chatId
         def queue = queueContainer?.requestsMap?.containsKey(chatId)
                 ? queueContainer.requestsMap.get(request.chatId)
@@ -46,7 +48,9 @@ class BotRequestService {
         queueContainer.hasRequest.set(true)
     }
 
-    void execute(@NotNull BaseRequest request) {
+    void execute(BaseRequest request) {
+        if (request == null) return
+
         log.trace "Execution api method..."
         try {
             def response = mapAndExecute(request)
@@ -61,8 +65,8 @@ class BotRequestService {
         }
     }
 
-    void processToManyRequests(String errorMessage, BaseRequest request){
-        if (errorMessage ==~ /\[429].*/){
+    void processToManyRequests(String errorMessage, BaseRequest request) {
+        if (errorMessage ==~ /\[429].*/) {
             log.error 'To many requests. Send request back to queue'
             executeInQueue(request)
         }

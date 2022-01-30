@@ -16,6 +16,7 @@ class Constants {
     public static final String LOGGING_CHAT_ID = 'bot.logging.chat.id'
     public static final String DEBUG_LOGGING = 'switchable.config.debug.logging.enabled'
     public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.config.duplicate.warn.logging.to.admin'
+    public static final String BLOCK_DUPLICATE_REQUESTS = 'switchable.config.block.duplicate.requests'
 
 
     public static final String DELETE_MESSAGES_WEEKS_COUNT = 'delete.paths.weeks.count'

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
+import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
 
 @Slf4j
 @Component
@@ -78,7 +79,7 @@ class ExampleController extends AbstractBotController {
     getFeatures() {
         sendMessage.key('action two')
                 .keyboard(inlineKeyboard
-                        .button('example.simple.button', '/query')
+                        .button('example.simple.button', '/query', [(UNLIMITED_CALL):'true'])
                         .button('example.emoji.button', Emoji.AVOCADO, '/query')
                         .buttonWithBinding('example.binding.button', '/query', [binding: 'some'])
                         .row()

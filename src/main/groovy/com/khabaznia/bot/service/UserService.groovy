@@ -1,7 +1,6 @@
 package com.khabaznia.bot.service
 
 import com.khabaznia.bot.enums.ChatRole
-import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.model.Chat
 import com.khabaznia.bot.model.User
@@ -17,6 +16,8 @@ import org.springframework.stereotype.Service
 
 import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
 import static com.khabaznia.bot.core.Constants.LOGGING_CHAT_ID
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
+
 
 @Slf4j
 @Service
@@ -42,8 +43,10 @@ class UserService implements Configured, Logged {
     }
 
     void setPreviousPath(String path) {
+        def lastActionFullPath = SessionUtil.getAttribute(UPDATE_MESSAGE_ATTR)
         def currentChat = SessionUtil.currentChat
         currentChat.lastAction = path
+        currentChat.lastActionFullPath = lastActionFullPath
         chatRepository.save(currentChat)
     }
 

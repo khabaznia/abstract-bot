@@ -10,6 +10,12 @@ final class Constants {
         public static final String MESSAGE_UID = 'messageUid'
         public static final String ONE_TIME_KEYBOARD = 'oneTime'
         public static final String BUTTON_ID = 'buttonId'
+        public static final String UNLIMITED_CALL = 'unlimitedCall'
+    }
+
+    static final class SESSION_ATTRIBUTES {
+        public static final String UPDATE_MESSAGE_ATTR = 'updateMessage'
+        public static final String UPDATE_ID_ATTR = 'updateId'
     }
 
     static final class COMMON {

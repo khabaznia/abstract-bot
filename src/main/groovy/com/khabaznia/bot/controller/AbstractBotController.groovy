@@ -44,7 +44,6 @@ abstract class AbstractBotController implements Configured, Logged {
 
     void before(Update update) {
         setUp(update)
-//        SessionUtil.setAttribute('updateMessage', updateService.getMessageFromUpdate(update))
         deleteMessages()
         cleanCurrentOneTimeKeyboard()
         updateCurrentKeyboard()
