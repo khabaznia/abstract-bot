@@ -2,6 +2,7 @@ package com.khabaznia.bot.security.authorization.voter
 
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.core.proxy.ControllerMetaData
+import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.trait.Loggable
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation

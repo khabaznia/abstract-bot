@@ -1,6 +1,5 @@
 package com.khabaznia.bot.security.authorization.voter
 
-import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
@@ -16,17 +15,16 @@ import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_M
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID_ATTR
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
 import static com.khabaznia.bot.core.Constants.BLOCK_DUPLICATE_REQUESTS
+import static com.khabaznia.bot.service.UpdateService.getParametersFromMessage
 
 @Slf4j
 @Component
-class RepeatVoter extends AbstractBotAuthorizationVoter implements Configurable {
+class RepeatVoter extends AbstractBotAuthorizationVoter {
 
     @Autowired
     private ApplicationContext context
     @Autowired
-    private Environment environment
-    @Autowired
-    private UpdateService updateService
+    private Environment env
 
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {
@@ -47,16 +45,16 @@ class RepeatVoter extends AbstractBotAuthorizationVoter implements Configurable 
         'User again tries access to resource.'
     }
 
-    private boolean isNotRedirectCallFromController() {
+    private static boolean isNotRedirectCallFromController() {
         StringUtils.isNotEmpty(SessionUtil.getAttribute(UPDATE_ID_ATTR))
     }
 
     private boolean isFeatureEnabled() {
-        isEnabled(BLOCK_DUPLICATE_REQUESTS)
+        env.getProperty(BLOCK_DUPLICATE_REQUESTS)
     }
 
-    private boolean isNotSpecialButton(String updateMessage) {
-        !Boolean.valueOf(updateService.getParametersFromMessage(updateMessage)?.get(UNLIMITED_CALL))
+    private static boolean isNotSpecialButton(String updateMessage) {
+        !Boolean.valueOf(getParametersFromMessage(updateMessage)?.get(UNLIMITED_CALL))
     }
 
     private static String getUserLastActionFullPath() {

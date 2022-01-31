@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment
 import static com.khabaznia.bot.core.Constants.CONFIGS_DELIMITER
 import static com.khabaznia.bot.core.Constants.CONFIG_KEYS_PREFIX
 import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
+import static com.khabaznia.bot.core.Constants.ENV_ONLY_CONFIG_KEYS_PREFIX
 
 @Slf4j
 trait Configurable {
@@ -45,15 +46,21 @@ trait Configurable {
     }
 
     private String getConfigParam(String key) {
-        configRepository.existsById(key)
-                ? configRepository.getById(key).value
-                : getPropertyFromFileAndSave(key)
+        key.startsWith(ENV_ONLY_CONFIG_KEYS_PREFIX)
+                ? getEnvProperty(key)
+                : (configRepository.existsById(key)
+                    ? configRepository.getById(key).value
+                    : getPropertyFromFileAndSave(key))
     }
 
     private String getPropertyFromFileAndSave(String key) {
         log.trace 'Not found in database. Try to resolve key {} from properties file', key
-        def property = new Config(key: key, value: env.getProperty(key), name: CONFIG_KEYS_PREFIX + key)
+        def property = new Config(key: key, value: getEnvProperty(key), name: CONFIG_KEYS_PREFIX + key)
         configRepository.save(property)
         property.value
+    }
+
+    private String getEnvProperty(String key) {
+        env.getProperty(key)
     }
 }
