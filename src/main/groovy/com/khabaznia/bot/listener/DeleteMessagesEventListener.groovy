@@ -13,6 +13,8 @@ import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.enums.MessageType.DELETE_MESSAGE_GROUP
+
 @Slf4j
 @Component
 class DeleteMessagesEventListener {
@@ -27,7 +29,7 @@ class DeleteMessagesEventListener {
     @Async
     @EventListener
     void onApplicationEvent(DeleteMessagesEvent event) {
-        def messageTypes = event.type ? [event.type] : [MessageType.DELETE, MessageType.EDIT_AND_DELETE]
+        def messageTypes = event.types ?: DELETE_MESSAGE_GROUP
         def currentChatCode = SessionUtil.currentChat.code
         def deleteMessageRequests = messageTypes
                 .collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }

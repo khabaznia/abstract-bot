@@ -23,6 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 import static com.khabaznia.bot.core.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
+import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
 
 @Slf4j
 abstract class AbstractBotController implements Configurable, Loggable {
@@ -82,14 +83,13 @@ abstract class AbstractBotController implements Configurable, Loggable {
         publisher.publishEvent new DeleteMessagesEvent()
     }
 
-    void deleteMessages(MessageType type) {
-        publisher.publishEvent new DeleteMessagesEvent(type: type)
+    void deleteMessages(List<MessageType> types) {
+        publisher.publishEvent new DeleteMessagesEvent(types: types)
     }
 
     void deleteOldInlineKeyboardMessages() {
         if (isEnabled(DELETE_PREVIOUS_INLINE_KEYBOARDS) && hasInlineKeyboard()) {
-            publisher.publishEvent new DeleteMessagesEvent(type: MessageType.INLINE_KEYBOARD)
-            publisher.publishEvent new DeleteMessagesEvent(type: MessageType.ONE_TIME_INLINE_KEYBOARD)
+            publisher.publishEvent new DeleteMessagesEvent(types: INLINE_KEYBOARD_MESSAGE_GROUP)
         }
     }
 

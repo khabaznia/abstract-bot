@@ -9,6 +9,8 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.enums.MessageType.getEditGroup
+
 @ToString(includeSuper = true, includeNames = true)
 @Component(value = 'editMessage')
 @Scope('prototype')
@@ -23,7 +25,7 @@ class EditMessage extends AbstractKeyboardMessage<MessageResponse> {
     String label
 
     MessageType getType() {
-        super.type == MessageType.EDIT_AND_DELETE ? super.type : MessageType.EDIT
+        getEditGroup().contains(super.type) ? super.type : MessageType.EDIT
     }
 
     EditMessage delete() {

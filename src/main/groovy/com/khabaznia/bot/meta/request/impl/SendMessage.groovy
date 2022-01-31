@@ -9,6 +9,8 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.enums.MessageType.getForceDeleteGroup
+
 @ToString(includeSuper = true, includeNames = true)
 @Component(value = 'sendMessage')
 @Scope('prototype')
@@ -16,15 +18,12 @@ import org.springframework.stereotype.Component
 @TupleConstructor(includeSuperFields = true)
 class SendMessage extends AbstractKeyboardMessage<MessageResponse> {
 
-    private static final List<MessageType> FORCE_DELETE_MESSAGE_TYPES = [MessageType.SKIP, MessageType.DELETE]
-
     String key
     String emoji
     Map<String, String> binding = [:]
     String label
 
-
     MessageType getType() {
-        label && FORCE_DELETE_MESSAGE_TYPES.contains(super.type) ? MessageType.PERSIST : super.type
+        label && getForceDeleteGroup().contains(super.type) ? MessageType.PERSIST : super.type
     }
 }

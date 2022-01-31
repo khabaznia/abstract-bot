@@ -11,4 +11,13 @@ enum MessageType {
     PINNED, // Pinned message
     EDIT, // Edit existing message. Updates in db
     EDIT_AND_DELETE // Edit existing message. Updates in db. Deleted with next message
+
+    final static List<MessageType> FORCE_DELETE_MESSAGE_GROUP = [SKIP, DELETE]
+    final static List<MessageType> EDIT_MESSAGE_GROUP = [EDIT, EDIT_AND_DELETE]
+    final static List<MessageType> DELETE_MESSAGE_GROUP = [DELETE, EDIT_AND_DELETE]
+    final static List<MessageType> INLINE_KEYBOARD_MESSAGE_GROUP = [INLINE_KEYBOARD, ONE_TIME_INLINE_KEYBOARD]
+
+    static List<MessageType> getForceDeleteGroup() { FORCE_DELETE_MESSAGE_GROUP }
+
+    static List<MessageType> getEditGroup() { EDIT_MESSAGE_GROUP }
 }

@@ -20,6 +20,8 @@ import static com.khabaznia.bot.meta.Emoji.MEDITATE
 import static com.khabaznia.bot.meta.Emoji.CROWN
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
 
+import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
+
 
 @Slf4j
 @Component
@@ -36,8 +38,7 @@ class AdminController extends AbstractBotController {
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = ADMIN_TO_MAIN)
     adminMenu() {
-        deleteMessages(MessageType.INLINE_KEYBOARD)
-        deleteMessages(MessageType.ONE_TIME_INLINE_KEYBOARD)
+        deleteMessages(INLINE_KEYBOARD_MESSAGE_GROUP)
         sendMessage.key('message.choose.action')
                 .emoji(FINGER_DOWN)
                 .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])
