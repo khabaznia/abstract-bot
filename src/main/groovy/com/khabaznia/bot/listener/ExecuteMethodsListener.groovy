@@ -24,7 +24,6 @@ class ExecuteMethodsListener {
     @EventListener
     void onApplicationEvent(ExecuteMethodsEvent event) {
         log.debug 'Processing {} requests', event.requests.size()
-
         event.requests.each {
             log.trace it as String
             requestProcessingStrategyMap.get(it.type).prepare(it)

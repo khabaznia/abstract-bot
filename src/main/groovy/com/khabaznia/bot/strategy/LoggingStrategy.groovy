@@ -17,11 +17,11 @@ abstract class LoggingStrategy implements Configurable {
 
     List<SendMessage> getRequestForEvent(LogEvent event) {
         def request = event.getRequest() ?: context.getBean('sendMessage').key(event.text)
-        [request.key((event.skipMetaInfo ? '' : metaInfo) + request.key).chatId(getChatId(event)) as SendMessage]
+        [request.key((event.skipMetaInfo ? '' : metaInfo) + "$logEmoji " + request.key).chatId(getChatId(event)) as SendMessage]
     }
 
     protected String getMetaInfo() {
-        "${SessionUtil.currentChat?.code}:${SessionUtil.currentUser?.role?.toString()} $logEmoji "
+        "${SessionUtil.currentChat?.code}:${SessionUtil.currentUser?.role?.toString()} "
     }
 
     protected String getChatId(LogEvent event) {

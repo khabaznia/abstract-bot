@@ -23,8 +23,12 @@ import org.springframework.web.client.RestClientException
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
+import java.lang.reflect.UndeclaredThrowableException
+
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID_ATTR
+
+import static com.khabaznia.bot.exception.ExceptionUtil.getMessageFromUndeclaredThrowableException
 
 
 @Slf4j
@@ -68,7 +72,7 @@ class FrontController implements Loggable {
     ResponseEntity handleRestClientException(RestClientException e) {
         e.printStackTrace()
         log.error e.message
-        sendWarnLog("Exception occured -> $e.message")
+        sendWarnLog "RestClientException: $e.message"
         new ResponseEntity(HttpStatus.OK)
     }
 
@@ -76,15 +80,25 @@ class FrontController implements Loggable {
     ResponseEntity handleBotException(TelegramApiException e) {
         e.printStackTrace()
         log.error e.message
-        sendWarnLog("Exception occured -> $e.message")
+        sendWarnLog "TelegramApiException: $e.message"
         new ResponseEntity(HttpStatus.OK)
     }
+
+    @ExceptionHandler(UndeclaredThrowableException.class)
+    ResponseEntity handleUndeclaredThrowableException(UndeclaredThrowableException e) {
+        e.printStackTrace()
+        def message = getMessageFromUndeclaredThrowableException(e)
+        log.error message
+        sendWarnLog "Exception: $message"
+        new ResponseEntity(HttpStatus.OK)
+    }
+
 
     @ExceptionHandler(Exception.class)
     ResponseEntity handleException(Exception e) {
         e.printStackTrace()
         log.error e.message
-        sendWarnLog("Exception occured -> $e.message")
+        sendWarnLog "Exception: $e.message"
         new ResponseEntity(HttpStatus.OK)
     }
 
@@ -92,7 +106,7 @@ class FrontController implements Loggable {
     ResponseEntity handleException(BotExecutionApiMethodException e) {
         e.printStackTrace()
         log.error e.message
-        sendWarnLog("$e.message")
+        sendWarnLog "BotExcecutionException: $e.message"
         new ResponseEntity(HttpStatus.OK)
     }
 }

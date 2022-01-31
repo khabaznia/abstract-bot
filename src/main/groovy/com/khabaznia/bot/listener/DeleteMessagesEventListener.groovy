@@ -10,6 +10,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 @Slf4j
@@ -23,6 +24,7 @@ class DeleteMessagesEventListener {
     @Autowired
     private MessageService messageService
 
+    @Async
     @EventListener
     void onApplicationEvent(DeleteMessagesEvent event) {
         def messageTypes = event.type ? [event.type] : [MessageType.DELETE, MessageType.EDIT_AND_DELETE]

@@ -4,6 +4,7 @@ import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.exception.BotExecutionApiMethodException
 import com.khabaznia.bot.meta.mapper.ResponseMapper
 import com.khabaznia.bot.meta.request.BaseRequest
+import com.khabaznia.bot.meta.request.impl.DeleteMessage
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.sender.ApiMethodSender
 import com.khabaznia.bot.sender.BotRequestQueue
@@ -31,7 +32,8 @@ class BotRequestService implements Configurable {
     private Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
     @Autowired
     private BotRequestQueueContainer queueContainer
-
+    @Autowired
+    private MessageService messageService
 
     void execute(BaseRequest request) {
         execute(request, isEnabled(EXECUTE_REQUESTS_IN_QUEUE))
@@ -64,13 +66,29 @@ class BotRequestService implements Configurable {
                 requestProcessingStrategyMap.get(request.type).processResponse(response)
             }
         } catch (Exception e) {
-            log.error 'Method failed to execute -> {}', request
-            if (e.message ==~ /.*\[429].*/) {
-                log.error 'To many requests. Send request back to queue'
-                executeInQueueWithLimit(request, getLimitFromMessage(e.message))
-            } else {
-                throw new BotExecutionApiMethodException("Api method failed to execute -> $e.message", e)
+            handleException(e, request)
+        }
+    }
+
+    BaseResponse executeMapped(BaseRequest request) {
+        getMappedResponse(sender.execute(request.apiMethod as BotApiMethod))
+    }
+
+    private void handleException(Exception e, BaseRequest request) {
+        log.error 'Method failed to execute -> {}', request
+        if (e.message ==~ /.*\[429].*/) {
+            log.error 'To many requests. Send request back to queue'
+            def limit = getLimitFromMessage(e.message)
+            executeInQueueWithLimit(request, limit)
+            throw new BotExecutionApiMethodException("To many requests. Retry after $limit", e)
+        } else if (e.message ==~ /.*\[400].*message to delete not found.*/) {
+            if (request instanceof DeleteMessage && request.getMessageId()) {
+                log.error 'Can\'t delete some stuck message. Dropping from DB.'
+                messageService.removeMessage(request.messageId.toString())
+                throw new BotExecutionApiMethodException('Message to delete not found. Drop it from DB', e)
             }
+        } else {
+            throw new BotExecutionApiMethodException("Api method failed to execute: $e.message", e)
         }
     }
 
@@ -90,16 +108,12 @@ class BotRequestService implements Configurable {
     private static long getLimitFromMessage(String errorMessage) {
         def result = 30
         try {
-            def splited = errorMessage.split('retry after ')[1]?.strip()
-            result = Long.parseLong(splited)
-        } catch (NumberFormatException ex) {
+            def retrySeconds = errorMessage.split('retry after ')[1]?.strip()
+            result = Long.parseLong(retrySeconds)
+        } catch (NumberFormatException e) {
             log.debug 'Can\'t parse real limit from API. Set {} seconds', result
         }
         result
-    }
-
-    BaseResponse executeMapped(BaseRequest request) {
-        getMappedResponse(sender.execute(request.apiMethod as BotApiMethod))
     }
 
     private static BaseResponse getMappedResponse(Serializable apiResponse) {

@@ -63,6 +63,10 @@ class MessageService implements Configurable {
         messageRepository.deleteById(code)
     }
 
+    void removeMessage(String uniqueId) {
+        removeMessageForUid(getMessage(uniqueId).uid)
+    }
+
     Integer deleteExpiredMessages() {
         def messages = messageRepository.findAllWithUpdateDateTimeBefore(expirationDate)
         log.info 'Deleting {} expired messages', messages?.size()

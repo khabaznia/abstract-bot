@@ -43,6 +43,11 @@ class RepeatVoter extends AbstractBotAuthorizationVoter implements Configurable 
         result
     }
 
+    @Override
+    protected String getMessage() {
+        'User again tries access to resource.'
+    }
+
     private boolean isNotRedirectCallFromController() {
         StringUtils.isNotEmpty(SessionUtil.getAttribute(UPDATE_ID_ATTR))
     }

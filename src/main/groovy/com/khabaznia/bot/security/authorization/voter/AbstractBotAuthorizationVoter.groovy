@@ -24,10 +24,12 @@ abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter implements
             result = voteInternal(authentication, object)
         }
         if (result == ACCESS_DENIED) {
-            sendWarnLog("Access denied.")
+            sendWarnLog("Access denied: " + getMessage())
         }
         result
     }
+
+    protected abstract String getMessage()
 
     protected static ControllerMetaData getMetaData(MethodInvocation method) {
         method?.target?.metaData
