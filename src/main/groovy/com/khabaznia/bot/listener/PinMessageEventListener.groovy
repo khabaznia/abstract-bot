@@ -6,7 +6,6 @@ import com.khabaznia.bot.meta.request.impl.PinMessage
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -32,7 +31,7 @@ class PinMessageEventListener {
                 ? getEditMessage(event.messageId, message)
                 : getPinMessage(event.messageId)
         pinRequest.setChatId(message.chat.code)
-        apiMethodService.executeInQueue(pinRequest)
+        apiMethodService.execute(pinRequest)
     }
 
     private EditMessage getEditMessage(String messageId, Message message) {

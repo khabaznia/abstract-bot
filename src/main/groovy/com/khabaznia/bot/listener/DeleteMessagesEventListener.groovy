@@ -7,7 +7,6 @@ import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
-import io.micrometer.core.instrument.util.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
@@ -34,7 +33,7 @@ class DeleteMessagesEventListener {
                 .collect { it as Message }
                 .findAll { it.messageId != null && it.messageId != 0 }
                 .collect { context.getBean('deleteMessage').messageId(it.messageId) }
-                .each { requestService.executeInQueue(it) }
+                .each { requestService.execute(it) }
         log.info 'Delete {} messages from chat {}', deleteMessageRequests?.size(), currentChatCode
         messageTypes.each { messageService.removeMessagesOfType(it) }
     }

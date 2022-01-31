@@ -9,16 +9,19 @@ import com.khabaznia.bot.sender.ApiMethodSender
 import com.khabaznia.bot.sender.BotRequestQueue
 import com.khabaznia.bot.sender.BotRequestQueueContainer
 import com.khabaznia.bot.strategy.RequestProcessingStrategy
+import com.khabaznia.bot.trait.Configurable
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
+import static com.khabaznia.bot.core.Constants.EXECUTE_REQUESTS_IN_QUEUE
+
 
 @Slf4j
 @Service
-class BotRequestService {
+class BotRequestService implements Configurable {
 
     @Autowired
     private ApplicationContext context
@@ -31,34 +34,30 @@ class BotRequestService {
     @Autowired
     private BotRequestQueueContainer queueContainer
 
-    void executeInQueue(BaseRequest request) {
+
+    void execute(BaseRequest request) {
+        execute(request, isEnabled(EXECUTE_REQUESTS_IN_QUEUE))
+    }
+
+    void execute(BaseRequest request, Boolean useQueue) {
+        requestProcessingStrategyMap.get(request.type).updateWithMappedApiMethod(request)
+        useQueue ? executeInQueue(request) : sendToApi(request)
+    }
+
+    private void executeInQueue(BaseRequest request) {
         if (request == null) return
         def queue = getQueueForChat(request.chatId)
-        requestProcessingStrategyMap.get(request.type).updateWithMappedApiMethod(request)
         putRequestToQueue(queue, request)
     }
 
-    void executeInQueueWithLimit(BaseRequest request, long limit) {
+    private void executeInQueueWithLimit(BaseRequest request, long limit) {
         if (request == null) return
         def queue = getQueueForChat(request.chatId)
         queue.setToManyRequestsLimit(limit)
         putRequestToQueue(queue, request)
     }
 
-    private void putRequestToQueue(BotRequestQueue queue, BaseRequest request) {
-        log.debug 'Put request to queue of chat {} -> {}', request.chatId, request
-        queue.putRequest(request)
-        queueContainer.requestsMap.putIfAbsent(request.chatId, queue)
-        queueContainer.hasRequest.set(true)
-    }
-
-    private BotRequestQueue getQueueForChat(String chatId) {
-        queueContainer?.requestsMap?.containsKey(chatId)
-                ? queueContainer.requestsMap.get(chatId)
-                : context.getBean('botRequestQueue').chatId(chatId)
-    }
-
-    void execute(BaseRequest request) {
+    void sendToApi(BaseRequest request) {
         if (request == null) return
         try {
             def response = executeMapped(request)
@@ -75,6 +74,19 @@ class BotRequestService {
                 throw new BotExecutionApiMethodException("Api method failed to execute -> $e.message", e)
             }
         }
+    }
+
+    private void putRequestToQueue(BotRequestQueue queue, BaseRequest request) {
+        log.debug 'Put request to queue of chat {} -> {}', request.chatId, request
+        queue.putRequest(request)
+        queueContainer.requestsMap.putIfAbsent(request.chatId, queue)
+        queueContainer.hasRequest.set(true)
+    }
+
+    private BotRequestQueue getQueueForChat(String chatId) {
+        queueContainer?.requestsMap?.containsKey(chatId)
+                ? queueContainer.requestsMap.get(chatId)
+                : context.getBean('botRequestQueue').chatId(chatId)
     }
 
     private static long getLimitFromMessage(String errorMessage) {

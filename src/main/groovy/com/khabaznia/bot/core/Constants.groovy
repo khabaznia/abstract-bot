@@ -17,7 +17,7 @@ class Constants {
     public static final String DEBUG_LOGGING = 'switchable.config.debug.logging.enabled'
     public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.config.duplicate.warn.logging.to.admin'
     public static final String BLOCK_DUPLICATE_REQUESTS = 'switchable.config.block.duplicate.requests'
-
+    public static final String EXECUTE_REQUESTS_IN_QUEUE = 'switchable.config.execute.requests.in.queue'
 
     public static final String DELETE_MESSAGES_WEEKS_COUNT = 'delete.paths.weeks.count'
     public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.config.delete.previous.inline.keyboards'

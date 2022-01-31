@@ -44,7 +44,7 @@ class ApiMethodExecutionTask {
         def requestToExecute = queuesWithRequests?.find()?.getRequest(currentTime)
         if (requestToExecute != null) {
             log.trace 'Send request job - execution request: {} - {}', requestToExecute.class.simpleName, requestToExecute.chatId
-            botRequestService.execute(requestToExecute)
+            botRequestService.sendToApi(requestToExecute)
         }
     }
 }

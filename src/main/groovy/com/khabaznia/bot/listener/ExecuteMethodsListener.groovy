@@ -28,7 +28,7 @@ class ExecuteMethodsListener {
         event.requests.each {
             log.trace it as String
             requestProcessingStrategyMap.get(it.type).prepare(it)
-            requestService.executeInQueue(it)
+            requestService.execute(it)
         }
     }
 }

@@ -29,7 +29,7 @@ class DeleteOneTimeKeyboardMessagesEventListener {
             def editMessageRequest = context.getBean('editMessageKeyboard')
             editMessageRequest.messageId(messageToEdit.messageId)
             editMessageRequest.setKeyboard(null)
-            requestService.executeInQueue(editMessageRequest)
+            requestService.execute(editMessageRequest)
             log.info 'Delete keyboard from messageId {} from chat {}', messageToEdit?.messageId, messageToEdit.chat.code
             messageService.removeMessageForUid(event.messageUid)
         }

@@ -22,6 +22,6 @@ class SendChatActionListener {
     @EventListener
     void onApplicationEvent(SendChatActionEvent event) {
         log.trace 'Sending chat action {}', event.actionType
-        apiMethodService.executeInQueue(context.getBean('sendChatAction').action(event.actionType))
+        apiMethodService.execute(context.getBean('sendChatAction').action(event.actionType))
     }
 }

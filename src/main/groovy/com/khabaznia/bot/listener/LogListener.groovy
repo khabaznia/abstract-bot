@@ -25,6 +25,6 @@ class LogListener {
         def strategy = loggingStrategyMap.get(event.logType)
         def requests = strategy.getRequestForEvent(event)
         log.debug 'Log event: {}', requests[0]?.key
-        requests.each {apiMethodService.executeInQueue it}
+        requests.each {apiMethodService.execute it}
     }
 }

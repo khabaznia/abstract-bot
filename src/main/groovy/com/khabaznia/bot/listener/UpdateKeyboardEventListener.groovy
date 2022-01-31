@@ -37,7 +37,7 @@ class UpdateKeyboardEventListener {
             log.trace 'Message to edit -> {}', messageWithKeyboard
             def editMessageRequest = toEditKeyboardRequest(messageWithKeyboard)
             log.info 'Editing keyboard from messageId {} from chat {}', messageWithKeyboard?.messageId, messageWithKeyboard.chat.code
-            methodExecutionService.executeInQueue(editMessageRequest)
+            methodExecutionService.execute(editMessageRequest)
         }
     }
 
