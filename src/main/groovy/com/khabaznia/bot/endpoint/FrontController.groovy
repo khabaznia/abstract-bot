@@ -46,15 +46,21 @@ class FrontController implements Loggable {
 
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {
+        log(update)
         setUpdateMessageToSession(update)
         sendLog(new LogEvent(text: updateService.getMessageFromUpdate(update), logType: LogType.DEBUG))
-        log.trace "Got update -> $update"
         def botController = commandMapper.getController(update)
         while (botController) {
             publisher.publishEvent new SendChatActionEvent(actionType: botController.metaData.actionType)
             def path = botController.process update
             botController = path ? commandMapper.getController(path) : null
         }
+    }
+
+    private static log(Update update) {
+        log.info '====================================================================================='
+        log.debug 'Got update with id {}. Has message -> {}', update.updateId, update.hasMessage()
+        log.trace "Full update -> $update"
     }
 
     private setUpdateMessageToSession(Update update) {
@@ -68,22 +74,6 @@ class FrontController implements Loggable {
         new ResponseEntity(HttpStatus.OK)
     }
 
-    @ExceptionHandler(RestClientException.class)
-    ResponseEntity handleRestClientException(RestClientException e) {
-        e.printStackTrace()
-        log.error e.message
-        sendWarnLog "RestClientException: $e.message"
-        new ResponseEntity(HttpStatus.OK)
-    }
-
-    @ExceptionHandler(TelegramApiException.class)
-    ResponseEntity handleBotException(TelegramApiException e) {
-        e.printStackTrace()
-        log.error e.message
-        sendWarnLog "TelegramApiException: $e.message"
-        new ResponseEntity(HttpStatus.OK)
-    }
-
     @ExceptionHandler(UndeclaredThrowableException.class)
     ResponseEntity handleUndeclaredThrowableException(UndeclaredThrowableException e) {
         e.printStackTrace()
@@ -93,20 +83,19 @@ class FrontController implements Loggable {
         new ResponseEntity(HttpStatus.OK)
     }
 
+    @ExceptionHandler(BotExecutionApiMethodException.class)
+    ResponseEntity handleException(BotExecutionApiMethodException e) {
+        e.printStackTrace()
+        log.error e.message
+        sendWarnLog "BotExcecutionException: $e.message"
+        new ResponseEntity(HttpStatus.OK)
+    }
 
     @ExceptionHandler(Exception.class)
     ResponseEntity handleException(Exception e) {
         e.printStackTrace()
         log.error e.message
         sendWarnLog "Exception: $e.message"
-        new ResponseEntity(HttpStatus.OK)
-    }
-
-    @ExceptionHandler(BotExecutionApiMethodException.class)
-    ResponseEntity handleException(BotExecutionApiMethodException e) {
-        e.printStackTrace()
-        log.error e.message
-        sendWarnLog "BotExcecutionException: $e.message"
         new ResponseEntity(HttpStatus.OK)
     }
 }

@@ -6,6 +6,7 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.service.I18nService
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -29,6 +30,7 @@ class LangController extends AbstractBotController {
         sendMessage.key('message.select.lang')
                 .emoji(FINGER_DOWN)
                 .keyboard(localeKeyboard)
+        log.debug 'Default lang menu'
     }
 
     private ReplyKeyboard getLocaleKeyboard() {
@@ -46,6 +48,7 @@ class LangController extends AbstractBotController {
     @BotRequest(path = CHANGE_LANG_EN)
     String changeLocaleEn() {
         i18nService.changeLocale('en')
+        log.debug 'Change locale to {} for chat {}', 'en', SessionUtil.currentChat?.code
         TO_MAIN
     }
 
@@ -53,6 +56,7 @@ class LangController extends AbstractBotController {
     @BotRequest(path = CHANGE_LANG_UK)
     String changeLocaleUk() {
         i18nService.changeLocale('uk')
+        log.debug 'Change locale to {} for chat {}', 'uk', SessionUtil.currentChat?.code
         TO_MAIN
     }
 
@@ -60,6 +64,7 @@ class LangController extends AbstractBotController {
     @BotRequest(path = CHANGE_LANG_RU)
     String changeLocaleRu() {
         i18nService.changeLocale('ru')
+        log.debug 'Change locale to {} for chat {}', 'ru', SessionUtil.currentChat?.code
         TO_MAIN
     }
 }

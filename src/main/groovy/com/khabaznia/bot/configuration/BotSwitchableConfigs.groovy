@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties(prefix = 'switchable')
-class BotConfig {
+class BotSwitchableConfigs {
 
     Map<String, String> config
 

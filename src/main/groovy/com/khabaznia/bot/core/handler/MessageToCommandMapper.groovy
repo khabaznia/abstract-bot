@@ -27,9 +27,8 @@ class MessageToCommandMapper {
     }
 
     private String getPathForStringUpdate(Update update) {
-        log.trace 'Getting path for update'
         def controllerPath = updateService.getMessageFromUpdate(update)
-        log.info 'Full path -> {}', controllerPath
+        log.info 'Request message -> {}', controllerPath
         if (controllerPath?.startsWith(COMMANDS_DELIMITER)) {
             controllerPath = controllerPath.tokenize(PARAMETERS_PREFIX)[0]
         }

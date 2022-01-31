@@ -25,7 +25,7 @@ class PinnedMessageRequestProcessingStrategy extends RequestProcessingStrategy<B
     void processResponse(BaseResponse response) {
         if (response instanceof MessageResponse) {
             super.processResponse(response)
-            log.trace 'Send pin event'
+            log.debug 'Sending pin event for message {}', response.result.messageId
             publisher.publishEvent new PinMessageEvent(messageId: response.result.messageId)
         }
     }

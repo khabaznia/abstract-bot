@@ -28,5 +28,6 @@ class SettingsController extends AbstractBotController {
                         .button(DISPLAY_CHANGE_LANG, LANG_EMOJI.get(SessionUtil.currentChat.lang))
                         .row()
                         .button(TO_MAIN, LEFT_ARROW))
+        log.debug 'Default settings menu'
     }
 }

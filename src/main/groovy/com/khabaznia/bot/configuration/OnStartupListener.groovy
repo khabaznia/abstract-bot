@@ -51,7 +51,7 @@ class OnStartupListener implements Configurable {
     }
 
     private static void addMethods() {
-        log.debug 'Adding methods'
+        log.debug 'Adding string methods'
         String.metaClass.static.addParams << { Map<String, String> map -> addParamsToCallbackData(delegate, map) }
         String.metaClass.static.addEmoji << { String emoji -> addEmojiToKeyMessage(delegate, emoji) }
         String.metaClass.static.italic << { makeTextItalic(delegate) }

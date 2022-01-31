@@ -37,12 +37,17 @@ class CleanDatabaseCronJob {
         def deletedPaths = pathCryptService.deleteExpiredPaths()
         def deletedMessages = messageService.deleteExpiredMessages()
         def deletedKeyboards = messageService.deleteOrphanedKeyboards()
+        log.info '{}', logMessage(deletedPaths, deletedMessages, deletedKeyboards)
         publisher.publishEvent(new LogEvent(logChat: LoggingChat.ADMIN, skipMetaInfo: true,
-                text: "${TRIANGLE_RIGHT}Clean-up job${TRIANGLE_LEFT} \n$deletedPaths paths\n$deletedMessages messages\n$deletedKeyboards orhaned keyboards"))
+                text: logMessage(deletedPaths, deletedMessages, deletedKeyboards)))
 
 
         log.info '***********************************************************************************'
         log.info '*******************************       FINISHED       ******************************'
         log.info '***********************************************************************************'
+    }
+
+    private static String logMessage(int deletedPaths, int deletedMessages, int deletedKeyboards) {
+        "${TRIANGLE_RIGHT}Clean-up job${TRIANGLE_LEFT} \n$deletedPaths paths\n$deletedMessages messages\n$deletedKeyboards orhaned keyboards"
     }
 }

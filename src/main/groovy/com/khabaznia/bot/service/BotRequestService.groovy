@@ -60,6 +60,9 @@ class BotRequestService implements Configurable {
     void sendToApi(BaseRequest request) {
         if (request == null) return
         try {
+            log.info 'Sending api request: type: {}, chat: {}, class: {}. {}', request.type, request.chatId,
+                    request.class.simpleName, request.relatedMessageUid ? "Related message: $request.relatedMessageUid" : ''
+            log.debug 'Send request: {}', request
             def response = executeMapped(request)
             if (request.relatedMessageUid) {
                 response.setRelatedMessageUid(request.relatedMessageUid)
@@ -85,7 +88,6 @@ class BotRequestService implements Configurable {
             if (request instanceof DeleteMessage && request.getMessageId()) {
                 log.error 'Can\'t delete some stuck message. Dropping from DB.'
                 messageService.removeMessage(request.messageId.toString())
-                throw new BotExecutionApiMethodException('Message to delete not found. Drop it from DB', e)
             }
         } else {
             throw new BotExecutionApiMethodException("Api method failed to execute: $e.message", e)
@@ -93,7 +95,7 @@ class BotRequestService implements Configurable {
     }
 
     private void putRequestToQueue(BotRequestQueue queue, BaseRequest request) {
-        log.debug 'Put request to queue of chat {} -> {}', request.chatId, request
+        log.info 'Put request to queue of chat {}. {}', request.chatId, request.class.simpleName
         queue.putRequest(request)
         queueContainer.requestsMap.putIfAbsent(request.chatId, queue)
         queueContainer.hasRequest.set(true)

@@ -52,7 +52,7 @@ class AdminController extends AbstractBotController {
         featuresKeyboard.button('button.back', LEFT_ARROW, ADMIN_TO_MAIN)
         sendMessage.key('message.admin.switch.features')
                 .keyboard(featuresKeyboard)
-        log.debug "Return features to admin"
+        log.debug "Return features menu to admin"
     }
 
     @Secured(roles = Role.ADMIN)

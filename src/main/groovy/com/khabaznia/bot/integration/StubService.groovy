@@ -27,7 +27,7 @@ class StubService {
         def stubApi = clientBuilder.getClient(StubApi.class, PUBLIC_API)
         def request = new StubRequest(category: query)
         def result = stubApi.entries(request)
-        log.trace 'Result from api -> {}', result
+        log.trace 'Entries result from api -> {}', result
         result?.count
     }
 }

@@ -37,7 +37,6 @@ class RepeatVoter extends AbstractBotAuthorizationVoter implements Configurable 
             result = userLastActionFullPath == updateMessage
                     ? ACCESS_DENIED
                     : ACCESS_GRANTED
-            log.info 'Access {}', result > 0 ? 'granted' : 'denied'
         }
         SessionUtil.setAttribute(UPDATE_ID_ATTR, '')
         result

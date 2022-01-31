@@ -14,7 +14,6 @@ class DefaultLoggingStrategy extends LoggingStrategy {
 
     @Override
     List<SendMessage> getRequestForEvent(LogEvent event) {
-        log.trace 'Default logging strategy'
         super.getRequestForEvent(event)
     }
 

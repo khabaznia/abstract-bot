@@ -24,7 +24,7 @@ class LogListener {
     void onApplicationEvent(LogEvent event) {
         def strategy = loggingStrategyMap.get(event.logType)
         def requests = strategy.getRequestForEvent(event)
-        log.debug 'Log event: {}', requests[0]?.key
-        requests.each {requestService.execute it}
+        log.trace 'Log event: {}', requests[0]?.key
+        requests.each { requestService.execute it }
     }
 }

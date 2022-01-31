@@ -15,7 +15,6 @@ class DebugLoggingStrategy extends LoggingStrategy {
 
     @Override
     List<SendMessage> getRequestForEvent(LogEvent event) {
-        log.trace 'Debug logging'
         isEnabled(DEBUG_LOGGING) ? super.getRequestForEvent(event) : []
     }
 

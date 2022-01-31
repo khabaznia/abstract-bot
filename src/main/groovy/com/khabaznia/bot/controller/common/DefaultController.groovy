@@ -15,6 +15,7 @@ class DefaultController extends AbstractBotController {
 
     @BotRequest(path = DEFAULT)
     defaultAction() {
+        log.debug 'In default controller'
     }
 
 }

@@ -25,6 +25,7 @@ abstract class AbstractBotAuthorizationVoter extends AbstractAclVoter implements
         }
         if (result == ACCESS_DENIED) {
             sendWarnLog("Access denied: " + getMessage())
+            log.info "Access denied - {}", getMessage()
         }
         result
     }

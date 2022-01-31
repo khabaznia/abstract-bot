@@ -27,7 +27,6 @@ class UpdateService {
         }
     }
 
-
     String getMessageFromUpdate(Update update) {
         def message = update.hasCallbackQuery() ? update?.callbackQuery?.data : getMessage(update)?.text
         pathCryptService.isEncrypted(message) ? pathCryptService.decryptPath(message) : message ?: ''

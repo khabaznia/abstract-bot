@@ -26,11 +26,9 @@ class FlowVoter extends AbstractBotAuthorizationVoter {
     int voteInternal(Authentication authentication, MethodInvocation method) {
         def controllerPreviousPath = getMetaData(method)?.previousPath
         log.debug 'User last action -> {}, target previous path {}', userLastAction, controllerPreviousPath
-        def result = checkUserLastAction(controllerPreviousPath, userLastAction as String)
+        checkUserLastAction(controllerPreviousPath, userLastAction as String)
                 ? ACCESS_GRANTED
                 : ACCESS_DENIED
-        log.info 'Access {}', result > 0 ? 'granted' : 'denied'
-        result
     }
 
     @Override

@@ -25,6 +25,7 @@ class UserController extends AbstractBotController {
     String onStart() {
         sendMessage.key('message.user.greeting')
                 .emoji(SCREAMING_FACE)
+        log.debug 'User on start'
         USER_TO_MAIN
     }
 
@@ -34,5 +35,6 @@ class UserController extends AbstractBotController {
         sendMessage.key('message.choose.action')
                 .emoji(FINGER_DOWN)
                 .keyboard([SETTINGS.addEmoji(GEAR)])
+        log.debug 'User menu'
     }
 }

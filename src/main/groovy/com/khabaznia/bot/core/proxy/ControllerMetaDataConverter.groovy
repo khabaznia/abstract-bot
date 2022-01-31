@@ -58,7 +58,6 @@ class ControllerMetaDataConverter {
         controllerMetaData.hasParameters = method.parameterCount > 0
         controllerMetaData.actionType = getActionType(method)
         controllerMetaData.params = getParams(method)
-        log.trace "Get meta data for controller. {} : {}", controllerMetaData.bean.class.simpleName, controllerMetaData.controllerPath
         controllerMetaData
     }
 

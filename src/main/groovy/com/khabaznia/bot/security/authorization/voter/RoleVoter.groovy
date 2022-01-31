@@ -18,11 +18,9 @@ class RoleVoter extends AbstractBotAuthorizationVoter {
         def userRole = getUserRoles(authentication)
         log.debug 'User role -> {}, target roles: {},', userRole, targetRoles
 
-        def result = targetRoles.contains(Role.ALL.toString()) || targetRoles.intersect(userRole)
+        targetRoles.contains(Role.ALL.toString()) || targetRoles.intersect(userRole)
                 ? ACCESS_GRANTED
                 : ACCESS_DENIED
-        log.info 'Access {}', result > 0 ? 'granted' : 'denied'
-        result
     }
 
     @Override

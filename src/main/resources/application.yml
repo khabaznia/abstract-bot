@@ -20,7 +20,7 @@ logging:
   level:
     org.hibernate: error
     org.springframework: INFO
-    com.khabaznia.bot: ${LOGGING_LEVEL}
+    com.khabaznia.bot: INFO
 
 bot:
   token: ${BOT_TOKEN}

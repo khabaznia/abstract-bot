@@ -59,17 +59,21 @@ class MessageService implements Configurable {
                 .each { messageRepository.delete(it) }
     }
 
-    void removeMessageForUid(String code) {
-        messageRepository.deleteById(code)
+    void removeMessageForUid(String uid) {
+        log.trace "Removing message for uid: {}", uid
+        messageRepository.deleteById(uid)
     }
 
     void removeMessage(String uniqueId) {
-        removeMessageForUid(getMessage(uniqueId).uid)
+        def message = getMessage(uniqueId)
+        if (message) {
+            removeMessageForUid(message.uid)
+        }
     }
 
     Integer deleteExpiredMessages() {
         def messages = messageRepository.findAllWithUpdateDateTimeBefore(expirationDate)
-        log.info 'Deleting {} expired messages', messages?.size()
+        log.debug 'Deleting {} expired messages', messages?.size()
         messageRepository.deleteAll messages
         messages?.size()
     }
@@ -80,12 +84,13 @@ class MessageService implements Configurable {
 
     Integer deleteOrphanedKeyboards() {
         def keyboards = keyboardRepository.findAllOrphaned()
-        log.info 'Deleting {} orphaned messages', keyboards?.size()
+        log.debug 'Deleting {} orphaned messages', keyboards?.size()
         keyboardRepository.deleteAll keyboards
         keyboards?.size()
     }
 
     void removeButton(Button button) {
+        log.trace "Removing button {}", button.key
         button.setKeyboard(null)
         buttonRepository.saveAndFlush(button)
         buttonRepository.delete(button)
@@ -96,6 +101,7 @@ class MessageService implements Configurable {
     }
 
     Button saveButton(Button button) {
+        log.trace "Saving button {}", button.key
         buttonRepository.saveAndFlush(button)
     }
 

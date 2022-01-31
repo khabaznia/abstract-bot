@@ -22,6 +22,7 @@ class ReplyKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<A
 
     @Override
     void prepare(AbstractKeyboardMessage request) {
+        log.debug 'Removing previous message with reply keyboard'
         messageService.removeMessagesOfType(MessageType.REPLY_KEYBOARD)
         super.prepare(request)
     }

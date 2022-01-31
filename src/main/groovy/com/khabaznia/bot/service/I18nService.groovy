@@ -28,7 +28,7 @@ class I18nService implements Configurable {
     ]
 
     boolean changeLocale(String localeKey) {
-        log.debug 'Try to change locale to -> {}', localeKey
+        log.trace 'Try to change locale to -> {}', localeKey
         if (localeKey && getConfigs(AVAILABLE_LOCALES).contains(localeKey)) {
             def chatToUpdate = SessionUtil.currentChat
             chatToUpdate.lang = localeKey

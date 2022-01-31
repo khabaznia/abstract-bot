@@ -34,15 +34,15 @@ class BotControllerContainer {
         def path = proxy.metaData.controllerPath
         if (controllerMap.containsKey(path))
             throw new ControllerGenerationException("Controller for path -> $path is already exists")
-        log.info 'Added new controller for path -> {}', path
+        log.info 'Added controller for path -> {}', path
         controllerMap[path] = proxy
     }
 
     BotControllerProxy getController(String currentPath) {
         def emoji = emojiList.find { currentPath.endsWith(it) }
-        log.debug 'Emoji from path ---------------> {}', emoji
+        log.trace 'Emoji from path {}', emoji
         def pathWithoutEmoji = emoji ? currentPath.tokenize(emoji)[0].strip() : currentPath
-        log.info 'Try to find controller for path ---------------> {}', pathWithoutEmoji
+        log.info 'Try to find controller for path {}', pathWithoutEmoji
         def pathMatchingControllers = controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$pathWithoutEmoji/ }
         if (pathMatchingControllers.isEmpty()) {
             log.debug "Controller not found. Try to find $EMPTY_PATH controller that should match any user input"

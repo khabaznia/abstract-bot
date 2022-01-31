@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ActionType
 
-@ToString
+@ToString(includeSuper = true, includeNames = true)
 @Component(value = 'sendChatAction')
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')

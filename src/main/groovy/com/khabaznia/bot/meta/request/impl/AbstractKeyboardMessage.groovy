@@ -9,7 +9,7 @@ import groovy.transform.ToString
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
-@ToString
+@ToString(includeSuper = true, includeNames = true)
 abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRequest {
 
     @Autowired

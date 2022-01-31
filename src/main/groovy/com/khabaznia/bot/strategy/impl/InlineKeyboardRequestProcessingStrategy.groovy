@@ -21,7 +21,7 @@ class InlineKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<
             (request.keyboard as InlineKeyboard).addKeyboardParam(MESSAGE_UID, message.uid)
             message.setKeyboard(toKeyboardModel(request.keyboard))
         }
-        log.trace 'Saved message with keyboard -> {}', message
+        log.debug 'Saving message {} with inline keyboard', message.uid
         messageService.saveMessage(message)
     }
 }

@@ -103,6 +103,7 @@ abstract class AbstractBotController implements Configurable, Loggable {
         def isOneTime = Boolean.valueOf(updateService?.getParametersFromUpdate(update)?.get(ONE_TIME_KEYBOARD))
         if (isOneTime) {
             def messageUid = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_UID)
+            log.debug 'Trigger deleting on-time keyboard. Message id -> ', {}
             publisher.publishEvent new DeleteOneTimeKeyboardMessagesEvent(messageUid: messageUid)
         }
     }
@@ -112,6 +113,7 @@ abstract class AbstractBotController implements Configurable, Loggable {
             log.debug 'Try to update keyboard'
             def messageCode = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_UID)
             def buttonId = updateService?.getParametersFromUpdate(update)?.get(BUTTON_ID)
+            log.debug 'Trigger updating button {} for keyboard message {}', buttonId, messageCode
             publisher.publishEvent new UpdateKeyboardEvent(messageUid: messageCode, buttonId: buttonId)
         }
     }

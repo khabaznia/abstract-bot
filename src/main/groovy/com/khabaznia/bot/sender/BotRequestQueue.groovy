@@ -72,7 +72,7 @@ class BotRequestQueue implements Configurable {
     }
 
     void setToManyRequestsLimit(long seconds) {
-        log.trace 'To many requests for chat {}. Setting limit to {} seconds', chatId, seconds
+        log.trace 'Queue chat {}. Setting limit to {} seconds', chatId, seconds
         toManyRequestsLimit = (System.currentTimeMillis() + (seconds * 1000))
     }
 

@@ -25,7 +25,7 @@ class PinMessageEventListener {
 
     @EventListener
     void onApplicationEvent(PinMessageEvent event) {
-        log.trace 'Pin message with id {}', event.messageId
+        log.info 'Pin message with id {}', event.messageId
         def message = messageService.getMessage(event.messageId)
         def pinRequest = message.chat.type == 'private'
                 ? getEditMessage(event.messageId, message)
@@ -35,7 +35,7 @@ class PinMessageEventListener {
     }
 
     private EditMessage getEditMessage(String messageId, Message message) {
-        log.trace 'Editing message with id {}', messageId
+        log.trace 'Editing (instead pinning) message with id {}', messageId
         message.setText(message.getText().bold())
         messageService.saveMessage(message)
         context.getBean('editMessage')

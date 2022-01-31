@@ -15,12 +15,10 @@ class SwitchButtonProcessingStrategy extends ButtonProcessingStrategy {
 
     @Override
     void processOnClick(Button button) {
-        log.trace 'Modifying switch button -> {}', button
         def enabled = Boolean.valueOf(button.params.get(ButtonType.SWITCH.paramKey))
-        log.debug 'enabled -> {}', enabled
+        log.trace 'Modifying switch button with id {}. Enabled -> {}', button.id, enabled
         button.params.put(ButtonType.SWITCH.paramKey, (!enabled) as String)
         button.setEmoji(!enabled ? CHECKED_MARK : CROSS_MARK)
-        log.debug 'Save switch button: {}', button
         messageService.saveButton(button)
     }
 }

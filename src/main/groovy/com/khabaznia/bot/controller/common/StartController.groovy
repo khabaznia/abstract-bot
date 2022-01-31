@@ -31,6 +31,7 @@ class StartController extends AbstractBotController {
             case UserRole.USER:
                 return USER_START
         }
+        log.debug 'Default on start'
         TO_MAIN
     }
 
@@ -47,6 +48,7 @@ class StartController extends AbstractBotController {
                 .emoji(FINGER_DOWN)
                 .keyboard([SETTINGS.addEmoji(GEAR)])
                 .type(MessageType.DELETE)
+        log.debug 'Default to main'
         DEFAULT
     }
 

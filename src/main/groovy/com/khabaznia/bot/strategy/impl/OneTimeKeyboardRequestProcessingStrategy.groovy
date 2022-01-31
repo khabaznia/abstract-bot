@@ -23,7 +23,7 @@ class OneTimeKeyboardRequestProcessingStrategy extends RequestProcessingStrategy
             (request.keyboard as InlineKeyboard).addKeyboardParam(ONE_TIME_KEYBOARD, 'true')
             message.setKeyboard(toKeyboardModel(request.keyboard))
         }
-        log.trace 'Saved message with keyboard -> {}', message
+        log.debug 'Saving message {} with one-time keyboard', message.uid
         messageService.saveMessage(message)
     }
 }

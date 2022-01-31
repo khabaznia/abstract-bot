@@ -9,7 +9,7 @@ import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 
-@ToString
+@ToString(includeNames = true)
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
 abstract class BaseRequest<T extends BaseResponse> {

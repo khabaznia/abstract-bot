@@ -36,7 +36,7 @@ class DeleteMessagesEventListener {
                 .findAll { it.messageId != null && it.messageId != 0 }
                 .collect { context.getBean('deleteMessage').messageId(it.messageId) }
                 .each { requestService.execute(it) }
-        log.info 'Delete {} messages from chat {}', deleteMessageRequests?.size(), currentChatCode
+        log.info 'Delete {} messages of type {} from chat {}', deleteMessageRequests?.size(), messageTypes, currentChatCode
         messageTypes.each { messageService.removeMessagesOfType(it) }
     }
 }

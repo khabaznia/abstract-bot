@@ -20,7 +20,7 @@ abstract class LoggingStrategy implements Configurable {
         [request.key((event.skipMetaInfo ? '' : metaInfo) + "$logEmoji " + request.key).chatId(getChatId(event)) as SendMessage]
     }
 
-    protected String getMetaInfo() {
+    protected static String getMetaInfo() {
         "${SessionUtil.currentChat?.code}:${SessionUtil.currentUser?.role?.toString()} "
     }
 

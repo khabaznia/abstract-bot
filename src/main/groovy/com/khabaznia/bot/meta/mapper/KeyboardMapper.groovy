@@ -94,7 +94,6 @@ class KeyboardMapper {
     }
 
     static InlineKeyboard fromKeyboardModel(Keyboard keyboard) {
-        log.trace "Update keyboard ->>>>>>>>>>>>>>>>>>> {}", keyboard
         def result = !keyboard.buttons.isEmpty()
                 ? new InlineKeyboard().setRows(
                 keyboard.buttons
@@ -106,8 +105,6 @@ class KeyboardMapper {
                                     .collect { convertButton(it) }
                         }) as InlineKeyboard
                 : null
-
-        log.trace "After mapping keyboard ->>>>>>>>>>>>>>>>>>> {}", result
         result
     }
 

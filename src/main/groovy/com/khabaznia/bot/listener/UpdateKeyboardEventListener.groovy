@@ -34,7 +34,7 @@ class UpdateKeyboardEventListener {
         def messageWithKeyboard = messageService.getMessage(event.messageUid)
         if (messageWithKeyboard?.type == MessageType.INLINE_KEYBOARD) {
             processButton(event)
-            log.trace 'Message to edit -> {}', messageWithKeyboard
+            log.trace 'Message with keyboard to edit -> {}', messageWithKeyboard
             def editMessageRequest = toEditKeyboardRequest(messageWithKeyboard)
             log.info 'Editing keyboard from messageId {} from chat {}', messageWithKeyboard?.messageId, messageWithKeyboard.chat.code
             reqeustService.execute(editMessageRequest)

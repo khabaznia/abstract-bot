@@ -50,6 +50,6 @@ class ApiMethodExecutionTask {
     }
 
     private static logQueueState(BotRequestQueue it, long currentTime) {
-        log.trace('Queue for chat {}: status - {}, waiting messages for - {}', it.chatId, it.getState(currentTime), it.size())
+        log.debug 'Queue for chat {}: status - {}, waiting messages for - {}', it.chatId, it.getState(currentTime), it.size()
     }
 }

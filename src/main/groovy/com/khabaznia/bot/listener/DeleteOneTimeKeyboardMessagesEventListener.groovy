@@ -25,12 +25,12 @@ class DeleteOneTimeKeyboardMessagesEventListener {
     void onApplicationEvent(DeleteOneTimeKeyboardMessagesEvent event) {
         def messageToEdit = messageService.getMessage(event.messageUid)
         if (messageToEdit?.type == MessageType.ONE_TIME_INLINE_KEYBOARD) {
-            log.trace 'Message to edit -> {}', messageToEdit
+            log.trace 'Message with one-time keyboard -> {}', messageToEdit
             def editMessageRequest = context.getBean('editMessageKeyboard')
             editMessageRequest.messageId(messageToEdit.messageId)
             editMessageRequest.setKeyboard(null)
             requestService.execute(editMessageRequest)
-            log.info 'Delete keyboard from messageId {} from chat {}', messageToEdit?.messageId, messageToEdit.chat.code
+            log.info 'Delete one-time keyboard in message with id {} from chat {}', messageToEdit?.messageId, messageToEdit.chat.code
             messageService.removeMessageForUid(event.messageUid)
         }
     }

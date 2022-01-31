@@ -24,13 +24,13 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
     protected RequestMapper requestMapper
 
     void prepare(Request request) {
-        log.debug 'Saving message before sending api request'
+        log.debug 'Saving message for request {} before sending api request. Type: {}', request?.class?.simpleName, request?.type
         Message message = getMessageFromRequest(request)
         messageService.saveMessage(message)
     }
 
     void updateWithMappedApiMethod(Request request) {
-        request.setApiMethod(getApiMethod(request))
+        request.setApiMethod(requestMapper.toApiMethod(request))
     }
 
     void processResponse(Response response) {
@@ -41,12 +41,6 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
             log.debug 'Saving message with messageId: {}', response.result.messageId
             messageService.saveMessage(message)
         }
-    }
-
-    private BotApiMethod getApiMethod(BaseRequest request) {
-        def botApiMethod = requestMapper.toApiMethod(request)
-        log.debug "Request after mapping -> {}", botApiMethod
-        botApiMethod
     }
 
     protected static Message getMessageFromRequest(BaseRequest request) {

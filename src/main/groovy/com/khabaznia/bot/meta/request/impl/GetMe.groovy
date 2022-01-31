@@ -9,7 +9,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@ToString
+@ToString(includeSuper = true, includeNames = true)
 @Component(value = 'getMe')
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
