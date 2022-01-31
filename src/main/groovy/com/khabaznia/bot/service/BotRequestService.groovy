@@ -28,8 +28,6 @@ class BotRequestService implements Configurable {
     @Autowired
     private ApiMethodSender sender
     @Autowired
-    private ResponseMapper responseMapper
-    @Autowired
     private Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
     @Autowired
     private BotRequestQueueContainer queueContainer
@@ -104,8 +102,8 @@ class BotRequestService implements Configurable {
         getMappedResponse(sender.execute(request.apiMethod as BotApiMethod))
     }
 
-    private BaseResponse getMappedResponse(Serializable apiResponse) {
+    private static BaseResponse getMappedResponse(Serializable apiResponse) {
         log.debug "Got response -> $apiResponse"
-        responseMapper.toResponse(apiResponse)
+        ResponseMapper.toResponse(apiResponse)
     }
 }

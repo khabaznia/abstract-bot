@@ -15,7 +15,7 @@ import static com.khabaznia.bot.core.Constants.PARAMETERS_PREFIX
 @TupleConstructor(includeSuperFields = true)
 class ReplyKeyboard extends Keyboard<ReplyButton> {
 
-    List<List<ReplyButton>> lastRows
+    protected List<List<ReplyButton>> lastRows
 
     ReplyKeyboard() {
         this.rows = [[]]

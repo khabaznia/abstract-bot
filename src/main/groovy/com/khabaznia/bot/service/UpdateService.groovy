@@ -18,7 +18,7 @@ class UpdateService {
     @Autowired
     PathCryptService pathCryptService
 
-    String getChatInfoFromUpdate(Update update) {
+    static String getChatInfoFromUpdate(Update update) {
         def message = getMessage(update)
         if (message) {
             return message?.chat?.id + CHAT_ID_DELIMITER + message?.from?.id

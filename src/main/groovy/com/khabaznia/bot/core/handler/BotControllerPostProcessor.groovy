@@ -18,11 +18,11 @@ import org.springframework.stereotype.Component
 class BotControllerPostProcessor implements BeanPostProcessor, Ordered {
 
     @Autowired
-    BotControllerContainer container
+    protected BotControllerContainer container
     @Autowired
-    ApplicationContext applicationContext
+    protected ApplicationContext applicationContext
     @Autowired
-    ControllerMetaDataConverter converter
+    protected ControllerMetaDataConverter converter
 
     @Override
     Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

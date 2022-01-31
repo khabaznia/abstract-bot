@@ -21,4 +21,4 @@ appender("RollingFile", RollingFileAppender) {
     }
 }
 root(INFO, ["RollingFile", "Console"])
-logger("anyway", TRACE, ["RollingFile"])
+logger("com.khabaznia", TRACE, ["RollingFile"])

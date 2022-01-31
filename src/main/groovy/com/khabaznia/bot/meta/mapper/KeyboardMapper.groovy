@@ -25,11 +25,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 class KeyboardMapper {
 
     @Autowired
-    PathCryptService pathCryptService
+    private PathCryptService pathCryptService
     @Autowired
-    I18nService i18nService
+    private I18nService i18nService
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
 
     org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard toApiKeyboard(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
         keyboard ?

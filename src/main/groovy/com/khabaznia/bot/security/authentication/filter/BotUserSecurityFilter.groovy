@@ -26,9 +26,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 class BotUserSecurityFilter extends GenericFilterBean {
 
     @Autowired
-    AuthenticationManager authManager
-    @Autowired
-    UpdateService updateService
+    private AuthenticationManager authManager
 
     @Override
     void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -47,15 +45,15 @@ class BotUserSecurityFilter extends GenericFilterBean {
             securityContext.setAuthentication(auth)
             def session = ((HttpServletRequest) wrappedRequest).getSession(true)
             session.setAttribute SPRING_SECURITY_CONTEXT_KEY, securityContext
-        } catch (final Exception ex) {
+        } catch (Exception ex) {
             throw new AuthenticationServiceException("Authentication failed ".concat(ex.message), ex)
         }
     }
 
-    private String getUserCode(MultiReadHttpServletRequest wrappedRequest) throws MismatchedInputException {
+    private static String getUserCode(MultiReadHttpServletRequest wrappedRequest) throws MismatchedInputException {
         def req = wrappedRequest.getReader().readLines().join()
         def update = wrappedRequest.getAttribute('update') ?: new ObjectMapper().readValue(req, Update.class)
-        updateService.getChatInfoFromUpdate(update as Update)
+        UpdateService.getChatInfoFromUpdate(update as Update)
     }
 
     private static Boolean hasUpdate(MultiReadHttpServletRequest wrappedRequest) {

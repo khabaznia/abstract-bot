@@ -14,9 +14,9 @@ import static com.khabaznia.bot.core.Constants.*
 class MessageToCommandMapper {
 
     @Autowired
-    BotControllerContainer controllerContainer
+    private BotControllerContainer controllerContainer
     @Autowired
-    UpdateService updateService
+    private UpdateService updateService
 
     BotControllerProxy getController(Update update) {
         getController(getPathForStringUpdate(update))

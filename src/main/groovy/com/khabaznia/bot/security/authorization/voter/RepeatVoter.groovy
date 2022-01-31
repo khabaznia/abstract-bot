@@ -22,11 +22,11 @@ import static com.khabaznia.bot.core.Constants.BLOCK_DUPLICATE_REQUESTS
 class RepeatVoter extends AbstractBotAuthorizationVoter implements Configurable {
 
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
     @Autowired
-    Environment environment
+    private Environment environment
     @Autowired
-    UpdateService updateService
+    private UpdateService updateService
 
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {

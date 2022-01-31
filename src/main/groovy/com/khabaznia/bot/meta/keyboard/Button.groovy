@@ -1,7 +1,6 @@
 package com.khabaznia.bot.meta.keyboard
 
 import com.khabaznia.bot.enums.ButtonType
-import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy

@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component
 class DeleteOneTimeKeyboardMessagesEventListener {
 
     @Autowired
-    BotRequestService requestService
+    private BotRequestService requestService
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
     @Autowired
-    MessageService messageService
+    private MessageService messageService
 
     @EventListener
     void onApplicationEvent(DeleteOneTimeKeyboardMessagesEvent event) {

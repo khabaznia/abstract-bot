@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component
 class ExecuteMethodsListener {
 
     @Autowired
-    Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
+    private Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
     @Autowired
-    ApplicationEventPublisher publisher
+    private ApplicationEventPublisher publisher
     @Autowired
-    BotRequestService requestService
+    private BotRequestService requestService
 
     @EventListener
     void onApplicationEvent(ExecuteMethodsEvent event) {

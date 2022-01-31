@@ -21,7 +21,7 @@ import java.util.concurrent.Executor
 class AsyncConfig implements WebMvcConfigurer {
 
     @Autowired
-    SessionFactory sessionFactory
+    protected SessionFactory sessionFactory
 
     @Bean(name = "applicationEventMulticaster")
     ApplicationEventMulticaster simpleApplicationEventMulticaster() {

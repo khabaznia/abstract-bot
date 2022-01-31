@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext
 abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRequest {
 
     @Autowired
-    ApplicationContext context
+    protected ApplicationContext context
 
     Keyboard keyboard
 

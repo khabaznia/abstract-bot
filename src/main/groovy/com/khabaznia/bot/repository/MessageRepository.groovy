@@ -1,9 +1,7 @@
 package com.khabaznia.bot.repository
 
 import com.khabaznia.bot.enums.MessageType
-import com.khabaznia.bot.model.EncryptedPath
 import com.khabaznia.bot.model.Message
-import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param

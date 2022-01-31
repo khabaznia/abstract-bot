@@ -1,6 +1,6 @@
 package com.khabaznia.bot.core.handler
 
-import com.khabaznia.bot.core.ControllerGenerationException
+import com.khabaznia.bot.exception.ControllerGenerationException
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.meta.Emoji
 import com.khabaznia.bot.util.SessionUtil
@@ -17,8 +17,8 @@ import static com.khabaznia.bot.core.Constants.PREVIOUS_PATH_DELIMITER
 @Component
 class BotControllerContainer {
 
-    Map<String, BotControllerProxy> controllerMap
-    List<String> emojiList
+    private Map<String, BotControllerProxy> controllerMap
+    private List<String> emojiList
 
     BotControllerContainer() {
         controllerMap = [:]
@@ -51,7 +51,7 @@ class BotControllerContainer {
         getControllerFromMatching(pathMatchingControllers)
     }
 
-    BotControllerProxy getControllerFromMatching(Map<String, BotControllerProxy> matchingControllers) {
+    private BotControllerProxy getControllerFromMatching(Map<String, BotControllerProxy> matchingControllers) {
         log.trace 'Matching controllers -> {}', matchingControllers*.key
         def result = null
         if (matchingControllers) {

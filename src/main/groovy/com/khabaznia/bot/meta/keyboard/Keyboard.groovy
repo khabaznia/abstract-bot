@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext
 abstract class Keyboard<T extends Button> {
 
     @Autowired
-    ApplicationContext context
+    protected ApplicationContext context
 
     protected List<List<T>> rows
     protected List<T> currentRow

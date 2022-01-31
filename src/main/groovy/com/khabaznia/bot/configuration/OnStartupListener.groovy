@@ -35,7 +35,7 @@ class OnStartupListener implements Configurable {
     private RequestMapper requestMapper
 
     @EventListener
-    void onApplicationEvent(final ContextRefreshedEvent event) {
+    void onApplicationEvent(ContextRefreshedEvent event) {
         log.debug 'Context refreshed'
         addMethods()
         createBotUser()

@@ -27,13 +27,13 @@ import javax.annotation.Resource
 class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    BotUserDetailsService userDetailsService
+    protected BotUserDetailsService userDetailsService
     @Autowired
-    BotAuthenticationEntryPoint botAuthenticationEntryPoint
+    protected BotAuthenticationEntryPoint botAuthenticationEntryPoint
     @Autowired
-    BotAccessDeniedHandler botAccessDeniedHandler
+    protected BotAccessDeniedHandler botAccessDeniedHandler
     @Resource
-    BotUserSecurityFilter filter
+    protected BotUserSecurityFilter filter
 
     @Bean("authenticationManager")
     @Override

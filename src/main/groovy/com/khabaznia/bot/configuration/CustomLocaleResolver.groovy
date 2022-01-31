@@ -24,9 +24,9 @@ class CustomLocaleResolver extends AcceptHeaderLocaleResolver implements WebMvcC
     public static final String BUNDLE_NAME = 'messages'
 
     @Autowired
-    Environment env
+    protected Environment env
     @Autowired
-    I18nService i18nService
+    protected I18nService i18nService
 
     @Bean
     LocaleResolver localeResolver() {

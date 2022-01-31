@@ -32,13 +32,13 @@ import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_I
 class FrontController implements Loggable {
 
     @Autowired
-    Environment env
+    private Environment env
     @Autowired
-    MessageToCommandMapper commandMapper
+    private MessageToCommandMapper commandMapper
     @Autowired
-    ApplicationEventPublisher publisher
+    private ApplicationEventPublisher publisher
     @Autowired
-    UpdateService updateService
+    private UpdateService updateService
 
     @PostMapping('${bot.token}')
     processUpdate(@RequestBody Update update) {

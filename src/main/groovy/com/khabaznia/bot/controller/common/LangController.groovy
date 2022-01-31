@@ -4,7 +4,6 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
-import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.service.I18nService
 import groovy.util.logging.Slf4j
@@ -22,7 +21,7 @@ import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
 class LangController extends AbstractBotController {
 
     @Autowired
-    I18nService i18nService
+    private I18nService i18nService
 
     @Localized
     @BotRequest(path = DISPLAY_CHANGE_LANG)

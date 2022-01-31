@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 abstract class ButtonProcessingStrategy {
 
     @Autowired
-    MessageService messageService
+    protected MessageService messageService
 
     abstract void processOnClick(Button button)
 }

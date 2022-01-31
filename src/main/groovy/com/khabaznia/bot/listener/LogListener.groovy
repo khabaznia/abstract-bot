@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component
 class LogListener {
 
     @Autowired
-    Map<LogType, LoggingStrategy> loggingStrategyMap
+    private Map<LogType, LoggingStrategy> loggingStrategyMap
     @Autowired
-    BotRequestService apiMethodService
+    private BotRequestService requestService
 
     @Async
     @EventListener
@@ -25,6 +25,6 @@ class LogListener {
         def strategy = loggingStrategyMap.get(event.logType)
         def requests = strategy.getRequestForEvent(event)
         log.debug 'Log event: {}', requests[0]?.key
-        requests.each {apiMethodService.execute it}
+        requests.each {requestService.execute it}
     }
 }

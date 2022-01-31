@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequestWrapper
 
 class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 
-    ByteArrayOutputStream cachedBytes
+    protected ByteArrayOutputStream cachedBytes
 
     MultiReadHttpServletRequest(HttpServletRequest request) {
         super(request)

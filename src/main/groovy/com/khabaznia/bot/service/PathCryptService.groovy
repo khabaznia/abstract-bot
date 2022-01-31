@@ -19,18 +19,18 @@ class PathCryptService implements Configurable {
     @Autowired
     EncryptedPathRepository repository
 
-    static boolean isEncrypted(final String path) {
+    static boolean isEncrypted(String path) {
         path?.startsWith(ENCRYPTED_PATH_PREFIX)
     }
 
-    String encryptPath(final String path) {
+    String encryptPath(String path) {
         def key = ENCRYPTED_PATH_PREFIX + path.md5()
         repository.existsById(key)
                 ? key
                 : repository.save(new EncryptedPath(key: key, value: path)).key
     }
 
-    String decryptPath(final String path) {
+    String decryptPath(String path) {
         def encryptedPath = repository.findById(path)
         encryptedPath.ifPresent { repository.save(it) }
         encryptedPath.get().value

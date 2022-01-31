@@ -21,13 +21,13 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.fromKeyboardModel
 class UpdateKeyboardEventListener {
 
     @Autowired
-    BotRequestService methodExecutionService
+    private BotRequestService reqeustService
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
     @Autowired
-    MessageService messageService
+    private MessageService messageService
     @Autowired
-    Map<ButtonType, ButtonProcessingStrategy> buttonProcessingStrategyMap
+    private Map<ButtonType, ButtonProcessingStrategy> buttonProcessingStrategyMap
 
     @EventListener
     void onApplicationEvent(UpdateKeyboardEvent event) {
@@ -37,7 +37,7 @@ class UpdateKeyboardEventListener {
             log.trace 'Message to edit -> {}', messageWithKeyboard
             def editMessageRequest = toEditKeyboardRequest(messageWithKeyboard)
             log.info 'Editing keyboard from messageId {} from chat {}', messageWithKeyboard?.messageId, messageWithKeyboard.chat.code
-            methodExecutionService.execute(editMessageRequest)
+            reqeustService.execute(editMessageRequest)
         }
     }
 

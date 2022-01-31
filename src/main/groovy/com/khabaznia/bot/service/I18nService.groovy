@@ -39,7 +39,19 @@ class I18nService implements Configurable {
         return false
     }
 
-    String getMessage(String key) {
+    String getFilledTemplate(String stringTemplateKey, Map<String, String> binding) {
+        def engine = new GStringTemplateEngine()
+        def template = engine.createTemplate(getMessage(stringTemplateKey)).make(binding)
+        template as String
+    }
+
+    String getFilledTemplate(String stringTemplateKey, Map<String, String> binding, String emoji) {
+        emoji
+                ? getFilledTemplate(stringTemplateKey, binding) + " " + emoji
+                : getFilledTemplate(stringTemplateKey, binding)
+    }
+
+    private String getMessage(String key) {
         boolean hasMarkdown = key.matches(/<[bius]>.*<\/[bius]>/)
         def markdownMethod = hasMarkdown
                 ? markdownTextMap.find { key.matches(it.key) }.value
@@ -53,17 +65,5 @@ class I18nService implements Configurable {
     private String getLocalized(String key) {
         def localeFromChat = new Locale(SessionUtil.currentChat?.lang ?: DEFAULT_LOCALE)
         context.getMessage(key, null, localeFromChat)
-    }
-
-    String getFilledTemplate(String stringTemplateKey, Map<String, String> binding) {
-        def engine = new GStringTemplateEngine()
-        def template = engine.createTemplate(getMessage(stringTemplateKey)).make(binding)
-        template as String
-    }
-
-    String getFilledTemplate(String stringTemplateKey, Map<String, String> binding, String emoji) {
-        emoji
-                ? getFilledTemplate(stringTemplateKey, binding) + " " + emoji
-                : getFilledTemplate(stringTemplateKey, binding)
     }
 }

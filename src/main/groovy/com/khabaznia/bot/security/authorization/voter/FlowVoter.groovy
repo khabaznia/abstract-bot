@@ -18,9 +18,9 @@ import static com.khabaznia.bot.core.Constants.CONFIGS_DELIMITER
 class FlowVoter extends AbstractBotAuthorizationVoter {
 
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
     @Autowired
-    Environment environment
+    private Environment environment
 
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {

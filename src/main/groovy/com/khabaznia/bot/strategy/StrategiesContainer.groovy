@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration
 class StrategiesContainer {
 
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
 
     @Bean(name = 'requestProcessingStrategyMap')
     Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap() {

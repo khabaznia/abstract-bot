@@ -19,7 +19,7 @@ class PinMessageEventListener {
     @Autowired
     private ApplicationContext context
     @Autowired
-    private BotRequestService apiMethodService
+    private BotRequestService requestService
     @Autowired
     private MessageService messageService
 
@@ -31,7 +31,7 @@ class PinMessageEventListener {
                 ? getEditMessage(event.messageId, message)
                 : getPinMessage(event.messageId)
         pinRequest.setChatId(message.chat.code)
-        apiMethodService.execute(pinRequest)
+        requestService.execute(pinRequest)
     }
 
     private EditMessage getEditMessage(String messageId, Message message) {

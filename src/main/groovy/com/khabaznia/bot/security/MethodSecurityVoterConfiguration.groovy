@@ -13,14 +13,14 @@ import javax.annotation.Resource
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
-class MethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
+class MethodSecurityVoterConfiguration extends GlobalMethodSecurityConfiguration {
 
     @Resource
-    RoleVoter roleVoter
+    private RoleVoter roleVoter
     @Resource
-    FlowVoter flowVoter
+    private FlowVoter flowVoter
     @Resource
-    RepeatVoter repeatVoter
+    private RepeatVoter repeatVoter
 
     @Override
     AccessDecisionManager accessDecisionManager() {

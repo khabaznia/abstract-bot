@@ -29,16 +29,6 @@ class MessageService implements Configurable {
     @Autowired
     private KeyboardRepository keyboardRepository
 
-    List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
-        def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
-        resultList
-    }
-
-    void removeMessagesOfType(MessageType type) {
-        messageRepository.findByTypeAndChatCode(type, SessionUtil.currentChat.code)
-                .each { messageRepository.delete(it) }
-    }
-
     Message saveMessage(Message message) {
         if (message.label && messageRepository.existsByLabel(message.label)) {
             def existingMessage = getMessage(message.label)
@@ -59,17 +49,36 @@ class MessageService implements Configurable {
                 ?: getByMessageId(uniqueId)
     }
 
-    private Message getByMessageId(String uniqueId) {
-        try {
-            return messageRepository.findByMessageId(Integer.parseInt(uniqueId))
-        } catch (NumberFormatException e) {
-            log.trace "Can't find message with message id - {}. Possibly it's uid or label, ant it's message was deleted", uniqueId
-        }
-        return null
+    List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
+        def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
+        resultList
+    }
+
+    void removeMessagesOfType(MessageType type) {
+        messageRepository.findByTypeAndChatCode(type, SessionUtil.currentChat.code)
+                .each { messageRepository.delete(it) }
     }
 
     void removeMessageForUid(String code) {
         messageRepository.deleteById(code)
+    }
+
+    Integer deleteExpiredMessages() {
+        def messages = messageRepository.findAllWithUpdateDateTimeBefore(expirationDate)
+        log.info 'Deleting {} expired messages', messages?.size()
+        messageRepository.deleteAll messages
+        messages?.size()
+    }
+
+    Keyboard getKeyboard(Long id) {
+        keyboardRepository.getById(id)
+    }
+
+    Integer deleteOrphanedKeyboards() {
+        def keyboards = keyboardRepository.findAllOrphaned()
+        log.info 'Deleting {} orphaned messages', keyboards?.size()
+        keyboardRepository.deleteAll keyboards
+        keyboards?.size()
     }
 
     void removeButton(Button button) {
@@ -86,22 +95,13 @@ class MessageService implements Configurable {
         buttonRepository.saveAndFlush(button)
     }
 
-    Keyboard getKeyboard(Long id) {
-        keyboardRepository.getById(id)
-    }
-
-    Integer deleteExpiredMessages() {
-        def messages = messageRepository.findAllWithUpdateDateTimeBefore(expirationDate)
-        log.info 'Deleting {} expired messages', messages?.size()
-        messageRepository.deleteAll messages
-        messages?.size()
-    }
-
-    Integer deleteOrphanedKeyboards() {
-        def keyboards = keyboardRepository.findAllOrphaned()
-        log.info 'Deleting {} orphaned messages', keyboards?.size()
-        keyboardRepository.deleteAll keyboards
-        keyboards?.size()
+    private Message getByMessageId(String uniqueId) {
+        try {
+            return messageRepository.findByMessageId(Integer.parseInt(uniqueId))
+        } catch (NumberFormatException e) {
+            log.trace "Can't find message with message id - {}. Possibly it's uid or label, ant it's message was deleted", uniqueId
+        }
+        return null
     }
 
     private Date getExpirationDate() {

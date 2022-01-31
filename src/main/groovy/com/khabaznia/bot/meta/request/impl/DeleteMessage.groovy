@@ -8,7 +8,6 @@ import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
 @ToString
 @Component(value = 'deleteMessage')

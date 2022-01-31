@@ -1,5 +1,6 @@
 package com.khabaznia.bot.sender
 
+import com.khabaznia.bot.enums.BotRequestQueueState
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.trait.Configurable
 import groovy.transform.builder.Builder

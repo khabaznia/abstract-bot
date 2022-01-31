@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component
 class SendChatActionListener {
 
     @Autowired
-    ApplicationContext context
+    private ApplicationContext context
     @Autowired
-    BotRequestService apiMethodService
+    private BotRequestService requestService
 
     @Async
     @EventListener
     void onApplicationEvent(SendChatActionEvent event) {
         log.trace 'Sending chat action {}', event.actionType
-        apiMethodService.execute(context.getBean('sendChatAction').action(event.actionType))
+        requestService.execute(context.getBean('sendChatAction').action(event.actionType))
     }
 }
