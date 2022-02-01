@@ -13,12 +13,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 
+import static com.khabaznia.bot.core.Constants.DEFAULT_LOCALE
+
 @Slf4j
 @Configuration
 class CustomLocaleResolver extends AcceptHeaderLocaleResolver implements WebMvcConfigurer {
-
-    public static final String DEFAULT_LOCALE = 'locale.default'
-    public static final String AVAILABLE_LOCALES = 'locale.available'
 
     public static final String ENCODING = 'UTF-8'
     public static final String BUNDLE_NAME = 'messages'

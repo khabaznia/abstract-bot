@@ -18,7 +18,7 @@ class ApiMethodExecutionTask {
 
     private List<BotRequestQueue> queuesWithRequests
 
-    @Scheduled(fixedRateString = '${requests.per.second}')
+    @Scheduled(fixedRateString = '${env.only.requests.per.second}')
     void executeRequestTask() {
         if (!queueContainer.hasRequest.getAndSet(false))
             return // Don't check if no requests were found in previous run.

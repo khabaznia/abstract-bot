@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.configuration.CustomLocaleResolver.AVAILABLE_LOCALES
-import static com.khabaznia.bot.configuration.CustomLocaleResolver.DEFAULT_LOCALE
+import static com.khabaznia.bot.core.Constants.AVAILABLE_LOCALES
+import static com.khabaznia.bot.core.Constants.DEFAULT_LOCALE
 
 @Slf4j
 @Component

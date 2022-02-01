@@ -4,15 +4,16 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Secured
-import com.khabaznia.bot.enums.MessageType
-import com.khabaznia.bot.security.Role
+import com.khabaznia.bot.enums.Role
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.COMMON.*
+import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.EXAMPLE
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.*
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
 import static com.khabaznia.bot.meta.Emoji.GEAR
+import static com.khabaznia.bot.meta.Emoji.MEDITATE
 import static com.khabaznia.bot.meta.Emoji.SCREAMING_FACE
 
 @Slf4j
@@ -34,7 +35,7 @@ class UserController extends AbstractBotController {
     userMenu() {
         sendMessage.key('message.choose.action')
                 .emoji(FINGER_DOWN)
-                .keyboard([SETTINGS.addEmoji(GEAR)])
+                .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)],[SETTINGS.addEmoji(GEAR)]])
         log.debug 'User menu'
     }
 }

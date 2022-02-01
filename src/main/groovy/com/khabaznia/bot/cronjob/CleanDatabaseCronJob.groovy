@@ -26,7 +26,7 @@ class CleanDatabaseCronJob {
     @Autowired
     private ApplicationEventPublisher publisher
 
-    @Scheduled(cron = '${clean.up.database.cron.expression}')
+    @Scheduled(cron = '${env.only.clean.up.database.cron.expression}')
     @Async
     void cleanUpTask() {
         log.info '***********************************************************************************'

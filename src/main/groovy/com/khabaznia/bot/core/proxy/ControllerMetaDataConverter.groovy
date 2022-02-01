@@ -5,7 +5,7 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.core.annotation.Secured
 import com.khabaznia.bot.core.annotation.Action
-import com.khabaznia.bot.security.Role
+import com.khabaznia.bot.enums.Role
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -18,7 +18,6 @@ import java.lang.reflect.Method
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
-import static com.khabaznia.bot.configuration.CustomLocaleResolver.*
 import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j

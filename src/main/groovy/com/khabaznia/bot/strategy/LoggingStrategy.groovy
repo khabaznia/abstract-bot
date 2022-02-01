@@ -1,5 +1,6 @@
 package com.khabaznia.bot.strategy
 
+import com.khabaznia.bot.enums.LoggingChat
 import com.khabaznia.bot.event.LogEvent
 import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.service.UpdateService
@@ -25,7 +26,7 @@ abstract class LoggingStrategy implements Configurable {
     }
 
     protected String getChatId(LogEvent event) {
-        getConfig(event.logChat.chatIdConfig)
+        getConfig(event.logChat.chatIdConfig) ?: getConfig(LoggingChat.ADMIN.chatIdConfig)
     }
 
     abstract String getLogEmoji()

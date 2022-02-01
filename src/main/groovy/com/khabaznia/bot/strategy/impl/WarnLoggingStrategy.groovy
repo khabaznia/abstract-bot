@@ -18,9 +18,9 @@ class WarnLoggingStrategy extends LoggingStrategy {
     @Override
     List<SendMessage> getRequestForEvent(LogEvent event) {
         log.trace 'Warn logging. Duplicate to admin: {}', isEnabled(DUPLICATE_WARN_TO_ADMIN)
-        event.logChat == LoggingChat.ADMIN
+        getChatId(event) == getConfig(LoggingChat.ADMIN.chatIdConfig)
                 ? super.getRequestForEvent(event)
-                : [super.getRequestForEvent(event), duplicateToAdminRequest(event)].flatten()  as List<SendMessage>
+                : [super.getRequestForEvent(event), duplicateToAdminRequest(event)].flatten() as List<SendMessage>
     }
 
     @Override

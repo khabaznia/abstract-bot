@@ -1,6 +1,5 @@
 package com.khabaznia.bot.security.authorization.voter
 
-import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import io.micrometer.core.instrument.util.StringUtils
@@ -48,7 +47,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
         'User again tries access to resource.'
     }
 
-    private static boolean isControllerApplicable(MethodInvocation method){
+    private static boolean isControllerApplicable(MethodInvocation method) {
         !getMetaData(method)?.enableDuplicateRequests
     }
 
@@ -57,7 +56,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     private boolean isFeatureEnabled() {
-        env.getProperty(BLOCK_DUPLICATE_REQUESTS)
+        Boolean.valueOf(env.getProperty(BLOCK_DUPLICATE_REQUESTS))
     }
 
     private static boolean isNotSpecialButton(String updateMessage) {

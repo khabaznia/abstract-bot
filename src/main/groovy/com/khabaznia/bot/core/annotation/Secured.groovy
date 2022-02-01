@@ -1,6 +1,6 @@
 package com.khabaznia.bot.core.annotation
 
-import com.khabaznia.bot.security.Role
+import com.khabaznia.bot.enums.Role
 import org.springframework.stereotype.Component
 
 import java.lang.annotation.ElementType

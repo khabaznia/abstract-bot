@@ -1,7 +1,8 @@
-package com.khabaznia.bot.security
+package com.khabaznia.bot.security.authorization
 
 import com.khabaznia.bot.security.authorization.voter.FlowVoter
 import com.khabaznia.bot.security.authorization.voter.RepeatVoter
+import com.khabaznia.bot.security.authorization.voter.RestrictedBotVoter
 import com.khabaznia.bot.security.authorization.voter.RoleVoter
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.access.AccessDecisionManager
@@ -21,9 +22,11 @@ class MethodSecurityVoterConfiguration extends GlobalMethodSecurityConfiguration
     private FlowVoter flowVoter
     @Resource
     private RepeatVoter repeatVoter
+    @Resource
+    private RestrictedBotVoter restrictedBotVoter
 
     @Override
     AccessDecisionManager accessDecisionManager() {
-        new UnanimousBased([roleVoter, flowVoter, repeatVoter])
+        new UnanimousBased([roleVoter, flowVoter, repeatVoter, restrictedBotVoter])
     }
 }

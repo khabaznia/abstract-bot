@@ -1,6 +1,6 @@
 package com.khabaznia.bot.security.authorization.voter
 
-import com.khabaznia.bot.security.Role
+import com.khabaznia.bot.enums.Role
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.security.core.Authentication

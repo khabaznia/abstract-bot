@@ -9,7 +9,7 @@ import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.configuration.CustomLocaleResolver.AVAILABLE_LOCALES
+import static com.khabaznia.bot.core.Constants.AVAILABLE_LOCALES
 import static com.khabaznia.bot.core.Constants.CONFIGS_DELIMITER
 
 

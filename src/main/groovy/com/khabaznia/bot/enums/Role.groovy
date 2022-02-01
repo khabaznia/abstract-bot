@@ -1,4 +1,4 @@
-package com.khabaznia.bot.security
+package com.khabaznia.bot.enums
 
 enum Role {
 

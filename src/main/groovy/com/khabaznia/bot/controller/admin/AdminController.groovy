@@ -6,7 +6,7 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.core.annotation.Secured
 import com.khabaznia.bot.enums.MessageType
-import com.khabaznia.bot.security.Role
+import com.khabaznia.bot.enums.Role
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 

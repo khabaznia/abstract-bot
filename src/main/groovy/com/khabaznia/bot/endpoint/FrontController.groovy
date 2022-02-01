@@ -45,7 +45,7 @@ class FrontController implements Loggable {
     @Autowired
     private UpdateService updateService
 
-    @PostMapping('${bot.token}')
+    @PostMapping('${env.only.bot.token}')
     processUpdate(@RequestBody Update update) {
         log(update)
         setUpdateMessageToSession(update)

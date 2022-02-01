@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 
 import java.time.LocalDateTime
 
-import static com.khabaznia.bot.core.Constants.DELETE_MESSAGES_WEEKS_COUNT
+import static com.khabaznia.bot.core.Constants.EXPIRED_MESSAGES_IN_DAYS_COUNT
 
 @Slf4j
 @Service
@@ -115,6 +115,6 @@ class MessageService implements Configurable {
     }
 
     private Date getExpirationDate() {
-        LocalDateTime.now().minusWeeks(getLongConfig(DELETE_MESSAGES_WEEKS_COUNT)).toDate()
+        LocalDateTime.now().minusDays(getLongConfig(EXPIRED_MESSAGES_IN_DAYS_COUNT)).toDate()
     }
 }

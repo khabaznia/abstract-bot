@@ -11,7 +11,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.configuration.CustomLocaleResolver.AVAILABLE_LOCALES
+import static com.khabaznia.bot.core.Constants.AVAILABLE_LOCALES
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bot.controller.Constants.LANG_CONTROLLER.*
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN

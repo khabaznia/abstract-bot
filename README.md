@@ -1,34 +1,26 @@
-# abstract-bot
-### Clone
-```
-git remote add upstream https://github.com/khabaznia/abstract-bot.git
-git pull upstream master
-git push origin master
-```
+# abstract-telegram-bot
 
-### Run locally
-```
-gradle clean build bootRun
-```
+###Release 1.0.0
+Check example here -> https://t.me/example_abstract_bot
 
-### Things to do before run
-1. Create bot using BotFather
-2. Run ngrok
-3. Set webhook
+---
+## Quick start:
+
+### Fork
+
+### Register your bot. Set webhook
+
+### Configure
 ```
-curl -F "url=https://%ngrokHost%.ngrok.io/$BOT_TOKEN" https://api.telegram.org/bot$BOT_TOKEN/setWebhook
-```
-4. Set configs 
-```
-BOT_NAME
 BOT_TOKEN
 CHAT_ADMIN
-CHAT_LOGGING
-LOGGING_LEVEL
-DEFAULT_PORT
 DATABASE_URL
 ```
-### Deploy
+### Run
+
+#### Locally
+
+### Heroku
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
@@ -38,9 +30,52 @@ heroku git:remote -a
 heroku config:set BOT_NAME= BOT_TOKEN= CHAT_ADMIN= CHAT_LOGGING= LOGGING_LEVEL= 
 ```
 
+### Test features with example flows
 
-### Usefull links
+
+#### Useful links
 
 - [Heroku](https://dashboard.heroku.com/apps/anyway-bot)
 - [Telegram API](https://core.telegram.org/bots/api)
 
+---
+# Documentation:
+
+### Map commands. Annotations, Controllers
+Security. Roles
+
+Mappings. Previous path
+
+Default mappings
+
+### Support api methods.
+
+Main methods. How to create. Where to create
+
+### Builders. Localization. Text methods on String
+
+### Keyboards. Buttons
+
+### MessageTypes
+
+### Logging
+
+### Configs and features
+
+Duplicate messages
+
+Deleting old keyboards
+
+Integration stub
+
+Sending requests in queue
+
+Cron job
+
+Restricted mode
+
+---
+## Post MVP:
+Payments
+SetCommands
+Write tests ;) Wiremock. 

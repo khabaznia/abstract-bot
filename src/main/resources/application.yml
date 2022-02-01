@@ -8,7 +8,6 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-#      ddl-auto: create-drop
       ddl-auto: update
     show_sql: false
     open-in-view: false
@@ -22,8 +21,19 @@ logging:
     org.springframework: INFO
     com.khabaznia.bot: ${LOGGING_LEVEL}
 
-bot:
-  token: ${BOT_TOKEN}
-  name: ${BOT_NAME}
-  admin.chat.id: ${CHAT_ADMIN}
-  logging.chat.id: ${CHAT_LOGGING}
+env.only:
+  chat.inactive.minutes: 15
+  requests.per.second: 33
+  requests.delay.limit.in.single.chat: 500
+  expired.paths.in.days.count: 2
+  clean.up.database.cron.expression: 0 0 2 * * *
+  block.duplicate.requests: true
+  locale:
+    default: ru
+    available: ru,en,uk
+  bot:
+    token: ${BOT_TOKEN}
+    admin.chat.id: ${CHAT_ADMIN}
+    logging.chat.id: ${CHAT_LOGGING}
+    restricted.mode: false
+    restricted.mode.users: ${RESTRICTED_USERS}
