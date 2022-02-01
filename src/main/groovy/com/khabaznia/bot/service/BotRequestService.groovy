@@ -74,11 +74,11 @@ class BotRequestService implements Configurable {
     }
 
     BaseResponse executeMapped(BaseRequest request) {
-        getMappedResponse(sender.execute(request.apiMethod as BotApiMethod))
+        getMappedResponse(sender.execute(request.apiMethod))
     }
 
     private void handleException(Exception e, BaseRequest request) {
-        log.error 'Method failed to execute -> {}', request
+        log.error 'Method failed to execute -> {}', request.apiMethod.toString()
         if (e.message ==~ /.*\[429].*/) {
             log.error 'To many requests. Send request back to queue'
             def limit = getLimitFromMessage(e.message)

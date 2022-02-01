@@ -1,5 +1,6 @@
 package com.khabaznia.bot.service
 
+import com.khabaznia.bot.enums.UpdateType
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -34,18 +35,36 @@ class UpdateService {
 
     Map<String, String> getParametersFromUpdate(Update update) {
         def message = getMessageFromUpdate(update)
-        message?.contains(PARAMETERS_PREFIX)
-                ? getParametersFromMessage(message)
-                : [:]
+        message?.contains(PARAMETERS_PREFIX) ? getParametersFromMessage(message) : [:]
+    }
+
+    static UpdateType getUpdateType(Update update) {
+        def message = getMessage(update)
+        if (message.hasAudio()) return UpdateType.AUDIO
+        if (message.hasVideo()) return UpdateType.VIDEO
+        if (message.hasPhoto()) return UpdateType.IMAGE
+        message ? UpdateType.MESSAGE : UpdateType.NONE
+    }
+
+    static String getVideoId(Update update) {
+        def message = getMessage(update)
+        message?.hasVideo() ? message?.video?.fileId : null
+    }
+
+    static String getAudioId(Update update) {
+        def message = getMessage(update)
+        message?.hasAudio() ? message?.audio?.fileId : null
+    }
+
+    static String getPhotoId(Update update) {
+        def message = getMessage(update)
+        message?.hasPhoto() ? message?.photo[0]?.fileId : null
     }
 
     private static Message getMessage(Update update) {
-        if (update.hasMessage())
-            return update?.message
-        if (update.hasCallbackQuery())
-            return update?.callbackQuery?.message
-        if (update.hasEditedMessage())
-            return update?.editedMessage
+        if (update.hasMessage()) return update?.message
+        if (update.hasCallbackQuery()) return update?.callbackQuery?.message
+        if (update.hasEditedMessage()) return update?.editedMessage
         return null
     }
 

@@ -58,6 +58,7 @@ class ControllerMetaDataConverter {
         controllerMetaData.hasParameters = method.parameterCount > 0
         controllerMetaData.actionType = getActionType(method)
         controllerMetaData.params = getParams(method)
+        controllerMetaData.enableDuplicateRequests = getEnableDuplicateRequests(method)
         controllerMetaData
     }
 
@@ -90,6 +91,10 @@ class ControllerMetaDataConverter {
 
     private static String getPreviousPath(Method method) {
         method.getAnnotation(BotRequest.class).after()
+    }
+
+    private static Boolean getEnableDuplicateRequests(Method method) {
+        method.getAnnotation(BotRequest.class).enableDuplicateRequests()
     }
 
     private static List<String> getRoles(Method method) {

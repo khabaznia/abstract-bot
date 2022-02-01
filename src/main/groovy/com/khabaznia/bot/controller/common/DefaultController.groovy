@@ -13,7 +13,7 @@ import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 @BotController
 class DefaultController extends AbstractBotController {
 
-    @BotRequest(path = DEFAULT)
+    @BotRequest(path = DEFAULT, enableDuplicateRequests = true)
     defaultAction() {
         log.debug 'In default controller'
     }

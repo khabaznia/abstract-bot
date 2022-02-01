@@ -3,7 +3,7 @@ package com.khabaznia.bot.core
 class Constants {
     public static final String PREVIOUS_PATH_DELIMITER = '|'
     public static final String COMMANDS_DELIMITER = '/'
-    public static final String PARAMETERS_PREFIX = '::'
+    public static final String PARAMETERS_PREFIX = '?'
     public static final String PARAMETERS_DELIMITER = ';'
     public static final String PARAMETER_KEY_VALUE_DELIMITER = '='
     public static final String ENCRYPTED_PATH_PREFIX = '/encrypted'

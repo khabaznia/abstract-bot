@@ -46,7 +46,7 @@ class UserService implements Configurable, Loggable {
         def lastActionFullPath = SessionUtil.getAttribute(UPDATE_MESSAGE_ATTR)
         def currentChat = SessionUtil.currentChat
         currentChat.lastAction = path
-        currentChat.lastActionFullPath = lastActionFullPath
+        if (lastActionFullPath) currentChat.lastActionFullPath = lastActionFullPath
         chatRepository.save(currentChat)
     }
 

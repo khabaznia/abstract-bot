@@ -8,8 +8,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.GetMe;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -45,5 +44,15 @@ public abstract class RequestMapper {
 
     public abstract PinChatMessage toApiMethod(PinMessage source);
 
+    @Mapping(target = "audio", expression = "java(new org.telegram.telegrambots.meta.api.objects.InputFile(source.getAudio()))")
+    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    public abstract SendAudio toApiMethod(com.khabaznia.bot.meta.request.impl.SendAudio source);
 
+    @Mapping(target = "video", expression = "java(new org.telegram.telegrambots.meta.api.objects.InputFile(source.getVideo()))")
+    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    public abstract SendVideo toApiMethod(com.khabaznia.bot.meta.request.impl.SendVideo source);
+
+    @Mapping(target = "photo", expression = "java(new org.telegram.telegrambots.meta.api.objects.InputFile(source.getPhoto()))")
+    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    public abstract SendPhoto toApiMethod(com.khabaznia.bot.meta.request.impl.SendPhoto source);
 }

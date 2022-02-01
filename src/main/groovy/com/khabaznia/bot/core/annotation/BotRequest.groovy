@@ -17,4 +17,6 @@ import static com.khabaznia.bot.controller.Constants.COMMON.EMPTY_PATH
     String path() default EMPTY_PATH
 
     String after() default ''
+
+    boolean enableDuplicateRequests() default false
 }

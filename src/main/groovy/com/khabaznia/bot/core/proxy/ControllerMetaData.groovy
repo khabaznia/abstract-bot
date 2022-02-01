@@ -21,4 +21,5 @@ class ControllerMetaData {
     String previousPath
     String controllerPath
     Boolean returnString
+    Boolean enableDuplicateRequests
 }

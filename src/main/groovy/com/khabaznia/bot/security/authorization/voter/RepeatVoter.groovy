@@ -30,7 +30,10 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     int voteInternal(Authentication authentication, MethodInvocation method) {
         def result = ACCESS_GRANTED
         def updateMessage = SessionUtil.getAttribute(UPDATE_MESSAGE_ATTR)
-        if (isFeatureEnabled() && isNotRedirectCallFromController() && isNotSpecialButton(updateMessage)) {
+        if (isFeatureEnabled()
+                && isNotRedirectCallFromController()
+                && isNotSpecialButton(updateMessage)
+                && isControllerApplicable(method)) {
             log.debug 'User last action -> {}, current action {}', userLastActionFullPath, updateMessage
             result = userLastActionFullPath == updateMessage
                     ? ACCESS_DENIED
@@ -43,6 +46,10 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     @Override
     protected String getMessage() {
         'User again tries access to resource.'
+    }
+
+    private static boolean isControllerApplicable(MethodInvocation method){
+        !getMetaData(method)?.enableDuplicateRequests
     }
 
     private static boolean isNotRedirectCallFromController() {

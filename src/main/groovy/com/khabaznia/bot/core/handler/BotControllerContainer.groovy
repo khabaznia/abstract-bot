@@ -3,14 +3,12 @@ package com.khabaznia.bot.core.handler
 import com.khabaznia.bot.exception.ControllerGenerationException
 import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.meta.Emoji
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import java.lang.reflect.Modifier
 
 import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
-import static com.khabaznia.bot.controller.Constants.COMMON.EMPTY_PATH
 import static com.khabaznia.bot.core.Constants.PREVIOUS_PATH_DELIMITER
 
 @Slf4j
@@ -18,7 +16,7 @@ import static com.khabaznia.bot.core.Constants.PREVIOUS_PATH_DELIMITER
 class BotControllerContainer {
 
     private Map<String, BotControllerProxy> controllerMap
-    private List<String> emojiList
+    List<String> emojiList
 
     BotControllerContainer() {
         controllerMap = [:]
@@ -38,36 +36,11 @@ class BotControllerContainer {
         controllerMap[path] = proxy
     }
 
-    BotControllerProxy getController(String currentPath) {
-        def emoji = emojiList.find { currentPath.endsWith(it) }
-        log.trace 'Emoji from path {}', emoji
-        def pathWithoutEmoji = emoji ? currentPath.tokenize(emoji)[0].strip() : currentPath
-        log.info 'Try to find controller for path {}', pathWithoutEmoji
-        def pathMatchingControllers = controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$pathWithoutEmoji/ }
-        if (pathMatchingControllers.isEmpty()) {
-            log.debug "Controller not found. Try to find $EMPTY_PATH controller that should match any user input"
-            pathMatchingControllers = controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$EMPTY_PATH/ }
-        }
-        getControllerFromMatching(pathMatchingControllers)
+    Map<String, BotControllerProxy> getMatchingControllers(String path){
+        controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$path/}
     }
 
-    private BotControllerProxy getControllerFromMatching(Map<String, BotControllerProxy> matchingControllers) {
-        log.trace 'Matching controllers -> {}', matchingControllers*.key
-        def result = null
-        if (matchingControllers) {
-            if (matchingControllers.size() == 1 && matchingControllers?.entrySet()[0]?.key?.startsWith(PREVIOUS_PATH_DELIMITER)) {
-                result = matchingControllers.entrySet()[0].value
-            } else {
-                def lastAction = SessionUtil.currentChat.lastAction
-                log.trace 'Try to get controller by lastAction {}', lastAction
-                result = matchingControllers.find({ it.key ==~ /$lastAction\$PREVIOUS_PATH_DELIMITER.*/ })?.value
-            }
-        }
-        result ?: defaultController
-
-    }
-
-    private BotControllerProxy getDefaultController() {
+    BotControllerProxy getDefaultController() {
         log.info "Controller not found. Using $DEFAULT controller"
         controllerMap[PREVIOUS_PATH_DELIMITER + DEFAULT]
     }

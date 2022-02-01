@@ -28,6 +28,7 @@ class StrategiesContainer {
         map[MessageType.REPLY_KEYBOARD] = context.getBean('replyKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
         map[MessageType.EDIT] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
         map[MessageType.EDIT_AND_DELETE] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageType.MEDIA] = context.getBean('noActionRequestProcessingStrategy') as RequestProcessingStrategy
         log.debug 'Request strategies map: {}', map
         map
     }

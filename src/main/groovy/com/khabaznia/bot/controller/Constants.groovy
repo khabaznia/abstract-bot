@@ -20,6 +20,9 @@ final class Constants {
 
     static final class COMMON {
         static final String DEFAULT = '/default'
+        static final String IMAGE_CONTROLLER = '/process_image'
+        static final String AUDIO_CONTROLLER = '/process_audio'
+        static final String VIDEO_CONTROLLER = '/process_video'
         static final String EMPTY_PATH = '/emptyPath'
         static final String START = '/start'
         static final String TO_MAIN = 'path.main'

@@ -24,7 +24,7 @@ class ExampleController extends AbstractBotController {
     private StubService stubService
 
     @Localized
-    @BotRequest(path = EXAMPLE)
+    @BotRequest(path = EXAMPLE, enableDuplicateRequests = true)
     getReply() {
         sendMessage
                 .key('Here is your reply keyboard')
@@ -46,10 +46,6 @@ class ExampleController extends AbstractBotController {
         sendMessage.key('test.italic'.italic())
         sendMessage.key('test.underline'.underline())
         sendMessage.key('test.strikethrough'.strikethrough())
-
-        for (int i = 0; i < 30; i++) {
-            sendMessage.key('Message '.strikethrough() + i)
-        }
     }
 
     @BotRequest(path = TEST_LOGS, after = EXAMPLE)

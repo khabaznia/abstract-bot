@@ -10,7 +10,8 @@ enum MessageType {
     ONE_TIME_INLINE_KEYBOARD, // Message with inline keyboard that should be deleted after any button press
     PINNED, // Pinned message
     EDIT, // Edit existing message. Updates in db
-    EDIT_AND_DELETE // Edit existing message. Updates in db. Deleted with next message
+    EDIT_AND_DELETE, // Edit existing message. Updates in db. Deleted with next message
+    MEDIA // For AUDIO, IMAGE, VIDEO messages
 
     final static List<MessageType> FORCE_DELETE_MESSAGE_GROUP = [SKIP, DELETE]
     final static List<MessageType> EDIT_MESSAGE_GROUP = [EDIT, EDIT_AND_DELETE]

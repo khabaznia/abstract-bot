@@ -29,6 +29,7 @@ import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_M
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID_ATTR
 
 import static com.khabaznia.bot.exception.ExceptionUtil.getMessageFromUndeclaredThrowableException
+import static com.khabaznia.bot.service.UpdateService.getUpdateType
 
 
 @Slf4j
@@ -64,7 +65,7 @@ class FrontController implements Loggable {
     }
 
     private setUpdateMessageToSession(Update update) {
-        SessionUtil.setAttribute(UPDATE_MESSAGE_ATTR, updateService.getMessageFromUpdate(update))
+        SessionUtil.setAttribute(UPDATE_MESSAGE_ATTR, updateService.getMessageFromUpdate(update) ?: getUpdateType(update).defaultController)
         SessionUtil.setAttribute(UPDATE_ID_ATTR, update.updateId.toString())
     }
 

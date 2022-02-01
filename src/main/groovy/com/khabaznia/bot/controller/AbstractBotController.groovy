@@ -1,6 +1,7 @@
 package com.khabaznia.bot.controller
 
 import com.khabaznia.bot.enums.ButtonType
+import com.khabaznia.bot.enums.LoggingChat
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.event.DeleteOneTimeKeyboardMessagesEvent
@@ -10,7 +11,10 @@ import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.EditMessage
+import com.khabaznia.bot.meta.request.impl.SendAudio
 import com.khabaznia.bot.meta.request.impl.SendMessage
+import com.khabaznia.bot.meta.request.impl.SendPhoto
+import com.khabaznia.bot.meta.request.impl.SendVideo
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
 import com.khabaznia.bot.trait.Configurable
@@ -54,6 +58,10 @@ abstract class AbstractBotController implements Configurable, Loggable {
         userService.setPreviousPath originalPath
     }
 
+    String getAdminChatId(){
+        getConfig(LoggingChat.ADMIN.chatIdConfig)
+    }
+
     SendMessage getSendMessage() {
         def message = context.getBean 'sendMessage'
         requests.add(message)
@@ -62,6 +70,24 @@ abstract class AbstractBotController implements Configurable, Loggable {
 
     EditMessage getEditMessage() {
         def message = context.getBean 'editMessage'
+        requests.add(message)
+        message
+    }
+
+    SendPhoto getSendPhoto() {
+        def message = context.getBean 'sendPhoto'
+        requests.add(message)
+        message
+    }
+
+    SendVideo getSendVideo() {
+        def message = context.getBean 'sendVideo'
+        requests.add(message)
+        message
+    }
+
+    SendAudio getSendAudio() {
+        def message = context.getBean 'sendAudio'
         requests.add(message)
         message
     }
