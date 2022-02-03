@@ -38,6 +38,9 @@ class Message {
     @UpdateTimestamp
     Date updateDate
 
+    @Column(name = "isSent")
+    Boolean isSent
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
     MessageType type

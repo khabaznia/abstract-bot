@@ -2,6 +2,7 @@ package com.khabaznia.bot.listener
 
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.DeleteMessagesEvent
+import com.khabaznia.bot.meta.request.impl.DeleteMessage
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
@@ -31,14 +32,20 @@ class DeleteMessagesEventListener {
     void onApplicationEvent(DeleteMessagesEvent event) {
         def messageTypes = event.types ?: DELETE_MESSAGE_GROUP
         def currentChatCode = SessionUtil.currentChat.code
-        def deleteMessageRequests = messageTypes
-                .collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }
-                .flatten()
-                .collect { it as Message }
-                .findAll { it.messageId != null && it.messageId != 0 }
-                .collect { context.getBean('deleteMessage').messageId(it.messageId) }
+        def messagesToDelete = getMessagesToDelete(messageTypes, currentChatCode)
+        messagesToDelete.collect { convertToRequest(it) }
                 .each { requestService.execute(it) }
-        log.info 'Delete {} messages of type {} from chat {}', deleteMessageRequests?.size(), messageTypes, currentChatCode
-        messageTypes.each { messageService.removeMessagesOfType(it) }
+        messagesToDelete.each { messageService.removeMessageForUid(it.uid) }
+        log.info 'Delete {} messages of type {} from chat {}', messagesToDelete?.size(), messageTypes, currentChatCode
+    }
+
+    private List<Message> getMessagesToDelete(List<MessageType> messageTypes, String currentChatCode) {
+        messageTypes.collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }
+                .flatten().collect { it as Message }
+                .findAll { it.messageId != null && it.messageId != 0 }
+    }
+
+    private DeleteMessage convertToRequest(Message it) {
+        context.getBean('deleteMessage').messageId(it.messageId)
     }
 }

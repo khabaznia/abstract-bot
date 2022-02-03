@@ -47,12 +47,12 @@ abstract class AbstractBotController implements Configurable, Loggable {
 
     void before(Update update) {
         setUp(update)
-        deleteMessages()
-        cleanCurrentOneTimeKeyboard()
         updateCurrentKeyboard()
     }
 
     void after(String originalPath) {
+        deleteOldMessages()
+        deleteCurrentOneTimeKeyboard()
         deleteOldInlineKeyboardMessages()
         publisher.publishEvent new ExecuteMethodsEvent(requests: requests)
         userService.setPreviousPath originalPath
@@ -105,11 +105,11 @@ abstract class AbstractBotController implements Configurable, Loggable {
         this.update = update
     }
 
-    void deleteMessages() {
+    void deleteOldMessages() {
         publisher.publishEvent new DeleteMessagesEvent()
     }
 
-    void deleteMessages(List<MessageType> types) {
+    void deleteOldMessages(List<MessageType> types) {
         publisher.publishEvent new DeleteMessagesEvent(types: types)
     }
 
@@ -125,7 +125,7 @@ abstract class AbstractBotController implements Configurable, Loggable {
         }
     }
 
-    private void cleanCurrentOneTimeKeyboard() {
+    private void deleteCurrentOneTimeKeyboard() {
         def isOneTime = Boolean.valueOf(updateService?.getParametersFromUpdate(update)?.get(ONE_TIME_KEYBOARD))
         if (isOneTime) {
             def messageUid = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_UID)

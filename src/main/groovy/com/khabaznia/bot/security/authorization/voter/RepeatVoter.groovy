@@ -43,6 +43,11 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     @Override
+    protected boolean sendWarning() {
+        false
+    }
+
+    @Override
     protected String getMessage() {
         'User again tries access to resource.'
     }

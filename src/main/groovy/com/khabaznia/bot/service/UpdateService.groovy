@@ -17,7 +17,7 @@ import static com.khabaznia.bot.security.Constants.CHAT_ID_DELIMITER
 class UpdateService {
 
     @Autowired
-    PathCryptService pathCryptService
+    private PathCryptService pathCryptService
 
     static String getChatInfoFromUpdate(Update update) {
         def message = getMessage(update)

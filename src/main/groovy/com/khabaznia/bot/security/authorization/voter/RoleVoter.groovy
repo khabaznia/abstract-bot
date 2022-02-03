@@ -28,6 +28,11 @@ class RoleVoter extends AbstractBotAuthorizationVoter {
         'User role not acceptable for this controller.'
     }
 
+    @Override
+    protected boolean sendWarning() {
+        true
+    }
+
     private static List<String> getUserRoles(Authentication authentication) {
         authentication.authorities.collect { it.role - ROLE_PREFIX }
     }

@@ -24,7 +24,7 @@ logging:
 env.only:
   chat.inactive.minutes: 15
   requests.per.second: 33
-  requests.delay.limit.in.single.chat: 500
+  requests.delay.limit.in.single.chat: 450
   expired.paths.in.days.count: 2
   clean.up.database.cron.expression: 0 0 2 * * *
   block.duplicate.requests: true

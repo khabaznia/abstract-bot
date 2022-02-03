@@ -38,7 +38,7 @@ class AdminController extends AbstractBotController {
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = ADMIN_TO_MAIN)
     adminMenu() {
-        deleteMessages(INLINE_KEYBOARD_MESSAGE_GROUP)
+        deleteOldMessages(INLINE_KEYBOARD_MESSAGE_GROUP)
         sendMessage.key('message.choose.action')
                 .emoji(FINGER_DOWN)
                 .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])

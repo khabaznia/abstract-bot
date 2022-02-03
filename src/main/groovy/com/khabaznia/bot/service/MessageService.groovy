@@ -5,6 +5,7 @@ import com.khabaznia.bot.model.Button
 import com.khabaznia.bot.model.Keyboard
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.repository.ButtonRepository
+import com.khabaznia.bot.repository.EncryptedPathRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
 
@@ -12,6 +13,7 @@ import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 
 import java.time.LocalDateTime
@@ -28,6 +30,8 @@ class MessageService implements Configurable {
     private ButtonRepository buttonRepository
     @Autowired
     private KeyboardRepository keyboardRepository
+    @Autowired
+    private PathCryptService pathCryptService
 
     Message saveMessage(Message message) {
         if (message.label && messageRepository.existsByLabel(message.label)) {
@@ -56,12 +60,17 @@ class MessageService implements Configurable {
 
     void removeMessagesOfType(MessageType type) {
         messageRepository.findByTypeAndChatCode(type, SessionUtil.currentChat.code)
-                .each { messageRepository.delete(it) }
+                .each { removeMessageForUid(it.uid) }
     }
 
     void removeMessageForUid(String uid) {
         log.trace "Removing message for uid: {}", uid
-        messageRepository.deleteById(uid)
+        try {
+            messageRepository.deleteById(uid)
+            pathCryptService.deletePathsOfMessage(uid)
+        } catch (EmptyResultDataAccessException e) {
+            log.warn "Error during deleting message and related buttons. Seems, was deleted by another thread. Uid - {}", uid
+        }
     }
 
     void removeMessage(String uniqueId) {

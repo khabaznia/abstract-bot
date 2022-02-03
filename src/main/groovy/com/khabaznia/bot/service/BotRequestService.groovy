@@ -80,13 +80,12 @@ class BotRequestService implements Configurable {
     private void handleException(Exception e, BaseRequest request) {
         log.error 'Method failed to execute -> {}', request.apiMethod.toString()
         if (e.message ==~ /.*\[429].*/) {
-            log.error 'To many requests. Send request back to queue'
+            log.warn 'To many requests. Send request back to queue'
             def limit = getLimitFromMessage(e.message)
             executeInQueueWithLimit(request, limit)
-            throw new BotExecutionApiMethodException("To many requests. Retry after $limit", e)
         } else if (e.message ==~ /.*\[400].*message to delete not found.*/) {
             if (request instanceof DeleteMessage && request.getMessageId()) {
-                log.error 'Can\'t delete some stuck message. Dropping from DB.'
+                log.warn 'Message was deleted by another . Dropping from DB.'
                 messageService.removeMessage(request.messageId.toString())
             }
         } else {
@@ -113,7 +112,7 @@ class BotRequestService implements Configurable {
             def retrySeconds = errorMessage.split('retry after ')[1]?.strip()
             result = Long.parseLong(retrySeconds)
         } catch (NumberFormatException e) {
-            log.debug 'Can\'t parse real limit from API. Set {} seconds', result
+            log.warn 'Can\'t parse real limit from API. Set {} seconds', result
         }
         result
     }

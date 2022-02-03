@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface EncryptedPathRepository extends JpaRepository<EncryptedPath, String> {
 
-    @Query("SELECT p FROM encrypted_path p where p.updateDate <= :updateTimeStamp")
+    @Query("SELECT p FROM encrypted_path p WHERE p.updateDate <= :updateTimeStamp")
     List<EncryptedPath> findAllWithUpdateDateTimeBefore(@Param("updateTimeStamp") Date updateTimeStamp)
+
+    List<EncryptedPath> findByValueContaining(String messageId)
 }

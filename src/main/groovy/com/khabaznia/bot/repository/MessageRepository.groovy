@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MessageRepository extends JpaRepository<Message, String> {
 
-    @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c WHERE m.type=?1 AND m.messageId IS NOT NULL AND c.code=?2 ORDER BY m.updateDate DESC ")
+    @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c WHERE m.type=?1 AND m.messageId IS NOT NULL AND c.code=?2 AND m.isSent=true ORDER BY m.updateDate DESC ")
     List<Message> findByTypeAndChatCode(MessageType type, String chatCode)
 
     @Query("SELECT m FROM message m where m.updateDate <= :updateTimeStamp")

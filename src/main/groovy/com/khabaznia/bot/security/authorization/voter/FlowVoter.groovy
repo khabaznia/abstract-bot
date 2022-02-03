@@ -36,6 +36,11 @@ class FlowVoter extends AbstractBotAuthorizationVoter {
         'Flow is broken. User\'s previous path mismatch to previous path of controller'
     }
 
+    @Override
+    protected boolean sendWarning() {
+        false
+    }
+
     private boolean checkUserLastAction(String previousPath, String lastAction) {
         previousPath.isBlank()
                 || lastAction?.endsWith(previousPath)

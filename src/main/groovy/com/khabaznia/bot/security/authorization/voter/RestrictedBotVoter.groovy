@@ -33,6 +33,11 @@ class RestrictedBotVoter extends AbstractBotAuthorizationVoter {
     }
 
     @Override
+    protected boolean sendWarning() {
+        true
+    }
+
+    @Override
     protected String getMessage() {
         'User is not in list of restricted users.'
     }

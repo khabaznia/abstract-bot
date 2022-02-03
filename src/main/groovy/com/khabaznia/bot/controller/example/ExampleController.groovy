@@ -11,9 +11,14 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
+import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
+import static com.khabaznia.bot.meta.Emoji.LEFT_ARROW
+import static com.khabaznia.bot.meta.Emoji.MEDITATE
+import static com.khabaznia.bot.meta.Emoji.WARNING_TRIANGLE
 
 @Slf4j
 @Component
@@ -29,7 +34,7 @@ class ExampleController extends AbstractBotController {
         sendMessage
                 .key('Here is your reply keyboard')
                 .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
-                                [EXAMPLE], [TO_MAIN]])
+                                [EXAMPLE.addEmoji(MEDITATE)], [TO_MAIN.addEmoji(LEFT_ARROW)]])
         sendMessage.key(TEST_LOGS + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
         sendMessage.key('/anyString - ' + 'pins next message'.italic()).delete()
         sendMessage.key('/checkTexts').delete()
@@ -77,24 +82,24 @@ class ExampleController extends AbstractBotController {
     @Localized
     @BotRequest(path = MODIFIABLE_INLINE_KEYBOARD)
     getFeatures() {
-        sendMessage.key('action two')
+        sendMessage.key('modifiable.inline.keyboard')
                 .keyboard(inlineKeyboard
-                        .button('example.simple.button', '/query', [(UNLIMITED_CALL): 'true'])
-                        .button('example.emoji.button', Emoji.AVOCADO, '/query')
-                        .buttonWithBinding('example.binding.button', '/query', [binding: 'some'])
+                        .button('button.example.simple', Emoji.AVOCADO, '/query', [(UNLIMITED_CALL): 'true'])
+                        .buttonWithBinding('button.example.binding', '/query', [binding: 'Some'])
                         .row()
-                        .oneTimeButton('OT button', '/query')
-                        .oneTimeButton('OT emoji', Emoji.BOAT, '/query')
-                        .oneTimeButton('OT param', '/queryWithParam', [someUniqueId: '34'])
+                        .oneTimeButton('button.one.time.simple', DEFAULT)
+                        .oneTimeButton('button.one.time.with.query', Emoji.BOAT, '/query')
+                        .oneTimeButton('button.one.time.with.param', '/queryWithParam', [someUniqueId: 'data from button'])
                         .row()
-                        .switchButton('SB with param', '/queryWithParam', true, [someUniqueId: '34']))
+                        .switchButton('button.example.switch', DEFAULT, true, [someUniqueId: 'some data from button']))
     }
 
     @Localized
     @BotRequest(path = EDITING_MESSAGES)
     actionTwo() {
-        sendMessage.key('Edit message ')
-                .inlineKeyboard([['example.button.one': "/exampleMessage", 'example.button.two': "/editExampleMessage"],
+        sendMessage.key('message.action.edit')
+                .label('keyboardMessage')
+                .inlineKeyboard([['button.example.message': "/exampleMessage"],['button.edit.example.message': "/editExampleMessage"],
                                  [('button.example.back'): BACK_ACTION]])
     }
 
@@ -106,7 +111,7 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = '/editExampleMessage')
     editExampleMessage() {
-        editMessage.key('<b>Some example message</b> - !edited!')
+        editMessage.key("<b>Some example message</b> $WARNING_TRIANGLE $WARNING_TRIANGLE $WARNING_TRIANGLE")
                 .label('messageToEdit')
                 .delete()
     }
@@ -118,8 +123,7 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = '/queryWithParam')
     query(String someUniqueId) {
-        sendMessage.key('query - <i>ok</i>').delete()
-        sendMessage.key(someUniqueId).delete()
+        sendMessage.key("This param was in button request -> $someUniqueId").delete()
     }
 
     @Localized
@@ -130,7 +134,7 @@ class ExampleController extends AbstractBotController {
                 .keyboard(inlineKeyboard.button('Yes', YES_ACTION)
                         .button("No, just count", NO_ACTION, [category: 'science'])
                         .row()
-                        .button('button.example.back', BACK_ACTION)
+                        .button('button.example.back', LEFT_ARROW, BACK_ACTION)
                 )
                 .type(MessageType.ONE_TIME_INLINE_KEYBOARD)
     }
@@ -143,14 +147,14 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = NO_ACTION)
     noAction(String category) {
-        sendMessage.key('Count of entries for category $category').binding([category: category])
+        sendMessage.key('Count of entries for category ' + '\"$category\"'.underline()).binding([category: category])
         def count = stubService.entries(category)
         sendMessage.key('Key count -> $count').binding([count: count as String])
     }
 
     @BotRequest(path = BACK_ACTION)
     String backAction() {
-        sendMessage.key('back')
+        sendMessage.key('back').delete()
         EXAMPLE
     }
 }

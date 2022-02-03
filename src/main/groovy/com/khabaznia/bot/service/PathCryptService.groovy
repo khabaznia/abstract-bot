@@ -17,7 +17,7 @@ import static com.khabaznia.bot.core.Constants.EXPIRED_MESSAGES_IN_DAYS_COUNT
 class PathCryptService implements Configurable {
 
     @Autowired
-    EncryptedPathRepository repository
+    private EncryptedPathRepository repository
 
     static boolean isEncrypted(String path) {
         path?.startsWith(ENCRYPTED_PATH_PREFIX)
@@ -34,6 +34,11 @@ class PathCryptService implements Configurable {
         def encryptedPath = repository.findById(path)
         encryptedPath.ifPresent { repository.save(it) }
         encryptedPath.get().value
+    }
+
+    void deletePathsOfMessage(String messageId) {
+        repository.findByValueContaining(messageId)
+                .each { repository.delete(it) }
     }
 
     Integer deleteExpiredPaths() {
