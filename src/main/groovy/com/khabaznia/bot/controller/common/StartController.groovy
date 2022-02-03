@@ -4,6 +4,7 @@ import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
+import com.khabaznia.bot.enums.ChatType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.util.SessionUtil
@@ -29,7 +30,7 @@ class StartController extends AbstractBotController {
         def redirect = TO_MAIN
         switch (SessionUtil.currentUser.role) {
             case UserRole.ADMIN:
-                redirect = SessionUtil.currentChat.type == PRIVATE_CHAT_TYPE ? ADMIN_START : TO_MAIN
+                redirect = SessionUtil.currentChat.type == ChatType.PRIVATE ? ADMIN_START : TO_MAIN
                 break
             case UserRole.USER:
                 redirect = USER_START
@@ -45,7 +46,7 @@ class StartController extends AbstractBotController {
         def redirect = DEFAULT
         switch (SessionUtil.currentUser.role) {
             case UserRole.ADMIN:
-                redirect = SessionUtil.currentChat.type == PRIVATE_CHAT_TYPE ? ADMIN_TO_MAIN : DEFAULT
+                redirect = SessionUtil.currentChat.type == ChatType.PRIVATE ? ADMIN_TO_MAIN : DEFAULT
                 break
             case UserRole.USER:
                 redirect = USER_TO_MAIN

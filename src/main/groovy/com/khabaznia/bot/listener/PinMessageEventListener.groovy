@@ -1,5 +1,6 @@
 package com.khabaznia.bot.listener
 
+import com.khabaznia.bot.enums.ChatType
 import com.khabaznia.bot.event.PinMessageEvent
 import com.khabaznia.bot.meta.request.impl.EditMessage
 import com.khabaznia.bot.meta.request.impl.PinMessage
@@ -29,7 +30,7 @@ class PinMessageEventListener {
     void onApplicationEvent(PinMessageEvent event) {
         log.info 'Pin message with id {}', event.messageId
         def message = messageService.getMessage(event.messageId)
-        def pinRequest = message.chat.type == PRIVATE_CHAT_TYPE
+        def pinRequest = message.chat.type == ChatType.PRIVATE
                 ? getEditMessage(event.messageId, message)
                 : getPinMessage(event.messageId)
         pinRequest.setChatId(message.chat.code)

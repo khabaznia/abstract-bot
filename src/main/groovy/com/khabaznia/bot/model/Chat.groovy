@@ -1,7 +1,7 @@
 package com.khabaznia.bot.model
 
 import com.khabaznia.bot.enums.ChatRole
-
+import com.khabaznia.bot.enums.ChatType
 import groovy.transform.ToString
 
 import javax.persistence.CascadeType
@@ -32,8 +32,9 @@ class Chat {
     @Column(name = "last_action_full_path")
     String lastActionFullPath
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    String type
+    ChatType type
 
     @Enumerated(EnumType.STRING)
     @NotNull

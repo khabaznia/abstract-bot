@@ -1,6 +1,7 @@
 package com.khabaznia.bot.service
 
 import com.khabaznia.bot.enums.ChatRole
+import com.khabaznia.bot.enums.ChatType
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.model.Chat
 import com.khabaznia.bot.model.User
@@ -92,7 +93,7 @@ class UserService implements Configurable, Loggable {
         code == getConfig(LOGGING_CHAT_ID) ? ChatRole.LOGGING_CHAT : ChatRole.NONE
     }
 
-    static String getChatType(String code) {
-        code.startsWith('-') ? GROUP_CHAT_TYPE : PRIVATE_CHAT_TYPE
+    static ChatType getChatType(String code) {
+        code.startsWith('-') ? ChatType.GROUP : ChatType.PRIVATE
     }
 }
