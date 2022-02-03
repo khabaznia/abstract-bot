@@ -32,15 +32,15 @@ class DeleteMessagesEventListener {
     void onApplicationEvent(DeleteMessagesEvent event) {
         def messageTypes = event.types ?: DELETE_MESSAGE_GROUP
         def currentChatCode = SessionUtil.currentChat.code
-        def messagesToDelete = getMessagesToDelete(messageTypes, currentChatCode)
+        def messagesToDelete = getMessagesToDelete(messageTypes, currentChatCode, event.updateId)
         messagesToDelete.collect { convertToRequest(it) }
                 .each { requestService.execute(it) }
-        messagesToDelete.each { messageService.removeMessageForUid(it.uid) }
+        messagesToDelete.each { messageService.removeMessageForUid(it.getUid()) }
         log.info 'Delete {} messages of type {} from chat {}', messagesToDelete?.size(), messageTypes, currentChatCode
     }
 
-    private List<Message> getMessagesToDelete(List<MessageType> messageTypes, String currentChatCode) {
-        messageTypes.collect { messageService.getMessagesForTypeAndChat(it, currentChatCode) }
+    private List<Message> getMessagesToDelete(List<MessageType> messageTypes, String currentChatCode, Integer updateId) {
+        messageTypes.collect { messageService.getMessagesForTypeExcludingForUpdateId(it, currentChatCode, updateId) }
                 .flatten().collect { it as Message }
                 .findAll { it.messageId != null && it.messageId != 0 }
     }

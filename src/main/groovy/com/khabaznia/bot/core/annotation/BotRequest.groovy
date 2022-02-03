@@ -7,14 +7,14 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
-import static com.khabaznia.bot.controller.Constants.COMMON.EMPTY_PATH
+import static com.khabaznia.bot.controller.Constants.COMMON.ANY_STRING
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 @interface BotRequest {
 
-    String path() default EMPTY_PATH
+    String path() default ANY_STRING
 
     String after() default ''
 

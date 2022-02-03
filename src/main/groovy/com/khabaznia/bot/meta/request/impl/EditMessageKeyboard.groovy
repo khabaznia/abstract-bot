@@ -16,4 +16,5 @@ import org.springframework.stereotype.Component
 class EditMessageKeyboard extends AbstractKeyboardMessage<MessageResponse> {
 
     Integer messageId
+    String label
 }

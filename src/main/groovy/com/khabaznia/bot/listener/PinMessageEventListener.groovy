@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.core.Constants.PRIVATE_CHAT_TYPE
+
 @Slf4j
 @Component
 class PinMessageEventListener {
@@ -27,7 +29,7 @@ class PinMessageEventListener {
     void onApplicationEvent(PinMessageEvent event) {
         log.info 'Pin message with id {}', event.messageId
         def message = messageService.getMessage(event.messageId)
-        def pinRequest = message.chat.type == 'private'
+        def pinRequest = message.chat.type == PRIVATE_CHAT_TYPE
                 ? getEditMessage(event.messageId, message)
                 : getPinMessage(event.messageId)
         pinRequest.setChatId(message.chat.code)

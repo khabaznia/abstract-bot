@@ -5,4 +5,5 @@ import com.khabaznia.bot.enums.MessageType
 class DeleteMessagesEvent {
 
     List<MessageType> types
+    Integer updateId
 }

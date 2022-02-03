@@ -38,8 +38,8 @@ class Message {
     @UpdateTimestamp
     Date updateDate
 
-    @Column(name = "isSent")
-    Boolean isSent
+    @Column(name = "update_id")
+    Integer updateId
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")

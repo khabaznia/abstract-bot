@@ -19,6 +19,7 @@ abstract class BaseRequest<T extends BaseResponse> {
     MessageType type = MessageType.SKIP
     String relatedMessageUid
     Object apiMethod
+    Integer updateId
 
     BaseRequest delete() {
         type = MessageType.DELETE

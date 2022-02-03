@@ -15,6 +15,7 @@ import static com.khabaznia.bot.controller.Constants.COMMON.*
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.ADMIN_START
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_START
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_TO_MAIN
+import static com.khabaznia.bot.core.Constants.PRIVATE_CHAT_TYPE
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
 import static com.khabaznia.bot.meta.Emoji.GEAR
 
@@ -25,31 +26,39 @@ class StartController extends AbstractBotController {
 
     @BotRequest(path = START)
     String onStart() {
+        def redirect = TO_MAIN
         switch (SessionUtil.currentUser.role) {
             case UserRole.ADMIN:
-                return ADMIN_START
+                redirect = SessionUtil.currentChat.type == PRIVATE_CHAT_TYPE ? ADMIN_START : TO_MAIN
+                break
             case UserRole.USER:
-                return USER_START
+                redirect = USER_START
+                break
         }
         log.debug 'Default on start'
-        TO_MAIN
+        redirect
     }
 
     @Localized
     @BotRequest(path = TO_MAIN)
     String getMain() {
+        def redirect = DEFAULT
         switch (SessionUtil.currentUser.role) {
             case UserRole.ADMIN:
-                return ADMIN_TO_MAIN
+                redirect = SessionUtil.currentChat.type == PRIVATE_CHAT_TYPE ? ADMIN_TO_MAIN : DEFAULT
+                break
             case UserRole.USER:
-                return USER_TO_MAIN
+                redirect = USER_TO_MAIN
+                break
         }
-        sendMessage.key('message.choose.action')
-                .emoji(FINGER_DOWN)
-                .keyboard([SETTINGS.addEmoji(GEAR)])
-                .type(MessageType.DELETE)
-        log.debug 'Default to main'
-        DEFAULT
+        if (redirect == DEFAULT) {
+            sendMessage.key('message.choose.action')
+                    .emoji(FINGER_DOWN)
+                    .keyboard([SETTINGS.addEmoji(GEAR)])
+                    .type(MessageType.DELETE)
+            log.debug 'Default to main'
+        }
+        redirect
     }
 
 }

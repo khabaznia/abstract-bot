@@ -8,6 +8,9 @@ class Constants {
     public static final String PARAMETER_KEY_VALUE_DELIMITER = '='
     public static final String ENCRYPTED_PATH_PREFIX = '/encrypted'
 
+    public static final String PRIVATE_CHAT_TYPE = 'private'
+    public static final String GROUP_CHAT_TYPE = 'group'
+
     public static final String CONFIGS_DELIMITER = ','
     public static final String CONFIG_KEYS_PREFIX = 'name.'
     public static final String SWITCHABLE_CONFIG_KEYS_PREFIX = 'switchable.'

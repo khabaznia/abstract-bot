@@ -38,7 +38,6 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
         if (response && message && response instanceof MessageResponse) {
             message.setMessageId(response.result.messageId)
             message.setText(response.result.text)
-            message.setIsSent(true)
             log.debug 'Saving message with messageId: {}', response.result.messageId
             messageService.saveMessage(message)
         }
@@ -54,6 +53,6 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
                 chat: SessionUtil.currentChat,
                 label: label,
                 keyboard: keyboard,
-                isSent: false)
+                updateId: request.updateId)
     }
 }

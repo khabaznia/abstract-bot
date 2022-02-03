@@ -16,6 +16,7 @@ final class Constants {
     static final class SESSION_ATTRIBUTES {
         public static final String UPDATE_MESSAGE_ATTR = 'updateMessage'
         public static final String UPDATE_ID_ATTR = 'updateId'
+        public static final String IS_UPDATE_PROCESSED_ATTR = 'isUpdateProcessed'
     }
 
     static final class COMMON {
@@ -23,7 +24,7 @@ final class Constants {
         static final String IMAGE_CONTROLLER = '/process_image'
         static final String AUDIO_CONTROLLER = '/process_audio'
         static final String VIDEO_CONTROLLER = '/process_video'
-        static final String EMPTY_PATH = '/emptyPath'
+        static final String ANY_STRING = '/any_string'
         static final String START = '/start'
         static final String TO_MAIN = 'path.main'
         static final String SETTINGS = 'path.settings.display'

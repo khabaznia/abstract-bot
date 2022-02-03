@@ -18,13 +18,8 @@ class EditMessageRequestProcessingStrategy extends RequestProcessingStrategy<Edi
     void prepare(EditMessage request) {
         def messageToEdit = messageService.getMessage(request.label ?: request.messageId.toString())
         log.debug "Try to edit message with: uid {}, label {}, messageId {}", messageToEdit.uid, messageToEdit.label, messageToEdit.messageId
-        populatedMessage(request, messageToEdit)
-        request.setRelatedMessageUid(messageToEdit?.uid)
-    }
-
-    private void populatedMessage(EditMessage request, Message messageToEdit) {
         populate(request, messageToEdit)
-        messageToEdit
+        request.setRelatedMessageUid(messageToEdit?.uid)
     }
 
     private static void populate(EditMessage source, Message target) {

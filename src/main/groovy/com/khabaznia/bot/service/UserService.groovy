@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service
 
 import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
 import static com.khabaznia.bot.core.Constants.LOGGING_CHAT_ID
+import static com.khabaznia.bot.core.Constants.PRIVATE_CHAT_TYPE
+import static com.khabaznia.bot.core.Constants.GROUP_CHAT_TYPE
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
 
 
@@ -91,6 +93,6 @@ class UserService implements Configurable, Loggable {
     }
 
     static String getChatType(String code) {
-        code.startsWith('-') ? 'group' : 'private'
+        code.startsWith('-') ? GROUP_CHAT_TYPE : PRIVATE_CHAT_TYPE
     }
 }

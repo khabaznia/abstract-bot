@@ -5,7 +5,6 @@ import com.khabaznia.bot.model.Button
 import com.khabaznia.bot.model.Keyboard
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.repository.ButtonRepository
-import com.khabaznia.bot.repository.EncryptedPathRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
 
@@ -48,18 +47,21 @@ class MessageService implements Configurable {
         messageRepository.save(message)
     }
 
+    List<Message> getReadyToSentMessages(Integer updateId) {
+        messageRepository.findAllUnsentByChatCode(SessionUtil.currentChat.code, updateId)
+    }
+
     Message getMessage(String uniqueId) {
         messageRepository.findById(uniqueId).orElse(messageRepository.findByLabel(uniqueId))
                 ?: getByMessageId(uniqueId)
     }
 
-    List<Message> getMessagesForTypeAndChat(MessageType type, String chatCode) {
-        def resultList = messageRepository.findByTypeAndChatCode(type, chatCode)
-        resultList
+    List<Message> getMessagesForTypeExcludingForUpdateId(MessageType type, String chatCode, Integer updateId) {
+        messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, chatCode, updateId)
     }
 
-    void removeMessagesOfType(MessageType type) {
-        messageRepository.findByTypeAndChatCode(type, SessionUtil.currentChat.code)
+    void removeMessagesOfTypeExcludingUpdateId(MessageType type, Integer updateId) {
+        messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, SessionUtil.currentChat.code, updateId)
                 .each { removeMessageForUid(it.uid) }
     }
 
