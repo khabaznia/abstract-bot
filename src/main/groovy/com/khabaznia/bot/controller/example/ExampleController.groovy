@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
-import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
@@ -35,7 +34,7 @@ class ExampleController extends AbstractBotController {
                 .key('Here is your reply keyboard')
                 .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
                                 [EXAMPLE.addEmoji(MEDITATE)], [TO_MAIN.addEmoji(LEFT_ARROW)]])
-        sendMessage.key(TEST_LOGS + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
+        sendMessage.key(NEXT + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
         sendMessage.key('/anyString - ' + 'pins next message'.italic()).delete()
         sendMessage.key('/checkTexts').delete()
     }
@@ -53,21 +52,21 @@ class ExampleController extends AbstractBotController {
         sendMessage.key('test.strikethrough'.strikethrough())
     }
 
-    @BotRequest(path = TEST_LOGS, after = EXAMPLE)
+    @BotRequest(path = NEXT, after = EXAMPLE)
     getAfterExampleNext() {
         sendLog 'Example message log message.'.strikethrough()
         sendMessage.key('Only after localized example'.underline()).delete()
-        sendMessage.key(TEST_LOGS + ' - ' + 'sends warn logs'.italic()).delete()
+        sendMessage.key(AFTER_NEXT + ' - ' + 'sends warn logs'.italic()).delete()
     }
 
-    @BotRequest(path = TEST_LOGS, after = TEST_LOGS)
+    @BotRequest(path = AFTER_NEXT, after = NEXT)
     getAfterNextNext() {
         sendWarnLog('Warn log message'.strikethrough())
         sendMessage.key('Works only after /test_logs'.underline()).delete()
         sendMessage.key('/anyString - ' + 'should send log message only for admin'.italic()).delete()
     }
 
-    @BotRequest(after = TEST_LOGS)
+    @BotRequest(after = NEXT)
     getAfterNextEmptyString() {
         sendLogToAdmin 'Admin log message'.strikethrough()
         sendMessage.key('Any string after /test_logs').delete()
@@ -96,23 +95,27 @@ class ExampleController extends AbstractBotController {
 
     @Localized
     @BotRequest(path = EDITING_MESSAGES)
-    actionTwo() {
+    editMessageKeyboard() {
         sendMessage.key('message.action.edit')
-                .label('keyboardMessage')
-                .inlineKeyboard([['button.example.message': "/exampleMessage"],['button.edit.example.message': "/editExampleMessage"],
-                                 [('button.example.back'): BACK_ACTION]])
+                .label("${chatId}_keyboardMessage")
+                .inlineKeyboard([['button.example.message': "/exampleMessage"]])
     }
 
     @BotRequest(path = '/exampleMessage')
-    exampleMessage() {
+    sendExampleMessageToEdit() {
+        editMessage.key('').emoji(Emoji.FINGER_DOWN)
+                .label("${chatId}_keyboardMessage")
+                .inlineKeyboard([['button.edit.example.message': "/editExampleMessage"]])
         sendMessage.key('<b>Some example message</b> - this part will be edited')
-                .label('messageToEdit')
+                .label("${chatId}_messageToEdit")
     }
 
     @BotRequest(path = '/editExampleMessage')
     editExampleMessage() {
+        editMessage.label("${chatId}_keyboardMessage")
+                .keyboard([:])
         editMessage.key("<b>Some example message</b> $WARNING_TRIANGLE $WARNING_TRIANGLE $WARNING_TRIANGLE")
-                .label('messageToEdit')
+                .label("${chatId}_messageToEdit")
                 .delete()
     }
 

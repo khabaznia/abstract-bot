@@ -52,14 +52,16 @@ class I18nService implements Configurable {
     }
 
     private String getMessage(String key) {
-        boolean hasMarkdown = key.matches(/<[bius]>.*<\/[bius]>/)
-        def markdownMethod = hasMarkdown
-                ? markdownTextMap.find { key.matches(it.key) }.value
-                : null
-        def keyWithoutMarkdown = hasMarkdown ? key - ~/<[bius]>/ - ~/<\/[bius]>/ : key
-        def localizedMessage = getLocalized(keyWithoutMarkdown)
-        def result = hasMarkdown ? markdownMethod(localizedMessage) : localizedMessage
-        result
+        if (key) {
+            boolean hasMarkdown = key.matches(/<[bius]>.*<\/[bius]>/)
+            def markdownMethod = hasMarkdown
+                    ? markdownTextMap.find { key.matches(it.key) }.value
+                    : null
+            def keyWithoutMarkdown = hasMarkdown ? key - ~/<[bius]>/ - ~/<\/[bius]>/ : key
+            def localizedMessage = getLocalized(keyWithoutMarkdown)
+            return hasMarkdown ? markdownMethod(localizedMessage) : localizedMessage
+        }
+        ''
     }
 
     private String getLocalized(String key) {

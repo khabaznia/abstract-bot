@@ -26,7 +26,7 @@ class DeleteOneTimeKeyboardMessagesEventListener {
         def messageToEdit = messageService.getMessage(event.messageUid)
         if (messageToEdit?.type == MessageType.ONE_TIME_INLINE_KEYBOARD) {
             log.trace 'Message with one-time keyboard -> {}', messageToEdit
-            def editMessageRequest = context.getBean('editMessageKeyboard')
+            def editMessageRequest = context.getBean('editMessage')
             editMessageRequest.messageId(messageToEdit.messageId)
             editMessageRequest.setKeyboard(null)
             requestService.execute(editMessageRequest)

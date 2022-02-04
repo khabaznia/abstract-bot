@@ -3,7 +3,7 @@ package com.khabaznia.bot.listener
 import com.khabaznia.bot.enums.ButtonType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.event.UpdateKeyboardEvent
-import com.khabaznia.bot.meta.request.impl.EditMessageKeyboard
+import com.khabaznia.bot.meta.request.impl.EditMessage
 import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
@@ -21,7 +21,7 @@ import static com.khabaznia.bot.meta.mapper.KeyboardMapper.fromKeyboardModel
 class UpdateKeyboardEventListener {
 
     @Autowired
-    private BotRequestService reqeustService
+    private BotRequestService requestSerivce
     @Autowired
     private ApplicationContext context
     @Autowired
@@ -37,7 +37,7 @@ class UpdateKeyboardEventListener {
             log.trace 'Message with keyboard to edit -> {}', messageWithKeyboard
             def editMessageRequest = toEditKeyboardRequest(messageWithKeyboard)
             log.info 'Editing keyboard from messageId {} from chat {}', messageWithKeyboard?.messageId, messageWithKeyboard.chat.code
-            reqeustService.execute(editMessageRequest)
+            requestSerivce.execute(editMessageRequest)
         }
     }
 
@@ -46,8 +46,8 @@ class UpdateKeyboardEventListener {
         buttonProcessingStrategyMap.get(button.type).processOnClick(button)
     }
 
-    private EditMessageKeyboard toEditKeyboardRequest(Message messageWithKeyboard) {
-        def editMessageRequest = context.getBean('editMessageKeyboard')
+    private EditMessage toEditKeyboardRequest(Message messageWithKeyboard) {
+        def editMessageRequest = context.getBean('editMessage')
         editMessageRequest.messageId(messageWithKeyboard.messageId)
         editMessageRequest.setKeyboard(fromKeyboardModel(messageService.getKeyboard(messageWithKeyboard.keyboard.id)))
         editMessageRequest

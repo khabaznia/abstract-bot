@@ -13,8 +13,6 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.core.Constants.PRIVATE_CHAT_TYPE
-
 @Slf4j
 @Component
 class PinMessageEventListener {

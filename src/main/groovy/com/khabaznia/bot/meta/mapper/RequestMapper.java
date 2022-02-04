@@ -1,11 +1,11 @@
 package com.khabaznia.bot.meta.mapper;
 
 import com.khabaznia.bot.meta.request.impl.EditMessage;
-import com.khabaznia.bot.meta.request.impl.EditMessageKeyboard;
 import com.khabaznia.bot.meta.request.impl.PinMessage;
 import com.khabaznia.bot.service.I18nService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetMe;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.send.*;
@@ -32,13 +32,20 @@ public abstract class RequestMapper {
 
     public abstract GetMe toApiMethod(com.khabaznia.bot.meta.request.impl.GetMe source);
 
-    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding()))")
+    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toInlineApiKeyboard(source.getKeyboard()))")
     @Mapping(target = "parseMode", constant = "HTML")
-    public abstract EditMessageText toApiMethod(EditMessage source);
+    public abstract EditMessageText toApiEditMessageText(EditMessage source);
 
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toInlineApiKeyboard(source.getKeyboard()))")
-    public abstract EditMessageReplyMarkup toApiMethod(EditMessageKeyboard source);
+    public abstract EditMessageReplyMarkup toApiEditReplyKeyboard(EditMessage source);
+
+    public BotApiMethod toApiMethod(EditMessage source) {
+        String messageText = i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji());
+        return messageText == null || "".equals(messageText)
+                ? toApiEditReplyKeyboard(source)
+                : toApiEditMessageText(source);
+    }
 
     public abstract SendChatAction toApiMethod(com.khabaznia.bot.meta.request.impl.SendChatAction source);
 

@@ -25,8 +25,8 @@ class ExecuteMethodsListener {
     void onApplicationEvent(ExecuteMethodsEvent event) {
         log.info 'Processing {} requests', event.requests.size()
         event.requests.each {
-            log.trace it as String
             requestProcessingStrategyMap.get(it.type).prepare(it)
+            log.trace 'After prepare: {}', it
             requestService.execute(it)
         }
     }
