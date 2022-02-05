@@ -4,11 +4,8 @@ import com.khabaznia.bot.enums.KeyboardType
 import com.khabaznia.bot.meta.keyboard.Button
 import com.khabaznia.bot.meta.keyboard.impl.InlineButton
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
-
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
-
 import com.khabaznia.bot.model.Keyboard
-
 import com.khabaznia.bot.service.I18nService
 import com.khabaznia.bot.service.PathCryptService
 import groovy.util.logging.Slf4j
@@ -64,7 +61,7 @@ class KeyboardMapper {
         })
         result.setResizeKeyboard(true)
         result.setOneTimeKeyboard(false)
-        result.setInputFieldPlaceholder(i18nService.getFilledTemplate('reply.keyboard.placeholder',[:]))
+        result.setInputFieldPlaceholder(i18nService.getFilledTemplate('reply.keyboard.placeholder', [:]))
         result
     }
 

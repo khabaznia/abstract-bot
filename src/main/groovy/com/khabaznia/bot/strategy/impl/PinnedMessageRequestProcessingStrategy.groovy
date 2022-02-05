@@ -4,7 +4,6 @@ import com.khabaznia.bot.event.PinMessageEvent
 import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.meta.response.impl.MessageResponse
-import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.strategy.RequestProcessingStrategy
 import groovy.util.logging.Slf4j

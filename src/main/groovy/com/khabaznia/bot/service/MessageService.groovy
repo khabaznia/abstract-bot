@@ -7,7 +7,6 @@ import com.khabaznia.bot.model.Message
 import com.khabaznia.bot.repository.ButtonRepository
 import com.khabaznia.bot.repository.KeyboardRepository
 import com.khabaznia.bot.repository.MessageRepository
-
 import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j

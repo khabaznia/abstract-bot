@@ -19,7 +19,7 @@ class ResponseMapper {
                 text: result.text))
     }
 
-    static UserResponse toResponse(User user){
+    static UserResponse toResponse(User user) {
         new UserResponse(result: new com.khabaznia.bot.meta.response.dto.User(id: user.id))
     }
 

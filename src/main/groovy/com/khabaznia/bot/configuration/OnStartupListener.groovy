@@ -13,13 +13,8 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addParamsToCallbackData
-import static com.khabaznia.bot.util.MessageTextsModifyingUtil.addEmojiToKeyMessage
-import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextItalic
-import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextBold
-import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextUnderline
-import static com.khabaznia.bot.util.MessageTextsModifyingUtil.makeTextStrikethrough
 import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
+import static com.khabaznia.bot.util.MessageTextsModifyingUtil.*
 
 @Slf4j
 @Component

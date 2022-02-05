@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Slf4j
 @Component(value = 'noActionButtonProcessingStrategy')
-class NoActionButtonProcessingStrategy extends ButtonProcessingStrategy{
+class NoActionButtonProcessingStrategy extends ButtonProcessingStrategy {
 
     @Override
     void processOnClick(Button button) {

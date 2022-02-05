@@ -7,11 +7,7 @@ import com.khabaznia.bot.event.ExecuteMethodsEvent
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
-import com.khabaznia.bot.meta.request.impl.EditMessage
-import com.khabaznia.bot.meta.request.impl.SendAudio
-import com.khabaznia.bot.meta.request.impl.SendMessage
-import com.khabaznia.bot.meta.request.impl.SendPhoto
-import com.khabaznia.bot.meta.request.impl.SendVideo
+import com.khabaznia.bot.meta.request.impl.*
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
 import com.khabaznia.bot.trait.Configurable

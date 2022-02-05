@@ -24,7 +24,7 @@ class InlineButton extends Button {
         params.put(BUTTON_ID, this.id)
     }
 
-    InlineButton params(Map<String, String> params){
+    InlineButton params(Map<String, String> params) {
         this.params.putAll(params)
         return this
     }

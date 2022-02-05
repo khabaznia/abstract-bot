@@ -6,10 +6,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 
-import static com.khabaznia.bot.core.Constants.CONFIGS_DELIMITER
-import static com.khabaznia.bot.core.Constants.CONFIG_KEYS_PREFIX
-import static com.khabaznia.bot.core.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
-import static com.khabaznia.bot.core.Constants.ENV_ONLY_CONFIG_KEYS_PREFIX
+import static com.khabaznia.bot.core.Constants.*
 
 @Slf4j
 trait Configurable {

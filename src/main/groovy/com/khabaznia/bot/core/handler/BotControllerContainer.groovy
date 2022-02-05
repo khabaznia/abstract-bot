@@ -1,7 +1,7 @@
 package com.khabaznia.bot.core.handler
 
-import com.khabaznia.bot.exception.ControllerGenerationException
 import com.khabaznia.bot.core.proxy.BotControllerProxy
+import com.khabaznia.bot.exception.ControllerGenerationException
 import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
@@ -36,8 +36,8 @@ class BotControllerContainer {
         controllerMap[path] = proxy
     }
 
-    Map<String, BotControllerProxy> getMatchingControllers(String path){
-        controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$path/}
+    Map<String, BotControllerProxy> getMatchingControllers(String path) {
+        controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$path/ }
     }
 
     BotControllerProxy getDefaultController() {

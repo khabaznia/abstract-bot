@@ -5,11 +5,7 @@ import com.khabaznia.bot.core.proxy.BotControllerProxy
 import com.khabaznia.bot.enums.ButtonType
 import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.enums.MessageType
-import com.khabaznia.bot.event.DeleteMessagesEvent
-import com.khabaznia.bot.event.DeleteOneTimeKeyboardMessagesEvent
-import com.khabaznia.bot.event.LogEvent
-import com.khabaznia.bot.event.SendChatActionEvent
-import com.khabaznia.bot.event.UpdateKeyboardEvent
+import com.khabaznia.bot.event.*
 import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.trait.Configurable
@@ -21,12 +17,8 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 
-import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.BUTTON_ID
-import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.MESSAGE_UID
-import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.ONE_TIME_KEYBOARD
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.IS_UPDATE_PROCESSED_ATTR
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID_ATTR
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
+import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.*
 import static com.khabaznia.bot.core.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
 import static com.khabaznia.bot.service.UpdateService.getUpdateType

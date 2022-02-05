@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ConfigRepository extends JpaRepository<Config, String>{
+interface ConfigRepository extends JpaRepository<Config, String> {
 
     List<Config> findByKeyStartsWith(String prefix)
 }

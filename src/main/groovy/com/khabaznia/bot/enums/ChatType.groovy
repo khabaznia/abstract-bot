@@ -6,7 +6,7 @@ enum ChatType {
 
     String value
 
-    ChatType(String value){
+    ChatType(String value) {
         this.value = value
     }
 }

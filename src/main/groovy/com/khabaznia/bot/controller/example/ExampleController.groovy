@@ -11,13 +11,11 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
 import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
-import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
-import static com.khabaznia.bot.meta.Emoji.LEFT_ARROW
-import static com.khabaznia.bot.meta.Emoji.MEDITATE
-import static com.khabaznia.bot.meta.Emoji.WARNING_TRIANGLE
+import static com.khabaznia.bot.meta.Emoji.*
 
 @Slf4j
 @Component

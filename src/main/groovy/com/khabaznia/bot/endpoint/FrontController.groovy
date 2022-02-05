@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.telegram.telegrambots.meta.api.objects.Update
+
 import java.lang.reflect.UndeclaredThrowableException
 
-
 import static com.khabaznia.bot.exception.ExceptionUtil.getMessageFromUndeclaredThrowableException
-
 
 @Slf4j
 @RestController

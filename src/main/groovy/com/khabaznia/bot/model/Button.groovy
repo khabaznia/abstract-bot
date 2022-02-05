@@ -3,16 +3,7 @@ package com.khabaznia.bot.model
 import com.khabaznia.bot.enums.ButtonType
 import groovy.transform.ToString
 
-import javax.persistence.CollectionTable
-import javax.persistence.Column
-import javax.persistence.ElementCollection
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.MapKeyColumn
+import javax.persistence.*
 
 @Entity(name = "button")
 @ToString(excludes = 'keyboard')
@@ -31,10 +22,10 @@ class Button {
     @Column(name = "callback_data")
     String callbackData
 
-    @Column(name="button_position")
+    @Column(name = "button_position")
     Integer position
 
-    @Column(name="row_position")
+    @Column(name = "row_position")
     Integer rowPosition
 
     @ElementCollection

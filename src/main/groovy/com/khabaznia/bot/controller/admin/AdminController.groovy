@@ -13,15 +13,8 @@ import org.springframework.stereotype.Component
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.*
 import static com.khabaznia.bot.controller.Constants.COMMON.SETTINGS
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.EXAMPLE
-import static com.khabaznia.bot.meta.Emoji.GEAR
-import static com.khabaznia.bot.meta.Emoji.CHECK
-import static com.khabaznia.bot.meta.Emoji.LEFT_ARROW
-import static com.khabaznia.bot.meta.Emoji.MEDITATE
-import static com.khabaznia.bot.meta.Emoji.CROWN
-import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
-
 import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
-
+import static com.khabaznia.bot.meta.Emoji.*
 
 @Slf4j
 @Component

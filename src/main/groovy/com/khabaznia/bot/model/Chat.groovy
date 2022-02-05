@@ -4,14 +4,7 @@ import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.ChatType
 import groovy.transform.ToString
 
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.Id
-import javax.persistence.OneToMany
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @ToString

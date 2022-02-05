@@ -7,13 +7,8 @@ import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
-import static com.khabaznia.bot.controller.Constants.COMMON.IMAGE_CONTROLLER
-import static com.khabaznia.bot.controller.Constants.COMMON.AUDIO_CONTROLLER
-import static com.khabaznia.bot.controller.Constants.COMMON.VIDEO_CONTROLLER
-import static com.khabaznia.bot.service.UpdateService.getAudioId
-import static com.khabaznia.bot.service.UpdateService.getPhotoId
-import static com.khabaznia.bot.service.UpdateService.getVideoId
+import static com.khabaznia.bot.controller.Constants.COMMON.*
+import static com.khabaznia.bot.service.UpdateService.*
 
 @Slf4j
 @Component

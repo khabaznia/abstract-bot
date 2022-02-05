@@ -1,10 +1,6 @@
 package com.khabaznia.bot.core.proxy
 
-import com.khabaznia.bot.core.annotation.BotController
-import com.khabaznia.bot.core.annotation.BotRequest
-import com.khabaznia.bot.core.annotation.Localized
-import com.khabaznia.bot.core.annotation.Secured
-import com.khabaznia.bot.core.annotation.Action
+import com.khabaznia.bot.core.annotation.*
 import com.khabaznia.bot.enums.Role
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired

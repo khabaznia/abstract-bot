@@ -26,5 +26,4 @@ class SendAudio extends BaseRequest<MessageResponse> {
     MessageType getType() {
         super.type ?: MessageType.MEDIA
     }
-
 }

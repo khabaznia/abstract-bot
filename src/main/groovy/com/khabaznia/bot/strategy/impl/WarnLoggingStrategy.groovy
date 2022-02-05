@@ -2,14 +2,13 @@ package com.khabaznia.bot.strategy.impl
 
 import com.khabaznia.bot.enums.LoggingChat
 import com.khabaznia.bot.event.LogEvent
-import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.strategy.LoggingStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.meta.Emoji.LOG_WARNING
 import static com.khabaznia.bot.core.Constants.DUPLICATE_WARN_TO_ADMIN
+import static com.khabaznia.bot.meta.Emoji.LOG_WARNING
 
 @Slf4j
 @Component(value = 'warnLoggingStrategy')

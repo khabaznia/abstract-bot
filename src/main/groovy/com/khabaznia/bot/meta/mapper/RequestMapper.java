@@ -3,7 +3,10 @@ package com.khabaznia.bot.meta.mapper;
 import com.khabaznia.bot.meta.request.impl.EditMessage;
 import com.khabaznia.bot.meta.request.impl.PinMessage;
 import com.khabaznia.bot.service.I18nService;
-import org.mapstruct.*;
+import org.mapstruct.CollectionMappingStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetMe;
@@ -23,7 +26,7 @@ public abstract class RequestMapper {
     @Autowired
     protected KeyboardMapper keyboardMapper;
 
-    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getText(), source.getBinding(), source.getEmoji()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toApiKeyboard(source.getKeyboard()))")
     @Mapping(target = "parseMode", constant = "HTML")
     public abstract SendMessage toApiMethod(com.khabaznia.bot.meta.request.impl.SendMessage source);
@@ -32,7 +35,7 @@ public abstract class RequestMapper {
 
     public abstract GetMe toApiMethod(com.khabaznia.bot.meta.request.impl.GetMe source);
 
-    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    @Mapping(target = "text", expression = "java(i18nService.getFilledTemplate(source.getText(), source.getBinding(), source.getEmoji()))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toInlineApiKeyboard(source.getKeyboard()))")
     @Mapping(target = "parseMode", constant = "HTML")
     public abstract EditMessageText toApiEditMessageText(EditMessage source);
@@ -52,14 +55,14 @@ public abstract class RequestMapper {
     public abstract PinChatMessage toApiMethod(PinMessage source);
 
     @Mapping(target = "audio", expression = "java(new org.telegram.telegrambots.meta.api.objects.InputFile(source.getAudio()))")
-    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getText(), source.getBinding(), source.getEmoji()))")
     public abstract SendAudio toApiMethod(com.khabaznia.bot.meta.request.impl.SendAudio source);
 
     @Mapping(target = "video", expression = "java(new org.telegram.telegrambots.meta.api.objects.InputFile(source.getVideo()))")
-    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getText(), source.getBinding(), source.getEmoji()))")
     public abstract SendVideo toApiMethod(com.khabaznia.bot.meta.request.impl.SendVideo source);
 
     @Mapping(target = "photo", expression = "java(new org.telegram.telegrambots.meta.api.objects.InputFile(source.getPhoto()))")
-    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji()))")
+    @Mapping(target = "caption", expression = "java(i18nService.getFilledTemplate(source.getText(), source.getBinding(), source.getEmoji()))")
     public abstract SendPhoto toApiMethod(com.khabaznia.bot.meta.request.impl.SendPhoto source);
 }

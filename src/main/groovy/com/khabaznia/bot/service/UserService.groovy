@@ -15,12 +15,9 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
 import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
 import static com.khabaznia.bot.core.Constants.LOGGING_CHAT_ID
-import static com.khabaznia.bot.core.Constants.PRIVATE_CHAT_TYPE
-import static com.khabaznia.bot.core.Constants.GROUP_CHAT_TYPE
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
-
 
 @Slf4j
 @Service

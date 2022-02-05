@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
 
-import static com.khabaznia.bot.core.Constants.PARAMETERS_PREFIX
-import static com.khabaznia.bot.core.Constants.PARAMETERS_DELIMITER
-import static com.khabaznia.bot.core.Constants.PARAMETER_KEY_VALUE_DELIMITER
+import static com.khabaznia.bot.core.Constants.*
 import static com.khabaznia.bot.security.Constants.CHAT_ID_DELIMITER
 
 @Slf4j

@@ -11,9 +11,9 @@ import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.ADMIN_START
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.ADMIN_TO_MAIN
 import static com.khabaznia.bot.controller.Constants.COMMON.*
-import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.ADMIN_START
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_START
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_TO_MAIN
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN

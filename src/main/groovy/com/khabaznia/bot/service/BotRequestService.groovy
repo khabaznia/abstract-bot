@@ -15,10 +15,8 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
 import static com.khabaznia.bot.core.Constants.EXECUTE_REQUESTS_IN_QUEUE
-
 
 @Slf4j
 @Service

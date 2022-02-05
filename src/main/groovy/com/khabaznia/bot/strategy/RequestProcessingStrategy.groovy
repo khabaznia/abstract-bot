@@ -11,7 +11,6 @@ import com.khabaznia.bot.service.MessageService
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod
 
 import static com.khabaznia.bot.meta.mapper.KeyboardMapper.toKeyboardModel
 

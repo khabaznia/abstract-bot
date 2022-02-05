@@ -35,7 +35,7 @@ class UserController extends AbstractBotController {
     userMenu() {
         sendMessage.text('message.choose.action')
                 .emoji(FINGER_DOWN)
-                .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)],[SETTINGS.addEmoji(GEAR)]])
+                .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [SETTINGS.addEmoji(GEAR)]])
         log.debug 'User menu'
     }
 }

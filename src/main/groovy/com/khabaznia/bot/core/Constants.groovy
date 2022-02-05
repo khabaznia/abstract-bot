@@ -8,9 +8,6 @@ class Constants {
     public static final String PARAMETER_KEY_VALUE_DELIMITER = '='
     public static final String ENCRYPTED_PATH_PREFIX = '/encrypted'
 
-    public static final String PRIVATE_CHAT_TYPE = 'private'
-    public static final String GROUP_CHAT_TYPE = 'group'
-
     public static final String CONFIGS_DELIMITER = ','
     public static final String CONFIG_KEYS_PREFIX = 'name.'
     public static final String SWITCHABLE_CONFIG_KEYS_PREFIX = 'switchable.'
@@ -31,8 +28,4 @@ class Constants {
     public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.config.duplicate.warn.logging.to.admin'
     public static final String EXECUTE_REQUESTS_IN_QUEUE = 'switchable.config.execute.requests.in.queue'
     public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.config.delete.previous.inline.keyboards'
-
-
-
-
 }

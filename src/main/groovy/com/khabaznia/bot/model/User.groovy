@@ -3,17 +3,10 @@ package com.khabaznia.bot.model
 import com.khabaznia.bot.enums.UserRole
 import groovy.transform.ToString
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity(name = "bot_user")
-@ToString(excludes='chat')
+@ToString(excludes = 'chat')
 class User {
 
     @Id
