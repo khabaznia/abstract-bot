@@ -31,105 +31,105 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         this
     }
 
-    InlineKeyboard button(String key, String callbackData) {
+    InlineKeyboard button(String text, String callbackData) {
         def button = button
                 .callbackData(callbackData)
-                .text(key)
+                .text(text)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard button(String key, String emoji, String callbackData) {
+    InlineKeyboard button(String text, String emoji, String callbackData) {
         def button = button
                 .callbackData(callbackData)
-                .text(key)
+                .text(text)
                 .emoji(emoji)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard buttonWithBinding(String key, String callbackData, Map<String, String> binding) {
+    InlineKeyboard buttonWithBinding(String text, String callbackData, Map<String, String> binding) {
         def button = button
                 .callbackData(callbackData)
-                .text(key)
+                .text(text)
                 .binding(binding)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard button(String key, String callbackData, Map<String, String> params) {
+    InlineKeyboard button(String text, String callbackData, Map<String, String> params) {
         def button = button
                 .callbackData(callbackData)
                 .params(params)
-                .text(key)
+                .text(text)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard button(String key, String emoji, String callbackData, Map<String, String> params) {
+    InlineKeyboard button(String text, String emoji, String callbackData, Map<String, String> params) {
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .emoji(emoji)
-                .text(key)
+                .text(text)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard button(String key, String emoji, Map<String, String> binding, String callbackData, Map<String, String> params) {
+    InlineKeyboard button(String text, String emoji, Map<String, String> binding, String callbackData, Map<String, String> params) {
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .emoji(emoji)
-                .text(key)
+                .text(text)
                 .binding(binding)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard switchButton(String key, String callbackData, Boolean isEnabled, Map<String, String> params) {
+    InlineKeyboard switchButton(String text, String callbackData, Boolean isEnabled, Map<String, String> params) {
         params.put(ButtonType.SWITCH.paramKey, isEnabled as String)
         params.put(UNLIMITED_CALL, true.toString())
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .emoji(isEnabled ? CHECKED_MARK : CROSS_MARK)
-                .text(key)
+                .text(text)
                 .type(ButtonType.SWITCH)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard oneTimeButton(String key, String callbackData) {
+    InlineKeyboard oneTimeButton(String text, String callbackData) {
         def params = [(ButtonType.ONE_TIME.paramKey): 'true']
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .text(key)
+                .text(text)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard oneTimeButton(String key, String emoji, String callbackData) {
+    InlineKeyboard oneTimeButton(String text, String emoji, String callbackData) {
         def params = [(ButtonType.ONE_TIME.paramKey): 'true']
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .text(key)
+                .text(text)
                 .emoji(emoji)
         currentRow.add button as InlineButton
         this
     }
 
-    InlineKeyboard oneTimeButton(String key, String callbackData, Map<String, String> params) {
+    InlineKeyboard oneTimeButton(String text, String callbackData, Map<String, String> params) {
         params.put(ButtonType.ONE_TIME.paramKey, 'true')
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .text(key)
+                .text(text)
         currentRow.add button as InlineButton
         this
     }
@@ -146,13 +146,13 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         this
     }
 
-    InlineKeyboard oneTimeButton(String key, String emoji, Map<String, String> binding, String callbackData, Map<String, String> params) {
+    InlineKeyboard oneTimeButton(String text, String emoji, Map<String, String> binding, String callbackData, Map<String, String> params) {
         params.put(ButtonType.ONE_TIME.paramKey, 'true')
         def button = button
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .text(key)
+                .text(text)
                 .emoji(emoji)
                 .binding(binding)
         currentRow.add button as InlineButton

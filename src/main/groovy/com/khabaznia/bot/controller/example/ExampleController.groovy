@@ -6,7 +6,6 @@ import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.integration.StubService
-import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -21,31 +20,6 @@ import static com.khabaznia.bot.meta.Emoji.*
 @Component
 @BotController()
 class ExampleController extends AbstractBotController {
-
-
-    @BotRequest(path = '/firstAction') // first action
-    someFirstAction() {
-        sendMessage.text('Tap to go to next action') // send user simple message with one button
-                .keyboard(inlineKeyboard.button("Got to next action", '/nextAction',
-                        [category: 'science'])) // parameter in button
-    }
-
-    @BotRequest(path = '/nextAction', after = "/firstAction") // this mapping will be invoked ONLY after /firstAction
-    // Method returns String and this is trigger to forward to command mapping that will be returned
-    String simpleCommandAfterPath(String category) { // The 'category' parameter will be used from button param ('science' in this example)
-        sendMessage.text("You-ve got the category -> $category")
-        '/afterNext' // forward to another command
-    }
-
-    @BotRequest(path = '/afterNext') // This method is regular command, but also will be invoked from previous action
-    afterNextAction() {
-        sendMessage.text('Tap to go to next action')
-                .keyboard(inlineKeyboard.button("Got to next action", '/nextAction', [category: 'science']))
-    }
-
-
-
-
 
     @Autowired
     private StubService stubService
@@ -106,11 +80,11 @@ class ExampleController extends AbstractBotController {
     getFeatures() {
         sendMessage.text('modifiable.inline.keyboard')
                 .keyboard(inlineKeyboard
-                        .button('button.example.simple', Emoji.AVOCADO, '/query', [(UNLIMITED_CALL): 'true'])
+                        .button('button.example.simple', AVOCADO, '/query', [(UNLIMITED_CALL): 'true'])
                         .buttonWithBinding('button.example.binding', '/query', [binding: 'Some'])
                         .row()
                         .oneTimeButton('button.one.time.simple', DEFAULT)
-                        .oneTimeButton('button.one.time.with.query', Emoji.BOAT, '/query')
+                        .oneTimeButton('button.one.time.with.query', BOAT, '/query')
                         .oneTimeButton('button.one.time.with.param', '/queryWithParam', [someUniqueId: 'data from button'])
                         .row()
                         .switchButton('button.example.switch', DEFAULT, true, [someUniqueId: 'some data from button']))
@@ -126,7 +100,7 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = '/exampleMessage')
     sendExampleMessageToEdit() {
-        editMessage.text('').emoji(Emoji.FINGER_DOWN)
+        editMessage.text('').emoji(FINGER_DOWN)
                 .label("${chatId}_keyboardMessage")
                 .inlineKeyboard([['button.edit.example.message': "/editExampleMessage"]])
         sendMessage.text('<b>Some example message</b> - this part will be edited')

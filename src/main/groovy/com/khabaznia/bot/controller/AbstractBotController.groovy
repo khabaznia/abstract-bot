@@ -49,7 +49,7 @@ abstract class AbstractBotController implements Configurable, Loggable {
         getConfig(LoggingChat.ADMIN.chatIdConfig)
     }
 
-    protected String getChatId() {
+    protected static String getChatId() {
         SessionUtil.currentChat.code
     }
 
