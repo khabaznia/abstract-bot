@@ -22,6 +22,31 @@ import static com.khabaznia.bot.meta.Emoji.*
 @BotController()
 class ExampleController extends AbstractBotController {
 
+
+    @BotRequest(path = '/firstAction') // first action
+    someFirstAction() {
+        sendMessage.text('Tap to go to next action') // send user simple message with one button
+                .keyboard(inlineKeyboard.button("Got to next action", '/nextAction',
+                        [category: 'science'])) // parameter in button
+    }
+
+    @BotRequest(path = '/nextAction', after = "/firstAction") // this mapping will be invoked ONLY after /firstAction
+    // Method returns String and this is trigger to forward to command mapping that will be returned
+    String simpleCommandAfterPath(String category) { // The 'category' parameter will be used from button param ('science' in this example)
+        sendMessage.text("You-ve got the category -> $category")
+        '/afterNext' // forward to another command
+    }
+
+    @BotRequest(path = '/afterNext') // This method is regular command, but also will be invoked from previous action
+    afterNextAction() {
+        sendMessage.text('Tap to go to next action')
+                .keyboard(inlineKeyboard.button("Got to next action", '/nextAction', [category: 'science']))
+    }
+
+
+
+
+
     @Autowired
     private StubService stubService
 
