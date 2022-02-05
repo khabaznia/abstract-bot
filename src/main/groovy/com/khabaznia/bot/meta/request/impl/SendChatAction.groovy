@@ -18,5 +18,4 @@ import org.telegram.telegrambots.meta.api.methods.ActionType
 class SendChatAction extends BaseRequest<BooleanResponse> {
 
     ActionType action
-
 }

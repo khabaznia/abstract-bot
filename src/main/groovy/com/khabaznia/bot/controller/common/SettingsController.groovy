@@ -22,7 +22,7 @@ class SettingsController extends AbstractBotController {
     @BotRequest(path = SETTINGS)
     getSettings() {
         sendMessage
-                .key('message.settings.menu')
+                .text('message.settings.menu')
                 .emoji(FINGER_DOWN)
                 .keyboard(replyKeyboard
                         .button(DISPLAY_CHANGE_LANG, LANG_EMOJI.get(SessionUtil.currentChat.lang))

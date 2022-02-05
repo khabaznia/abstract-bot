@@ -31,7 +31,7 @@ class AdminController extends AbstractBotController {
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = ADMIN_START)
     String onStart() {
-        sendMessage.key('message.admin.greeting').emoji(CROWN).type(MessageType.DELETE)
+        sendMessage.text('message.admin.greeting').emoji(CROWN).type(MessageType.DELETE)
         ADMIN_TO_MAIN
     }
 
@@ -39,7 +39,7 @@ class AdminController extends AbstractBotController {
     @BotRequest(path = ADMIN_TO_MAIN)
     adminMenu() {
         deleteOldMessages(INLINE_KEYBOARD_MESSAGE_GROUP)
-        sendMessage.key('message.choose.action')
+        sendMessage.text('message.choose.action')
                 .emoji(FINGER_DOWN)
                 .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])
     }
@@ -51,7 +51,7 @@ class AdminController extends AbstractBotController {
         def featuresKeyboard = inlineKeyboard
         switchableConfigs.each { featuresKeyboard.switchButton(it.name, SWITCH_FEATURE, Boolean.valueOf(it.value), [configKey: it.key]).row() }
         featuresKeyboard.button('button.back', LEFT_ARROW, ADMIN_TO_MAIN)
-        sendMessage.key('message.admin.switch.features')
+        sendMessage.text('message.admin.switch.features')
                 .keyboard(featuresKeyboard)
         log.debug "Return features menu to admin"
     }

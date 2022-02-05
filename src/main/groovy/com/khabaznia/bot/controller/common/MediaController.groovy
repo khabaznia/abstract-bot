@@ -22,9 +22,9 @@ class MediaController extends AbstractBotController {
 
     @BotRequest(path = IMAGE_CONTROLLER, enableDuplicateRequests = true)
     String processPhoto() {
-        sendMessage.key('message.good.photo')
+        sendMessage.text('message.good.photo')
         sendPhoto.photo(getPhotoId(update))
-                .key('message.admin.media.from.chat')
+                .text('message.admin.media.from.chat')
                 .binding([chatId: SessionUtil.currentChat.code])
                 .chatId(adminChatId)
         log.debug 'Processing image (nope)'
@@ -33,9 +33,9 @@ class MediaController extends AbstractBotController {
 
     @BotRequest(path = VIDEO_CONTROLLER, enableDuplicateRequests = true)
     String processVideo() {
-        sendMessage.key('message.good.video')
+        sendMessage.text('message.good.video')
         sendVideo.video(getVideoId(update))
-                .key('message.admin.media.from.chat')
+                .text('message.admin.media.from.chat')
                 .binding([chatId: SessionUtil.currentChat.code])
                 .chatId(adminChatId)
         log.debug 'Processing video (nope)'
@@ -44,9 +44,9 @@ class MediaController extends AbstractBotController {
 
     @BotRequest(path = AUDIO_CONTROLLER, enableDuplicateRequests = true)
     String processAudio() {
-        sendMessage.key('message.good.audio')
+        sendMessage.text('message.good.audio')
         sendAudio.audio(getAudioId(update))
-                .key('message.admin.media.from.chat')
+                .text('message.admin.media.from.chat')
                 .binding([chatId: SessionUtil.currentChat.code])
                 .chatId(adminChatId)
         log.debug 'Processing audio (nope)'

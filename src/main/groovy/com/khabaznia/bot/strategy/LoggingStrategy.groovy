@@ -17,8 +17,8 @@ abstract class LoggingStrategy implements Configurable {
     protected UpdateService updateService
 
     List<SendMessage> getRequestForEvent(LogEvent event) {
-        def request = event.getRequest() ?: context.getBean('sendMessage').key(event.text)
-        [request.key((event.skipMetaInfo ? '' : metaInfo) + "$logEmoji " + request.key).chatId(getChatId(event)) as SendMessage]
+        def request = event.getRequest() ?: context.getBean('sendMessage').text(event.text)
+        [request.text((event.skipMetaInfo ? '' : metaInfo) + "$logEmoji " + request.text).chatId(getChatId(event)) as SendMessage]
     }
 
     protected static String getMetaInfo() {

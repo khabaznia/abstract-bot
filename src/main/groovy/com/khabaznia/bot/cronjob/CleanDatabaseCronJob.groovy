@@ -34,9 +34,9 @@ class CleanDatabaseCronJob {
         log.info '***********************************************************************************'
 
         BotRequestQueueContainer.requestOrder.set(0)
-        def deletedPaths = pathCryptService.deleteExpiredPaths()
-        def deletedMessages = messageService.deleteExpiredMessages()
-        def deletedKeyboards = messageService.deleteOrphanedKeyboards()
+        def deletedPaths = pathCryptService.removeExpiredPaths()
+        def deletedMessages = messageService.removeExpiredMessages()
+        def deletedKeyboards = messageService.removeOrphanedKeyboards()
         log.info '{}', logMessage(deletedPaths, deletedMessages, deletedKeyboards)
         publisher.publishEvent(new LogEvent(logChat: LoggingChat.ADMIN, skipMetaInfo: true,
                 text: logMessage(deletedPaths, deletedMessages, deletedKeyboards)))

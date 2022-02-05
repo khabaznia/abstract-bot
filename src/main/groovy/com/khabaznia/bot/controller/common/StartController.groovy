@@ -16,7 +16,6 @@ import static com.khabaznia.bot.controller.Constants.COMMON.*
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.ADMIN_START
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_START
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.USER_TO_MAIN
-import static com.khabaznia.bot.core.Constants.PRIVATE_CHAT_TYPE
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
 import static com.khabaznia.bot.meta.Emoji.GEAR
 
@@ -53,7 +52,7 @@ class StartController extends AbstractBotController {
                 break
         }
         if (redirect == DEFAULT) {
-            sendMessage.key('message.choose.action')
+            sendMessage.text('message.choose.action')
                     .emoji(FINGER_DOWN)
                     .keyboard([SETTINGS.addEmoji(GEAR)])
                     .type(MessageType.DELETE)

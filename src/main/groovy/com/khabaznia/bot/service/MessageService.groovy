@@ -47,7 +47,7 @@ class MessageService implements Configurable {
         messageRepository.save(message)
     }
 
-    List<Message> getReadyToSentMessages(Integer updateId) {
+    List<Message> getMessagesForUpdate(Integer updateId) {
         messageRepository.findAllUnsentByChatCode(SessionUtil.currentChat.code, updateId)
     }
 
@@ -56,7 +56,7 @@ class MessageService implements Configurable {
                 ?: getByMessageId(uniqueId)
     }
 
-    List<Message> getMessagesForTypeExcludingForUpdateId(MessageType type, String chatCode, Integer updateId) {
+    List<Message> getMessagesForTypeExcludingUpdateId(MessageType type, String chatCode, Integer updateId) {
         messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, chatCode, updateId)
     }
 
@@ -82,7 +82,7 @@ class MessageService implements Configurable {
         }
     }
 
-    Integer deleteExpiredMessages() {
+    Integer removeExpiredMessages() {
         def messages = messageRepository.findAllWithUpdateDateTimeBefore(expirationDate)
         log.debug 'Deleting {} expired messages', messages?.size()
         messageRepository.deleteAll messages
@@ -93,7 +93,7 @@ class MessageService implements Configurable {
         keyboardRepository.getById(id)
     }
 
-    Integer deleteOrphanedKeyboards() {
+    Integer removeOrphanedKeyboards() {
         def keyboards = keyboardRepository.findAllOrphaned()
         log.debug 'Deleting {} orphaned messages', keyboards?.size()
         keyboardRepository.deleteAll keyboards

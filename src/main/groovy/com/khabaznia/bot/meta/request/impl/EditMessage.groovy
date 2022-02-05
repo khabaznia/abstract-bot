@@ -18,7 +18,7 @@ import static com.khabaznia.bot.enums.MessageType.getEditGroup
 @TupleConstructor(includeSuperFields = true)
 class EditMessage extends AbstractKeyboardMessage<MessageResponse> {
 
-    String key
+    String text
     String emoji
     Integer messageId
     Map<String, String> binding

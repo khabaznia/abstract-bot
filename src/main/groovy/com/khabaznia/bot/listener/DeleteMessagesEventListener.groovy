@@ -40,7 +40,7 @@ class DeleteMessagesEventListener {
     }
 
     private List<Message> getMessagesToDelete(List<MessageType> messageTypes, String currentChatCode, Integer updateId) {
-        messageTypes.collect { messageService.getMessagesForTypeExcludingForUpdateId(it, currentChatCode, updateId) }
+        messageTypes.collect { messageService.getMessagesForTypeExcludingUpdateId(it, currentChatCode, updateId) }
                 .flatten().collect { it as Message }
                 .findAll { it.messageId != null && it.messageId != 0 }
     }

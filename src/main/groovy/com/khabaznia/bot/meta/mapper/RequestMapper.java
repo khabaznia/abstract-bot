@@ -41,7 +41,7 @@ public abstract class RequestMapper {
     public abstract EditMessageReplyMarkup toApiEditReplyKeyboard(EditMessage source);
 
     public BotApiMethod toApiMethod(EditMessage source) {
-        String messageText = i18nService.getFilledTemplate(source.getKey(), source.getBinding(), source.getEmoji());
+        String messageText = i18nService.getFilledTemplate(source.getText(), source.getBinding(), source.getEmoji());
         return messageText == null || "".equals(messageText)
                 ? toApiEditReplyKeyboard(source)
                 : toApiEditMessageText(source);

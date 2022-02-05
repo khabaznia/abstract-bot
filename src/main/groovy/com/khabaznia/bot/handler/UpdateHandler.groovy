@@ -107,7 +107,7 @@ class UpdateHandler implements Configurable, Loggable {
     }
 
     private Boolean hasInlineKeyboard(Integer currentUpdateId) {
-        messageService.getReadyToSentMessages(currentUpdateId).any {
+        messageService.getMessagesForUpdate(currentUpdateId).any {
             it.type == MessageType.ONE_TIME_INLINE_KEYBOARD || it.type == MessageType.INLINE_KEYBOARD
         }
     }

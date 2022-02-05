@@ -41,7 +41,7 @@ class PathCryptService implements Configurable {
                 .each { repository.delete(it) }
     }
 
-    Integer deleteExpiredPaths() {
+    Integer removeExpiredPaths() {
         def paths = repository.findAllWithUpdateDateTimeBefore(expirationDate)
         repository.deleteAll paths
         paths?.size()

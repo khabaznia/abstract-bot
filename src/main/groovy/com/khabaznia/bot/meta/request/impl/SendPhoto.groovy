@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
 class SendPhoto extends BaseRequest<MessageResponse> {
 
     String photo
-    String key
+    String text
     String emoji
     Map<String, String> binding = [:]
 

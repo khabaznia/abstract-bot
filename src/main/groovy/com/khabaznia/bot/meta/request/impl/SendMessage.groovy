@@ -18,7 +18,7 @@ import static com.khabaznia.bot.enums.MessageType.getForceDeleteGroup
 @TupleConstructor(includeSuperFields = true)
 class SendMessage extends AbstractKeyboardMessage<MessageResponse> {
 
-    String key
+    String text
     String emoji
     Map<String, String> binding = [:]
     String label

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component
 class SendVideo extends BaseRequest<MessageResponse> {
 
     String video
-    String key
+    String text
     String emoji
     Map<String, String> binding = [:]
 

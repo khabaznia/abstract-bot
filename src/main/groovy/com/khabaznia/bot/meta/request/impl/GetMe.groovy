@@ -16,6 +16,5 @@ import org.springframework.stereotype.Component
 @TupleConstructor(includeSuperFields = true)
 class GetMe extends BaseRequest<UserResponse> {
 
-    GetMe() {
-    }
+    GetMe() {}
 }

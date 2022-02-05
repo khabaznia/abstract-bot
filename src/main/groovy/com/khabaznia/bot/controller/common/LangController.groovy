@@ -27,7 +27,7 @@ class LangController extends AbstractBotController {
     @Localized
     @BotRequest(path = DISPLAY_CHANGE_LANG)
     displayLang() {
-        sendMessage.key('message.select.lang')
+        sendMessage.text('message.select.lang')
                 .emoji(FINGER_DOWN)
                 .keyboard(localeKeyboard)
         log.debug 'Default lang menu'

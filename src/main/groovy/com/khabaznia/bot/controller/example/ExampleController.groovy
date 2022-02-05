@@ -31,57 +31,57 @@ class ExampleController extends AbstractBotController {
     @BotRequest(path = EXAMPLE, enableDuplicateRequests = true)
     getReply() {
         sendMessage
-                .key('Here is your reply keyboard')
+                .text('Here is your reply keyboard')
                 .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
                                 [EXAMPLE.addEmoji(MEDITATE)], [TO_MAIN.addEmoji(LEFT_ARROW)]])
-        sendMessage.key(NEXT + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
-        sendMessage.key('/anyString - ' + 'pins next message'.italic()).delete()
-        sendMessage.key('/checkTexts').delete()
+        sendMessage.text(NEXT + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
+        sendMessage.text('/anyString - ' + 'pins next message'.italic()).delete()
+        sendMessage.text('/checkTexts').delete()
     }
 
     @BotRequest(path = '/checkTexts')
     checkTexts() {
-        sendMessage.key('some bold'.bold())
-        sendMessage.key('some italic'.italic())
-        sendMessage.key('some underline'.underline())
-        sendMessage.key('some strikethrough'.strikethrough())
+        sendMessage.text('some bold'.bold())
+        sendMessage.text('some italic'.italic())
+        sendMessage.text('some underline'.underline())
+        sendMessage.text('some strikethrough'.strikethrough())
 
-        sendMessage.key('test.bold'.bold())
-        sendMessage.key('test.italic'.italic())
-        sendMessage.key('test.underline'.underline())
-        sendMessage.key('test.strikethrough'.strikethrough())
+        sendMessage.text('test.bold'.bold())
+        sendMessage.text('test.italic'.italic())
+        sendMessage.text('test.underline'.underline())
+        sendMessage.text('test.strikethrough'.strikethrough())
     }
 
     @BotRequest(path = NEXT, after = EXAMPLE)
     getAfterExampleNext() {
         sendLog 'Example message log message.'.strikethrough()
-        sendMessage.key('Only after localized example'.underline()).delete()
-        sendMessage.key(AFTER_NEXT + ' - ' + 'sends warn logs'.italic()).delete()
+        sendMessage.text('Only after localized example'.underline()).delete()
+        sendMessage.text(AFTER_NEXT + ' - ' + 'sends warn logs'.italic()).delete()
     }
 
     @BotRequest(path = AFTER_NEXT, after = NEXT)
     getAfterNextNext() {
         sendWarnLog('Warn log message'.strikethrough())
-        sendMessage.key('Works only after /test_logs'.underline()).delete()
-        sendMessage.key('/anyString - ' + 'should send log message only for admin'.italic()).delete()
+        sendMessage.text('Works only after /test_logs'.underline()).delete()
+        sendMessage.text('/anyString - ' + 'should send log message only for admin'.italic()).delete()
     }
 
     @BotRequest(after = NEXT)
     getAfterNextEmptyString() {
         sendLogToAdmin 'Admin log message'.strikethrough()
-        sendMessage.key('Any string after /test_logs').delete()
+        sendMessage.text('Any string after /test_logs').delete()
     }
 
     @BotRequest(after = EXAMPLE)
     getAfterExampleEmptyString() {
-        sendMessage.key('Any string after localized example'.underline()).delete()
-        sendMessage.key('This message should be pinned').type(MessageType.PINNED)
+        sendMessage.text('Any string after localized example'.underline()).delete()
+        sendMessage.text('This message should be pinned').type(MessageType.PINNED)
     }
 
     @Localized
     @BotRequest(path = MODIFIABLE_INLINE_KEYBOARD)
     getFeatures() {
-        sendMessage.key('modifiable.inline.keyboard')
+        sendMessage.text('modifiable.inline.keyboard')
                 .keyboard(inlineKeyboard
                         .button('button.example.simple', Emoji.AVOCADO, '/query', [(UNLIMITED_CALL): 'true'])
                         .buttonWithBinding('button.example.binding', '/query', [binding: 'Some'])
@@ -96,17 +96,17 @@ class ExampleController extends AbstractBotController {
     @Localized
     @BotRequest(path = EDITING_MESSAGES)
     editMessageKeyboard() {
-        sendMessage.key('message.action.edit')
+        sendMessage.text('message.action.edit')
                 .label("${chatId}_keyboardMessage")
                 .inlineKeyboard([['button.example.message': "/exampleMessage"]])
     }
 
     @BotRequest(path = '/exampleMessage')
     sendExampleMessageToEdit() {
-        editMessage.key('').emoji(Emoji.FINGER_DOWN)
+        editMessage.text('').emoji(Emoji.FINGER_DOWN)
                 .label("${chatId}_keyboardMessage")
                 .inlineKeyboard([['button.edit.example.message': "/editExampleMessage"]])
-        sendMessage.key('<b>Some example message</b> - this part will be edited')
+        sendMessage.text('<b>Some example message</b> - this part will be edited')
                 .label("${chatId}_messageToEdit")
     }
 
@@ -114,26 +114,26 @@ class ExampleController extends AbstractBotController {
     editExampleMessage() {
         editMessage.label("${chatId}_keyboardMessage")
                 .keyboard([:])
-        editMessage.key("<b>Some example message</b> $WARNING_TRIANGLE $WARNING_TRIANGLE $WARNING_TRIANGLE")
+        editMessage.text("<b>Some example message</b> $WARNING_TRIANGLE $WARNING_TRIANGLE $WARNING_TRIANGLE")
                 .label("${chatId}_messageToEdit")
                 .delete()
     }
 
     @BotRequest(path = '/query')
     query() {
-        sendMessage.key('<b>query</b> - ok').delete()
+        sendMessage.text('<b>query</b> - ok').delete()
     }
 
     @BotRequest(path = '/queryWithParam')
     query(String someUniqueId) {
-        sendMessage.key("This param was in button request -> $someUniqueId").delete()
+        sendMessage.text("This param was in button request -> $someUniqueId").delete()
     }
 
     @Localized
     @BotRequest(path = INTEGRATION_TESTS_KEYBOARD)
     getInline() {
         sendMessage
-                .key('Get random stub api?')
+                .text('Get random stub api?')
                 .keyboard(inlineKeyboard.button('Yes', YES_ACTION)
                         .button("No, just count", NO_ACTION, [category: 'science'])
                         .row()
@@ -144,20 +144,20 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = YES_ACTION)
     yesAction() {
-        sendMessage.key('Random result from integration ->')
-        sendMessage.key(stubService.random().toString())
+        sendMessage.text('Random result from integration ->')
+        sendMessage.text(stubService.random().toString())
     }
 
     @BotRequest(path = NO_ACTION)
     noAction(String category) {
-        sendMessage.key('Count of entries for category ' + '\"$category\"'.underline()).binding([category: category])
+        sendMessage.text('Count of entries for category ' + '\"$category\"'.underline()).binding([category: category])
         def count = stubService.entries(category)
-        sendMessage.key('Key count -> $count').binding([count: count as String])
+        sendMessage.text('Key count -> $count').binding([count: count as String])
     }
 
     @BotRequest(path = BACK_ACTION)
     String backAction() {
-        sendMessage.key('back').delete()
+        sendMessage.text('back').delete()
         EXAMPLE
     }
 }

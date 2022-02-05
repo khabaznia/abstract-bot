@@ -24,7 +24,7 @@ class UserController extends AbstractBotController {
     @Secured(roles = Role.USER)
     @BotRequest(path = USER_START)
     String onStart() {
-        sendMessage.key('message.user.greeting')
+        sendMessage.text('message.user.greeting')
                 .emoji(SCREAMING_FACE)
         log.debug 'User on start'
         USER_TO_MAIN
@@ -33,7 +33,7 @@ class UserController extends AbstractBotController {
     @Secured(roles = Role.USER)
     @BotRequest(path = USER_TO_MAIN)
     userMenu() {
-        sendMessage.key('message.choose.action')
+        sendMessage.text('message.choose.action')
                 .emoji(FINGER_DOWN)
                 .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)],[SETTINGS.addEmoji(GEAR)]])
         log.debug 'User menu'

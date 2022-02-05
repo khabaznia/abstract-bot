@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
 class SendAudio extends BaseRequest<MessageResponse> {
 
     String audio
-    String key
+    String text
     String emoji
     Map<String, String> binding = [:]
 

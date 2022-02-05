@@ -40,7 +40,7 @@ class PinMessageEventListener {
         message.setText(message.getText().bold())
         messageService.saveMessage(message)
         context.getBean('editMessage')
-                .key(message.getText().bold())
+                .text(message.getText().bold())
                 .messageId(Integer.valueOf(messageId))
     }
 
