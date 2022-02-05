@@ -70,7 +70,7 @@ class KeyboardMapper {
     }
 
     private String getButtonText(Button button) {
-        i18nService.getFilledTemplate(button.key, button.binding, button.emoji)
+        i18nService.getFilledTemplate(button.text, button.binding, button.emoji)
     }
 
     static Keyboard toKeyboardModel(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
@@ -108,7 +108,7 @@ class KeyboardMapper {
     static com.khabaznia.bot.model.Button convertToButtonModel(Button source, Integer rowPosition, Integer buttonPosition) {
         new com.khabaznia.bot.model.Button(
                 id: source.id,
-                key: source.key,
+                key: source.text,
                 emoji: source.emoji,
                 binding: source.binding,
                 callbackData: source instanceof InlineButton ? source.callbackData : '',
@@ -122,7 +122,7 @@ class KeyboardMapper {
         new InlineButton(
                 params: source.params,
                 callbackData: source.callbackData,
-                key: source.key,
+                text: source.key,
                 emoji: source.emoji,
                 binding: source.binding,
                 type: source.type,

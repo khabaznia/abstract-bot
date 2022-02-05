@@ -21,7 +21,9 @@ import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.*
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.*
 import static com.khabaznia.bot.core.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
+import static com.khabaznia.bot.service.UpdateService.getParametersFromMessage
 import static com.khabaznia.bot.service.UpdateService.getUpdateType
+import static com.khabaznia.bot.util.SessionUtil.getAttribute
 
 @Slf4j
 @Component
@@ -73,9 +75,9 @@ class UpdateHandler implements Configurable, Loggable {
     }
 
     private setUpdateAttributesToSession(Update update) {
-        SessionUtil.setAttribute(UPDATE_MESSAGE_ATTR, updateService.getMessageFromUpdate(update) ?: getUpdateType(update).defaultController)
-        SessionUtil.setAttribute(UPDATE_ID_ATTR, update.updateId.toString())
-        SessionUtil.setAttribute(IS_UPDATE_PROCESSED_ATTR, 'false')
+        SessionUtil.setAttribute(UPDATE_MESSAGE, updateService.getMessageFromUpdate(update) ?: getUpdateType(update).defaultController)
+        SessionUtil.setAttribute(UPDATE_ID, update.updateId.toString())
+        SessionUtil.setAttribute(IS_UPDATE_PROCESSED, 'false')
     }
 
     private void updateCurrentKeyboard(Update update) {
@@ -105,7 +107,7 @@ class UpdateHandler implements Configurable, Loggable {
     }
 
     private void deleteCurrentOneTimeKeyboard(Update update) {
-        def isOneTime = Boolean.valueOf(updateService?.getParametersFromUpdate(update)?.get(ONE_TIME_KEYBOARD))
+        def isOneTime = Boolean.valueOf(getParametersFromMessage(getAttribute(UPDATE_MESSAGE))?.get(ONE_TIME_KEYBOARD))
         if (isOneTime) {
             def messageUid = updateService?.getParametersFromUpdate(update)?.get(MESSAGE_UID)
             log.debug 'Trigger deleting on-time keyboard. Message id -> ', {}

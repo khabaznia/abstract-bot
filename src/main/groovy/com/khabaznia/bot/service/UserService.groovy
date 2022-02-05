@@ -15,7 +15,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
 import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
 import static com.khabaznia.bot.core.Constants.LOGGING_CHAT_ID
 
@@ -43,7 +43,7 @@ class UserService implements Configurable, Loggable {
     }
 
     void setPreviousPath(String path) {
-        def lastActionFullPath = SessionUtil.getAttribute(UPDATE_MESSAGE_ATTR)
+        def lastActionFullPath = SessionUtil.getAttribute(UPDATE_MESSAGE)
         def currentChat = SessionUtil.currentChat
         currentChat.lastAction = path
         if (lastActionFullPath) currentChat.lastActionFullPath = lastActionFullPath

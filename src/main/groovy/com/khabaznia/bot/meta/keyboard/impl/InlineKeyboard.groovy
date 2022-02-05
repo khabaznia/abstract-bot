@@ -34,7 +34,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
     InlineKeyboard button(String key, String callbackData) {
         def button = button
                 .callbackData(callbackData)
-                .key(key)
+                .text(key)
         currentRow.add button as InlineButton
         this
     }
@@ -42,7 +42,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
     InlineKeyboard button(String key, String emoji, String callbackData) {
         def button = button
                 .callbackData(callbackData)
-                .key(key)
+                .text(key)
                 .emoji(emoji)
         currentRow.add button as InlineButton
         this
@@ -51,7 +51,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
     InlineKeyboard buttonWithBinding(String key, String callbackData, Map<String, String> binding) {
         def button = button
                 .callbackData(callbackData)
-                .key(key)
+                .text(key)
                 .binding(binding)
         currentRow.add button as InlineButton
         this
@@ -61,7 +61,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         def button = button
                 .callbackData(callbackData)
                 .params(params)
-                .key(key)
+                .text(key)
         currentRow.add button as InlineButton
         this
     }
@@ -71,7 +71,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .emoji(emoji)
-                .key(key)
+                .text(key)
         currentRow.add button as InlineButton
         this
     }
@@ -81,7 +81,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .emoji(emoji)
-                .key(key)
+                .text(key)
                 .binding(binding)
         currentRow.add button as InlineButton
         this
@@ -94,7 +94,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .emoji(isEnabled ? CHECKED_MARK : CROSS_MARK)
-                .key(key)
+                .text(key)
                 .type(ButtonType.SWITCH)
         currentRow.add button as InlineButton
         this
@@ -106,7 +106,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .key(key)
+                .text(key)
         currentRow.add button as InlineButton
         this
     }
@@ -117,7 +117,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .key(key)
+                .text(key)
                 .emoji(emoji)
         currentRow.add button as InlineButton
         this
@@ -129,7 +129,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .key(key)
+                .text(key)
         currentRow.add button as InlineButton
         this
     }
@@ -140,7 +140,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .key(key)
+                .text(key)
                 .emoji(emoji)
         currentRow.add button as InlineButton
         this
@@ -152,7 +152,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
                 .callbackData(callbackData)
                 .params(params)
                 .type(ButtonType.ONE_TIME)
-                .key(key)
+                .text(key)
                 .emoji(emoji)
                 .binding(binding)
         currentRow.add button as InlineButton

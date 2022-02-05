@@ -11,7 +11,7 @@ abstract class Button {
 
     String id
     ButtonType type
-    String key
+    String text
     Map<String, String> binding
     String emoji
 

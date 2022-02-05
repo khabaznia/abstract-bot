@@ -31,6 +31,6 @@ class InlineButton extends Button {
 
     @Override
     String toString() {
-        return "$id $type || $key $emoji $binding || $callbackData $params"
+        return "$id $type || $text $emoji $binding || $callbackData $params"
     }
 }

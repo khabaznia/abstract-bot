@@ -51,12 +51,12 @@ The app based on webhook and use text input and chat id to understand what resou
 Thus, all application resources are marked with the following corresponding annotations to ensure proper mapping:
 - [`@BotController`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotController.groovy) - ***Mandatory***, intended to mark class as controller that aggregates specific command mappings. 
 - [`@BotRequest`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotRequest.groovy) - ***Optional***, intended to mark method in bot controller with specific command mapping
-- [`@Localized`](/src/main/groovy/com/khabaznia/bot/core/annotation/Localized.groovy) - ***Optional***, intended to enable localization of specific command mapping (used in reply keyboards). See localization[^localization]
-- [`@Secured`](/src/main/groovy/com/khabaznia/bot/core/annotation/Secured.groovy) - ***Optional***, intended to restrict access to command mapping method to specific user roles.  _Default - ALL_
+- [`@Localized`](/src/main/groovy/com/khabaznia/bot/core/annotation/Localized.groovy) - ***Optional***, intended to enable localization of specific command mapping (used in reply keyboards). See [localization](https://github.com/khabaznia/abstract-bot#localization)
+- [`@Secured`](/src/main/groovy/com/khabaznia/bot/core/annotation/Secured.groovy) - ***Optional***, intended to restrict access to command mapping method to specific user [roles](https://github.com/khabaznia/abstract-bot#roles).  _Default - ALL_
 - [`@Action`](/src/main/groovy/com/khabaznia/bot/core/annotation/Action.groovy) - ***Optional***, intended to specify SendChatAction that should be sent to user, while request is processing. _Default - Typing_
 
 > NOTE!
-> You must extend your controller from [`AbstractBotController`](/src/main/groovy/com/khabaznia/bot/controller/AbstractBotController.groovy) to enable pre- and post- processing of update, and get access to specific object[^apiObjects] like sendMessage, editMessage, keyboard etc. 
+> You must extend your controller from [`AbstractBotController`](/src/main/groovy/com/khabaznia/bot/controller/AbstractBotController.groovy) to enable pre- and post- processing of update, and get access to specific [object](https://github.com/khabaznia/abstract-bot#available-methods) like sendMessage, editMessage, keyboard etc. 
 
 Example:
 ```groovy
@@ -90,8 +90,10 @@ class ExampleController extends AbstractBotController {
 
 message_en.properties: 
 `path.some=Some path`
+
 message_ru.properties:
 `path.some=Какой-то путь`
+
 message_uk.properties:
 `path.some=Якийсь шлях`
 
@@ -151,7 +153,7 @@ If there are no specific command mapping present in application, some default ma
 
 ![changleLang](demo/change_lang_flow.gif)
 
-- Switch configs flow for ADMIN only. See details in configuration[^configuration].
+- Switch configs flow for ADMIN only. See details in [configuration](https://github.com/khabaznia/abstract-bot#configuration).
 
 ![changleLang](demo/switch_configs.gif)
 
@@ -164,22 +166,22 @@ For adding custom role you need:
 - extend logic in [`UserService`](/src/main/groovy/com/khabaznia/bot/service/UserService.groovy) to specify how this role of user should be assigned
 - extend [`Role`](/src/main/groovy/com/khabaznia/bot/enums/Role.groovy) enum with corresponding role (used in @Secured annotation restricting access to resource in bot controller)
 
-[^apiObjects]:
-### Support api methods.
+## Available methods.
 
 Main methods. How to create. Where to create
 
-[^localization]:
-### Builders. Localization. Text methods on String
+### Builders. 
+
+### Text methods on String
+
+### Localization. 
 
 ### Keyboards. Buttons
 
 ### MessageTypes
 
-### Logging
 
-[^configuration]:
-### Configs and features 
+## Configuration 
 
 Duplicate messages
 
@@ -192,6 +194,8 @@ Sending requests in queue
 Cron job
 
 Restricted mode
+
+Logging
 
 ---
 ## Post MVP:

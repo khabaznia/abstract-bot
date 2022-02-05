@@ -11,8 +11,8 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.IS_UPDATE_PROCESSED_ATTR
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE_ATTR
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.IS_UPDATE_PROCESSED
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
 import static com.khabaznia.bot.core.Constants.BLOCK_DUPLICATE_REQUESTS
 import static com.khabaznia.bot.service.UpdateService.getParametersFromMessage
 
@@ -28,7 +28,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {
         def result = ACCESS_GRANTED
-        def updateMessage = SessionUtil.getAttribute(UPDATE_MESSAGE_ATTR)
+        def updateMessage = SessionUtil.getAttribute(UPDATE_MESSAGE)
         if (isFeatureEnabled()
                 && isNotRedirectCallFromController()
                 && isNotSpecialButton(updateMessage)
@@ -38,7 +38,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
                     ? ACCESS_DENIED
                     : ACCESS_GRANTED
         }
-        SessionUtil.setAttribute(IS_UPDATE_PROCESSED_ATTR, '')
+        SessionUtil.setAttribute(IS_UPDATE_PROCESSED, '')
         result
     }
 
@@ -57,7 +57,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     private static boolean isNotRedirectCallFromController() {
-        StringUtils.isNotEmpty(SessionUtil.getAttribute(IS_UPDATE_PROCESSED_ATTR))
+        StringUtils.isNotEmpty(SessionUtil.getAttribute(IS_UPDATE_PROCESSED))
     }
 
     private boolean isFeatureEnabled() {

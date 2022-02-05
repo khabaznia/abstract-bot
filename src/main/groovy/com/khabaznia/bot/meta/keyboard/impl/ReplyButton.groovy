@@ -19,6 +19,6 @@ class ReplyButton extends Button {
 
     @Override
     String toString() {
-        return "$id $type || $key $emoji $binding"
+        return "$id $type || $text $emoji $binding"
     }
 }

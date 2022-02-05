@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID_ATTR
+import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID
 
 
 @Slf4j
@@ -24,7 +24,7 @@ class ReplyKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<A
     void prepare(AbstractKeyboardMessage request) {
         log.debug 'Removing previous message with reply keyboard'
         messageService.removeMessagesOfTypeExcludingUpdateId(MessageType.REPLY_KEYBOARD,
-                Integer.parseInt(SessionUtil.getAttribute(UPDATE_ID_ATTR)))
+                Integer.parseInt(SessionUtil.getAttribute(UPDATE_ID)))
         super.prepare(request)
     }
 }

@@ -14,9 +14,9 @@ final class Constants {
     }
 
     static final class SESSION_ATTRIBUTES {
-        public static final String UPDATE_MESSAGE_ATTR = 'updateMessage'
-        public static final String UPDATE_ID_ATTR = 'updateId'
-        public static final String IS_UPDATE_PROCESSED_ATTR = 'isUpdateProcessed'
+        public static final String UPDATE_MESSAGE = 'updateMessage'
+        public static final String UPDATE_ID = 'updateId'
+        public static final String IS_UPDATE_PROCESSED = 'isUpdateProcessed'
     }
 
     static final class COMMON {

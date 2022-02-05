@@ -24,7 +24,7 @@ class ReplyKeyboard extends Keyboard<ReplyButton> {
     }
 
     ReplyKeyboard button(String text) {
-        def button = getButton().key(getKeyFromText(text)).emoji(getEmojiFromText(text))
+        def button = getButton().text(getKeyFromText(text)).emoji(getEmojiFromText(text))
         currentRow.add button as ReplyButton
         this
     }
@@ -38,19 +38,19 @@ class ReplyKeyboard extends Keyboard<ReplyButton> {
     }
 
     ReplyKeyboard button(String key, String emoji) {
-        def button = button.key(key).emoji(emoji)
+        def button = button.text(key).emoji(emoji)
         currentRow.add button as ReplyButton
         this
     }
 
     ReplyKeyboard button(String key, Map<String, String> binding) {
-        def button = button.key(key).binding(binding)
+        def button = button.text(key).binding(binding)
         currentRow.add button as ReplyButton
         this
     }
 
     ReplyKeyboard button(String key, String emoji, Map<String, String> binding) {
-        def button = button.key(key).emoji(emoji).binding(binding)
+        def button = button.text(key).emoji(emoji).binding(binding)
         currentRow.add button as ReplyButton
         this
     }
