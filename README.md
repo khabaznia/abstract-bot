@@ -10,16 +10,50 @@ This is ready-to-use bot abstraction that based on:
 _Release 1.0.0_
 
 ---
-## Quick start with your bot
+## How to start with your bot
 
 - Fork
+```shell
+git clone git@github.com:khabaznia/abstract-bot.git <new-repo-name>
+cd <new-repo-name>
+git remote rename origin abstract
+git remote add origin git@github.com:<new-repo-remote-link>
+git push origin master 
+```
 - Register your bot with [BotFather](https://t.me/BotFather)
 - Set [privacy mode](https://core.telegram.org/bots#privacy-mode) if needed for groups.
+- Set configs
+```shell
+export DATABASE_URL=
+export BOT_TOKEN=
+export CHAT_ADMIN= 
+export CHAT_LOGGING= 
+export LOGGING_LEVEL= 
+```
+- Deploy
+   - On local:
+     - install [ngrok](https://ngrok.com/)
+     - create DB
+     - run
+    ```shell
+    ngrok http 8083
+    gradle clean build bootRun
+    ```
+   - Create app on heroku:
+  ```shell
+    heroku apps:create <app-name>
+    heroku git:remote -a <app-name>
+    heroku addons:create heroku-postgresql:hobby-dev -a <app-name>
+    heroku ps:type hobby  
+    heroku config:set LOGGING_LEVEL='INFO' BOT_TOKEN='' CHAT_ADMIN='' CHAT_LOGGING=''
+    git push heroku master
+    ```
 - Set webhook
-- Configure token, chats
-- Run
+> If your run on local use hgrok https alias as `<host-url>`
+```shell
+curl -F "url=<host-url>/<bot-token>" https://api.telegram.org/bot<bot-token>/setWebhook
+```
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 
 
