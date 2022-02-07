@@ -48,6 +48,6 @@ class CleanDatabaseCronJob {
     }
 
     private static String logMessage(int deletedPaths, int deletedMessages, int deletedKeyboards) {
-        "${TRIANGLE_RIGHT}Clean-up job${TRIANGLE_LEFT} \n$deletedPaths paths\n$deletedMessages messages\n$deletedKeyboards orhaned keyboards"
+        "Clean-up job    ${TRIANGLE_RIGHT} \n$deletedPaths paths\n$deletedMessages messages\n$deletedKeyboards orhaned keyboards"
     }
 }

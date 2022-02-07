@@ -26,7 +26,7 @@ final class Emoji {
     public static final String TRIANGLE_LEFT = "◀️"
 
     // FROM example controller
-    public static final String MEDITATE = "🛀🏿 🧘🏼 🛌🏿"
-    public static final String AVOCADO = " 🥑 🍝 🍲"
+    public static final String TEST_EMOJI_SET = "🛀🏿 🧘🏼 🛌🏿"
+    public static final String AVOCADO = " 🥑"
     public static final String BOAT = "⛵️"
 }

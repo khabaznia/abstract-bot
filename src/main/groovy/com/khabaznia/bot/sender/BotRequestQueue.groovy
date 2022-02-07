@@ -24,7 +24,7 @@ class BotRequestQueue implements Configurable {
     private volatile long toManyRequestsLimit
     private volatile long lastPutTime
 
-    final ConcurrentLinkedQueue<BaseRequest> requestQueue = new ConcurrentLinkedQueue<>()
+    final ConcurrentLinkedQueue<WrappedRequestEntity> requestQueue = new ConcurrentLinkedQueue<>()
     private Map<BotRequestQueueState, List<Closure<Boolean>>> requestQueueStateMap = [
             (BotRequestQueueState.READY)   : [isQueueNotEmpty(), isExpiredLimitBetweenMessages(), isToManyRequestLimitExpired()],
             (BotRequestQueueState.INACTIVE): [isQueueEmpty(), isChatInactive()],
@@ -51,12 +51,12 @@ class BotRequestQueue implements Configurable {
         (callTime) -> { callTime > toManyRequestsLimit }
     }
 
-    synchronized void putRequest(BaseRequest request) {
+    synchronized void putRequest(WrappedRequestEntity request) {
         requestQueue.offer(request)
         lastPutTime = System.currentTimeMillis()
     }
 
-    synchronized BaseRequest getRequest(long currentTime) {
+    synchronized WrappedRequestEntity getRequest(long currentTime) {
         lastSendTime = currentTime
         requestQueue.poll()
     }

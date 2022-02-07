@@ -14,6 +14,7 @@ import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED
 import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
+import static com.khabaznia.bot.core.Constants.COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS
 import static com.khabaznia.bot.meta.Emoji.*
 
 @Slf4j
@@ -30,10 +31,16 @@ class ExampleController extends AbstractBotController {
         sendMessage
                 .text('Here is your reply keyboard')
                 .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
-                                [EXAMPLE.addEmoji(MEDITATE)], [TO_MAIN.addEmoji(LEFT_ARROW)]])
+                                [EXAMPLE.addEmoji(TEST_EMOJI_SET), TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
+    }
+
+    @Localized
+    @BotRequest(path = TEST_COMMANDS)
+    testCommands() {
         sendMessage.text(NEXT + ' - ' + 'sends log message to LOGGING_CHAT'.italic()).delete()
-        sendMessage.text('/anyString - ' + 'pins next message'.italic()).delete()
+        sendMessage.text('/anyString or write anything to chat - ' + 'pins next message'.italic()).delete()
         sendMessage.text('/checkTexts').delete()
+        sendMessage.text('/testRetryer').delete()
     }
 
     @BotRequest(path = '/checkTexts')
@@ -49,7 +56,13 @@ class ExampleController extends AbstractBotController {
         sendMessage.text('test.strikethrough'.strikethrough())
     }
 
-    @BotRequest(path = NEXT, after = EXAMPLE)
+    @BotRequest(path = '/testRetryer')
+    testRetryer() {
+        sendMessage.text('Should try to send message $times times').binding([times: getConfig(COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS)])
+        sendMessage.text('Invalid chat id').chatId('33')
+    }
+
+    @BotRequest(path = NEXT, after = TEST_COMMANDS)
     getAfterExampleNext() {
         sendLog 'Example message log message.'.strikethrough()
         sendMessage.text('Only after localized example'.underline()).delete()
@@ -60,7 +73,7 @@ class ExampleController extends AbstractBotController {
     getAfterNextNext() {
         sendWarnLog('Warn log message'.strikethrough())
         sendMessage.text('Works only after /test_logs'.underline()).delete()
-        sendMessage.text('/anyString - ' + 'should send log message only for admin'.italic()).delete()
+        sendMessage.text('/anyString or write anything to chat - ' + 'should send log message only for admin'.italic()).delete()
     }
 
     @BotRequest(after = AFTER_NEXT)
@@ -69,7 +82,7 @@ class ExampleController extends AbstractBotController {
         sendMessage.text('Any string after /test_logs').delete()
     }
 
-    @BotRequest(after = EXAMPLE)
+    @BotRequest(after = TEST_COMMANDS)
     getAfterExampleEmptyString() {
         sendMessage.text('Any string after localized example'.underline()).delete()
         sendMessage.text('This message should be pinned').type(MessageType.PINNED)

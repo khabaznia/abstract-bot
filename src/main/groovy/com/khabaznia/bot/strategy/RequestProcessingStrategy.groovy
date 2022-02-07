@@ -28,8 +28,8 @@ abstract class RequestProcessingStrategy<Request extends BaseRequest, Response e
         messageService.saveMessage(message)
     }
 
-    void updateWithMappedApiMethod(Request request) {
-        request.setApiMethod(requestMapper.toApiMethod(request))
+    Object getMappedApiMethod(Request request) {
+        requestMapper.toApiMethod(request)
     }
 
     void processResponse(Response response) {

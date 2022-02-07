@@ -36,3 +36,9 @@ env.only:
     admin.chat.id: ${CHAT_ADMIN}
     restricted.mode: false
     restricted.mode.users: ${RESTRICTED_USERS}
+  integration:
+    telegram.count.of.retries: 3
+    retryer:
+      max.attempts: 3
+      period: 1000
+      max.period: 4

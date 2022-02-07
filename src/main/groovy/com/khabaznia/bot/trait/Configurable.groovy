@@ -24,6 +24,10 @@ trait Configurable {
         Long.parseLong(getConfigParam(key))
     }
 
+    Integer getIntConfig(String key) {
+        Integer.parseInt(getConfigParam(key))
+    }
+
     Collection<String> getConfigs(String key) {
         getConfigParam(key)?.tokenize(CONFIGS_DELIMITER)
     }

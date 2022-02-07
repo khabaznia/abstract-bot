@@ -22,9 +22,14 @@ class Constants {
     public static final String RESTRICTED_MODE = 'env.only.bot.restricted.mode'
     public static final String RESTRICTED_MODE_USERS = 'env.only.bot.restricted.mode.users'
     public static final String REQUESTS_DELAY_LIMIT_IN_SINGLE_CHAT = 'env.only.requests.delay.limit.in.single.chat'
+    public static final String COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS = 'env.only.integration.telegram.count.of.retries'
 
     public static final String DEBUG_LOGGING = 'switchable.config.debug.logging.enabled'
     public static final String DUPLICATE_WARN_TO_ADMIN = 'switchable.config.duplicate.warn.logging.to.admin'
     public static final String EXECUTE_REQUESTS_IN_QUEUE = 'switchable.config.execute.requests.in.queue'
     public static final String DELETE_PREVIOUS_INLINE_KEYBOARDS = 'switchable.config.delete.previous.inline.keyboards'
+
+    public static final String INTEGRATION_RETYER_PERIOD = 'env.only.integration.retryer.period'
+    public static final String INTEGRATION_RETYER_MAX_ATTEMPTS = 'env.only.integration.retryer.max.attempts'
+    public static final String INTEGRATION_RETYER_MAX_PERIOD = 'env.only.integration.retryer.max.period'
 }

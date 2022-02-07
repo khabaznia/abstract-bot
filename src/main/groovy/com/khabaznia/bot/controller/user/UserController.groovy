@@ -13,7 +13,7 @@ import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.EXAMPLE
 import static com.khabaznia.bot.controller.Constants.USER_CONTROLLER.*
 import static com.khabaznia.bot.meta.Emoji.FINGER_DOWN
 import static com.khabaznia.bot.meta.Emoji.GEAR
-import static com.khabaznia.bot.meta.Emoji.MEDITATE
+import static com.khabaznia.bot.meta.Emoji.TEST_EMOJI_SET
 import static com.khabaznia.bot.meta.Emoji.SCREAMING_FACE
 
 @Slf4j
@@ -35,7 +35,7 @@ class UserController extends AbstractBotController {
     userMenu() {
         sendMessage.text('message.choose.action')
                 .emoji(FINGER_DOWN)
-                .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [SETTINGS.addEmoji(GEAR)]])
+                .replyKeyboard([[EXAMPLE.addEmoji(TEST_EMOJI_SET)], [SETTINGS.addEmoji(GEAR)]])
         log.debug 'User menu'
     }
 }

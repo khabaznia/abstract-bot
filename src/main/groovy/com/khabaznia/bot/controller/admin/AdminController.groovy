@@ -9,7 +9,6 @@ import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.ChatType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.enums.Role
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -38,7 +37,7 @@ class AdminController extends AbstractBotController {
         deleteOldMessages(INLINE_KEYBOARD_MESSAGE_GROUP)
         sendMessage.text('message.choose.action')
                 .emoji(FINGER_DOWN)
-                .replyKeyboard([[EXAMPLE.addEmoji(MEDITATE)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])
+                .replyKeyboard([[EXAMPLE.addEmoji(TEST_EMOJI_SET)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])
     }
 
     @Secured(roles = Role.ADMIN)
