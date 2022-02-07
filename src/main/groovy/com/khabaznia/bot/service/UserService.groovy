@@ -30,7 +30,9 @@ class UserService implements Configurable, Loggable {
     private ConfigRepository configRepository
 
     Chat getChatForCode(String chatCode, String userCode) {
-        chatRepository.existsById(chatCode) ? chatRepository.getById(chatCode) : createChat(chatCode, userCode)
+        chatRepository.existsById(chatCode) ?
+                processChatForUser(chatCode, userCode) :
+                createChat(chatCode, userCode)
     }
 
     User getUserForCode(String userCode) {
@@ -61,36 +63,37 @@ class UserService implements Configurable, Loggable {
         chatRepository.save(currentChat)
     }
 
-    private Chat createChat(String chatCode, String userCode) {
-        Chat chat = new Chat();
-        chat.code = chatCode
-        chat.role = ChatRole.NONE
-        chat.type = getChatType(chatCode)
+    private Chat processChatForUser(String chatCode, String userCode) {
         def user = userRepository.getById(userCode)
-        chat.users = [user]
+        def chat = chatRepository.getById(chatCode)
+        chat?.users?.any { it.code == user.code }
+                ? chat
+                : addUserToChat(chat, user)
+    }
 
-        def savedChat = chatRepository.save(chat)
-        user.setChat(savedChat)
-        userRepository.save(user)
-        savedChat
+    private Chat createChat(String chatCode, String userCode) {
+        def chat = new Chat(code: chatCode, role: ChatRole.NONE, type: getChatType(chatCode), users: [])
+        addUserToChat(chat, userRepository.getById(userCode))
     }
 
     private User createUser(String code) {
-        sendLog('New user for code')
-        User user = new User()
-        user.code = code
-        user.role = getUserRole(code)
+        sendLog("New user for code: $code")
+        userRepository.save(new User(code: code, role: getUserRole(code), chats: []))
+    }
 
+    private Chat addUserToChat(Chat chat, User user) {
+//        chat.users = chat.users ?: []
+//        user.chats = user.chats ?: []
+        chat.users << user
+        chatRepository.save(chat)
+        user.chats << chat
         userRepository.save(user)
+        chat
     }
 
     private User createUser(String code, UserRole userRole) {
         sendLog("New user for code: $code, userRole: ${userRole.toString()}")
-        User user = new User()
-        user.code = code
-        user.role = userRole
-
-        userRepository.save(user)
+        userRepository.save(new User(code: code, role: userRole, chats: []))
     }
 
     private UserRole getUserRole(String code) {

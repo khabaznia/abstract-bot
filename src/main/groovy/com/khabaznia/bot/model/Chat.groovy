@@ -7,7 +7,7 @@ import groovy.transform.ToString
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-@ToString
+@ToString(excludes = 'history')
 @Entity(name = "chat")
 class Chat {
 
@@ -38,7 +38,10 @@ class Chat {
     @Column(name = "history")
     List<Message> history
 
-    @OneToMany(mappedBy = "chat", cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.LAZY)
-    @Column(name = "users")
+    @ManyToMany
+    @JoinTable(
+            name = "chat_user",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     List<User> users
 }

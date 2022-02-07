@@ -6,7 +6,7 @@ import groovy.transform.ToString
 import javax.persistence.*
 
 @Entity(name = "bot_user")
-@ToString(excludes = 'chat')
+@ToString(excludes = 'chats')
 class User {
 
     @Id
@@ -17,7 +17,6 @@ class User {
     @Column(name = "role")
     UserRole role
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_id")
-    Chat chat
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = 'users')
+    List<Chat> chats
 }
