@@ -34,6 +34,5 @@ env.only:
   bot:
     token: ${BOT_TOKEN}
     admin.chat.id: ${CHAT_ADMIN}
-    logging.chat.id: ${CHAT_LOGGING}
     restricted.mode: false
     restricted.mode.users: ${RESTRICTED_USERS}

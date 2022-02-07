@@ -23,7 +23,7 @@ class LogListener {
     @EventListener
     void onApplicationEvent(LogEvent event) {
         def strategy = loggingStrategyMap.get(event.logType)
-        def requests = strategy.getRequestForEvent(event)
+        def requests = strategy.getRequestsForEvent(event)
         log.trace 'Log event: {}', requests[0]?.text
         requests.each { requestService.execute it }
     }

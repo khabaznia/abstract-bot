@@ -5,8 +5,11 @@ import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
 import com.khabaznia.bot.core.annotation.Localized
 import com.khabaznia.bot.core.annotation.Secured
+import com.khabaznia.bot.enums.ChatRole
+import com.khabaznia.bot.enums.ChatType
 import com.khabaznia.bot.enums.MessageType
 import com.khabaznia.bot.enums.Role
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -15,6 +18,7 @@ import static com.khabaznia.bot.controller.Constants.COMMON.SETTINGS
 import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.EXAMPLE
 import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
 import static com.khabaznia.bot.meta.Emoji.*
+import static com.khabaznia.bot.util.SessionUtil.currentChat
 
 @Slf4j
 @Component
@@ -54,5 +58,17 @@ class AdminController extends AbstractBotController {
     switchFeature(String configKey) {
         setConfig(configKey, (!isEnabled(configKey)).toString())
         log.debug 'Switching config with key {}', configKey
+    }
+
+    @Secured(roles = Role.ADMIN)
+    @BotRequest(path = SET_LOGGING)
+    setLoggingChat() {
+        if (currentChat.type == ChatType.PRIVATE){
+            sendMessage.text('message.error.chat.set.logging')
+        } else {
+            currentChat.setRole(ChatRole.LOGGING_CHAT)
+            userService.updateChat(currentChat)
+            sendMessage.text('message.chat.set.logging')
+        }
     }
 }

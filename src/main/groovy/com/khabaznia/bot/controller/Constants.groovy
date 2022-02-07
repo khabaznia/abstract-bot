@@ -45,6 +45,7 @@ final class Constants {
         static final String ADMIN_TO_MAIN = '/admin_main'
         static final String FEATURES_LIST = 'path.features.list'
         static final String SWITCH_FEATURE = '/switch_feature'
+        static final String SET_LOGGING = '/setLogging'
     }
 
     static final class USER_CONTROLLER {

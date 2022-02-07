@@ -14,7 +14,7 @@ import static com.khabaznia.bot.core.Constants.RESTRICTED_MODE_USERS
 
 @Slf4j
 @Component
-class RestrictedBotVoter extends AbstractBotAuthorizationVoter {
+class RestrictedModeVoter extends AbstractBotAuthorizationVoter {
 
     @Autowired
     private Environment env
@@ -23,9 +23,9 @@ class RestrictedBotVoter extends AbstractBotAuthorizationVoter {
     int voteInternal(Authentication authentication, MethodInvocation method) {
         if (isFeatureEnabled()) {
             def allowedUsers = env.getProperty(RESTRICTED_MODE_USERS)?.tokenize(CONFIGS_DELIMITER)
-            def chatCode = SessionUtil.getCurrentChat().code
-            log.trace 'Allowed users -> {}. User -> {}', allowedUsers, chatCode
-            return allowedUsers.contains(chatCode)
+            def chatCode = [SessionUtil.getCurrentChat().code, SessionUtil.currentUser.code]
+            log.trace 'Allowed users -> {}. User & chat codes -> {}', allowedUsers, chatCode
+            return allowedUsers.intersect(chatCode)
                     ? ACCESS_GRANTED
                     : ACCESS_DENIED
         }

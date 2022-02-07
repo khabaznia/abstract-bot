@@ -1,6 +1,6 @@
 package com.khabaznia.bot.strategy.impl
 
-import com.khabaznia.bot.enums.LoggingChat
+
 import com.khabaznia.bot.event.LogEvent
 import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.strategy.LoggingStrategy
@@ -15,11 +15,15 @@ import static com.khabaznia.bot.meta.Emoji.LOG_WARNING
 class WarnLoggingStrategy extends LoggingStrategy {
 
     @Override
-    List<SendMessage> getRequestForEvent(LogEvent event) {
+    List<SendMessage> getRequestsForEvent(LogEvent event) {
         log.trace 'Warn logging. Duplicate to admin: {}', isEnabled(DUPLICATE_WARN_TO_ADMIN)
-        getChatId(event) == getConfig(LoggingChat.ADMIN.chatIdConfig)
-                ? super.getRequestForEvent(event)
-                : [super.getRequestForEvent(event), duplicateToAdminRequest(event)].flatten() as List<SendMessage>
+        def logRequests = super.getRequestsForEvent(event)
+        def duplicateRequests = shouldDuplicateLog(logRequests) ? duplicateToAdminRequests(event) : []
+        [logRequests, duplicateRequests].flatten() as List<SendMessage>
+    }
+
+    private boolean shouldDuplicateLog(List<SendMessage> logRequests) {
+        (logRequests && isEnabled(DUPLICATE_WARN_TO_ADMIN)) || (logRequests.isEmpty())
     }
 
     @Override
@@ -27,9 +31,9 @@ class WarnLoggingStrategy extends LoggingStrategy {
         LOG_WARNING
     }
 
-    private List<SendMessage> duplicateToAdminRequest(LogEvent event) {
-        !isEnabled(DUPLICATE_WARN_TO_ADMIN) ? [] : super.getRequestForEvent(event)
-                .each { it.chatId = getConfig(LoggingChat.ADMIN.chatIdConfig) }
+    private List<SendMessage> duplicateToAdminRequests(LogEvent event) {
+        [getLogMessageRequest(event)]
+                .each { it.chatId = adminChat }
                 .collect()
     }
 

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service
 
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
 import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
-import static com.khabaznia.bot.core.Constants.LOGGING_CHAT_ID
 
 @Slf4j
 @Service
@@ -42,6 +41,18 @@ class UserService implements Configurable, Loggable {
         userRepository.existsById(userCode) ? userRepository.getById(userCode) : createUser(userCode, userRole)
     }
 
+    Chat updateChat(Chat chat) {
+        chatRepository.save(chat)
+    }
+
+    Chat getChatForRole(ChatRole role) {
+        chatRepository.findByRole(role).find()
+    }
+
+    User getUserForRole(UserRole role) {
+        userRepository.findByRole(role).find()
+    }
+
     void setPreviousPath(String path) {
         def lastActionFullPath = SessionUtil.getAttribute(UPDATE_MESSAGE)
         def currentChat = SessionUtil.currentChat
@@ -53,7 +64,7 @@ class UserService implements Configurable, Loggable {
     private Chat createChat(String chatCode, String userCode) {
         Chat chat = new Chat();
         chat.code = chatCode
-        chat.role = getChatRole(chatCode)
+        chat.role = ChatRole.NONE
         chat.type = getChatType(chatCode)
         def user = userRepository.getById(userCode)
         chat.users = [user]
@@ -84,10 +95,6 @@ class UserService implements Configurable, Loggable {
 
     private UserRole getUserRole(String code) {
         code == getConfig(ADMIN_CHAT_ID) ? UserRole.ADMIN : UserRole.USER
-    }
-
-    private ChatRole getChatRole(String code) {
-        code == getConfig(LOGGING_CHAT_ID) ? ChatRole.LOGGING_CHAT : ChatRole.NONE
     }
 
     static ChatType getChatType(String code) {

@@ -7,7 +7,7 @@ import com.khabaznia.bot.meta.request.impl.SendMessage
 class LogEvent {
 
     LogType logType = LogType.INFO
-    LoggingChat logChat = LoggingChat.DEFAULT
+    LoggingChat logChat = LoggingChat.LOGGING
     SendMessage request
     String text
     Boolean skipMetaInfo = false

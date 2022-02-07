@@ -38,8 +38,10 @@ class BotRequestService implements Configurable {
     }
 
     void execute(BaseRequest request, Boolean useQueue) {
-        requestProcessingStrategyMap.get(request.type).updateWithMappedApiMethod(request)
-        useQueue ? executeInQueue(request) : sendToApi(request)
+        if (request) {
+            requestProcessingStrategyMap.get(request.type).updateWithMappedApiMethod(request)
+            useQueue ? executeInQueue(request) : sendToApi(request)
+        }
     }
 
     private void executeInQueue(BaseRequest request) {

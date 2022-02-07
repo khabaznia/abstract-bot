@@ -1,7 +1,7 @@
 package com.khabaznia.bot.controller
 
-import com.khabaznia.bot.enums.LoggingChat
 import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.event.ExecuteMethodsEvent
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
@@ -28,12 +28,11 @@ abstract class AbstractBotController implements Configurable, Loggable {
     protected ApplicationEventPublisher publisher
     @Autowired
     protected UpdateService updateService
+    @Autowired
+    protected UserService userService
 
     protected Update update
     protected List<BaseRequest> requests
-
-    @Autowired
-    UserService userService
 
     void before(Update update) {
         setUp(update)
@@ -46,7 +45,7 @@ abstract class AbstractBotController implements Configurable, Loggable {
     }
 
     protected String getAdminChatId() {
-        getConfig(LoggingChat.ADMIN.chatIdConfig)
+        userService.getUserForRole(UserRole.ADMIN)?.code
     }
 
     protected static String getChatId() {

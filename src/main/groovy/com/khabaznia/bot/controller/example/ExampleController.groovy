@@ -63,7 +63,7 @@ class ExampleController extends AbstractBotController {
         sendMessage.text('/anyString - ' + 'should send log message only for admin'.italic()).delete()
     }
 
-    @BotRequest(after = NEXT)
+    @BotRequest(after = AFTER_NEXT)
     getAfterNextEmptyString() {
         sendLogToAdmin 'Admin log message'.strikethrough()
         sendMessage.text('Any string after /test_logs').delete()

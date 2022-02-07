@@ -27,7 +27,6 @@ git push origin master
 export DATABASE_URL=
 export BOT_TOKEN=
 export CHAT_ADMIN= 
-export CHAT_LOGGING= 
 export LOGGING_LEVEL= 
 ```
 - Deploy
@@ -45,7 +44,7 @@ export LOGGING_LEVEL=
     heroku git:remote -a <app-name>
     heroku addons:create heroku-postgresql:hobby-dev -a <app-name>
     heroku ps:type hobby  
-    heroku config:set LOGGING_LEVEL='INFO' BOT_TOKEN='' CHAT_ADMIN='' CHAT_LOGGING=''
+    heroku config:set LOGGING_LEVEL='INFO' BOT_TOKEN='<bot-token>' CHAT_ADMIN='<admin-chat>'
     git push heroku master
     ```
 - Set webhook
@@ -361,7 +360,10 @@ env.only:
 
 ### Logging to chat
 
-You can specify logging chat to check what actions are performed in the application.
+You can set any group as logging chat in order to check what actions are performed in the application, 
+by **'/setLogging'** command that is available to admin.
+
+
 Next type of logging available:
 - **DEBUG** - logs every update info to specified `CHAT_LOGGING` if feature is enabled
 - **INFO** - logs to message to `CHAT_LOGGING`. Use [`Loggable`](/src/main/groovy/com/khabaznia/bot/trait/Loggable.groovy) trait or publish [`LogEvent`](/src/main/groovy/com/khabaznia/bot/event/LogEvent.groovy) with specified message.

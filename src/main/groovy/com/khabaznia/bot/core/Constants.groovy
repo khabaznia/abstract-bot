@@ -16,7 +16,6 @@ class Constants {
     public static final String DEFAULT_LOCALE = 'env.only.locale.default'
     public static final String AVAILABLE_LOCALES = 'env.only.locale.available'
     public static final String ADMIN_CHAT_ID = 'env.only.bot.admin.chat.id'
-    public static final String LOGGING_CHAT_ID = 'env.only.bot.logging.chat.id'
     public static final String EXPIRED_MESSAGES_IN_DAYS_COUNT = 'env.only.expired.paths.in.days.count'
     public static final String CHAT_INACTIVE_MINUTES = 'env.only.chat.inactive.minutes'
     public static final String BLOCK_DUPLICATE_REQUESTS = 'env.only.block.duplicate.requests'

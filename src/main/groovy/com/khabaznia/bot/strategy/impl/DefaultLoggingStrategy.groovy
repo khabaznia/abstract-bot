@@ -13,8 +13,8 @@ import static com.khabaznia.bot.meta.Emoji.LOG_INFO
 class DefaultLoggingStrategy extends LoggingStrategy {
 
     @Override
-    List<SendMessage> getRequestForEvent(LogEvent event) {
-        super.getRequestForEvent(event)
+    List<SendMessage> getRequestsForEvent(LogEvent event) {
+        super.getRequestsForEvent(event)
     }
 
     @Override

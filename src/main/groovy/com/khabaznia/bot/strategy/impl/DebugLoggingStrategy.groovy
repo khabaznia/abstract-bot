@@ -14,8 +14,8 @@ import static com.khabaznia.bot.meta.Emoji.LOG_DEBUG
 class DebugLoggingStrategy extends LoggingStrategy {
 
     @Override
-    List<SendMessage> getRequestForEvent(LogEvent event) {
-        isEnabled(DEBUG_LOGGING) ? super.getRequestForEvent(event) : []
+    List<SendMessage> getRequestsForEvent(LogEvent event) {
+        isEnabled(DEBUG_LOGGING) ? super.getRequestsForEvent(event) : []
     }
 
     @Override
