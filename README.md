@@ -5,7 +5,7 @@ This is ready-to-use bot abstraction that based on:
 - Spring Boot
 - Telegram API based on webhooks
 
-**[Check an example](https://t.me/example_abstract_bot)**
+**[Check an example of current version](https://t.me/example_abstract_bot)**
 
 _Release 1.0.0_
 
@@ -33,12 +33,14 @@ export LOGGING_LEVEL=
    - On local:
      - install [ngrok](https://ngrok.com/)
      - create DB
-     - run
+     - run 
+     
     ```shell
     ngrok http 8083
     gradle clean build bootRun
     ```
    - Create app on heroku:
+  
   ```shell
     heroku apps:create <app-name>
     heroku git:remote -a <app-name>
@@ -48,7 +50,7 @@ export LOGGING_LEVEL=
     git push heroku master
     ```
 - Set webhook
-> If your run on local use hgrok https alias as `<host-url>`
+> If your run on local use ngrok https alias as `<host-url>`
 ```shell
 curl -F "url=<host-url>/<bot-token>" https://api.telegram.org/bot<bot-token>/setWebhook
 ```
@@ -355,7 +357,6 @@ env.only:
   bot:
     token: ${BOT_TOKEN} // mandatory, token of your bot
     admin.chat.id: ${CHAT_ADMIN} // mandatory, specified admin chat. Use https://t.me/userinfobot to check id of user
-    logging.chat.id: ${CHAT_LOGGING} // optional, used for app logging.
 ```
 
 ### Logging to chat
