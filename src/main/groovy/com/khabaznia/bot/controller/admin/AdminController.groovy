@@ -62,12 +62,25 @@ class AdminController extends AbstractBotController {
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = SET_LOGGING)
     setLoggingChat() {
-        if (currentChat.type == ChatType.PRIVATE){
+        if (currentChat.type == ChatType.PRIVATE) {
             sendMessage.text('message.error.chat.set.logging')
         } else {
-            currentChat.setRole(ChatRole.LOGGING_CHAT)
-            userService.updateChat(currentChat)
+            unsetOldChat()
+            setNewChat()
             sendMessage.text('message.chat.set.logging')
+        }
+    }
+
+    private void setNewChat() {
+        currentChat.setRole(ChatRole.LOGGING_CHAT)
+        userService.updateChat(currentChat)
+    }
+
+    private void unsetOldChat() {
+        def oldLoggingChat = userService.getChatForRole(ChatRole.LOGGING_CHAT)
+        if (oldLoggingChat) {
+            oldLoggingChat.setRole(ChatRole.NONE)
+            userService.updateChat(oldLoggingChat)
         }
     }
 }

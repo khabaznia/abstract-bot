@@ -26,39 +26,22 @@ class StartController extends AbstractBotController {
 
     @BotRequest(path = START)
     String onStart() {
-        def redirect = TO_MAIN
-        switch (SessionUtil.currentUser.role) {
-            case UserRole.ADMIN:
-                redirect = SessionUtil.currentChat.type == ChatType.PRIVATE ? ADMIN_START : TO_MAIN
-                break
-            case UserRole.USER:
-                redirect = USER_START
-                break
-        }
-        log.debug 'Default on start'
-        redirect
+        SessionUtil.currentChat.type == ChatType.PRIVATE
+                ? (SessionUtil.currentUser.role == UserRole.ADMIN ? ADMIN_START : USER_START)
+                : TO_MAIN
     }
 
     @Localized
     @BotRequest(path = TO_MAIN)
     String getMain() {
-        def redirect = DEFAULT
-        switch (SessionUtil.currentUser.role) {
-            case UserRole.ADMIN:
-                redirect = SessionUtil.currentChat.type == ChatType.PRIVATE ? ADMIN_TO_MAIN : DEFAULT
-                break
-            case UserRole.USER:
-                redirect = USER_TO_MAIN
-                break
-        }
-        if (redirect == DEFAULT) {
-            sendMessage.text('message.choose.action')
-                    .emoji(FINGER_DOWN)
-                    .keyboard([SETTINGS.addEmoji(GEAR)])
-                    .type(MessageType.DELETE)
-            log.debug 'Default to main'
-        }
-        redirect
+        if (SessionUtil.currentChat.type == ChatType.PRIVATE)
+            return SessionUtil.currentUser.role == UserRole.ADMIN ? ADMIN_TO_MAIN : USER_TO_MAIN
+
+        sendMessage.text('message.choose.action')
+                .emoji(FINGER_DOWN)
+                .keyboard([SETTINGS.addEmoji(GEAR)])
+                .type(MessageType.DELETE)
+        DEFAULT
     }
 
 }
