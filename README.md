@@ -443,14 +443,15 @@ clean.up.database.cron.expression: 0 0 2 * * *
 You can send messages via bot using api endpoint `/api/sendMessage/`
 ```json
 {
-    "chatId": "65534234", // optional. If empty sends message to admin user
+    "chatId": "65534234", 
     "text": "Hi from api"
 }
 ```
+Field `chatId` is optional. If empty - sends message to admin user
 
 Swagger documentation is available on `/swagger-ui`
 
-Link to [Swagger of Example bot](https://khabaznia-quest-bot.herokuapp.com/swagger-ui/#)
+Link to [Swagger of Example bot](https://example-abstract-bot.herokuapp.com//swagger-ui)
 
 ---
 ## Post MVP:
