@@ -1,8 +1,8 @@
 package com.khabaznia.bot.integration
 
 import com.khabaznia.bot.integration.api.StubApi
-import com.khabaznia.bot.integration.dto.StubRequest
-import com.khabaznia.bot.integration.dto.StubResponseEntry
+import com.khabaznia.bot.integration.dto.StubRequestDto
+import com.khabaznia.bot.integration.dto.StubResponseEntryDto
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -16,7 +16,7 @@ class StubService {
     @Autowired
     private ClientBuilder<StubApi> clientBuilder
 
-    StubResponseEntry random() {
+    StubResponseEntryDto random() {
         def stubApi = clientBuilder.getClient(StubApi.class, PUBLIC_API)
         def result = stubApi.random()
         log.trace 'Result from api -> {}', result
@@ -25,7 +25,7 @@ class StubService {
 
     Integer entries(String query) {
         def stubApi = clientBuilder.getClient(StubApi.class, PUBLIC_API)
-        def request = new StubRequest(category: query)
+        def request = new StubRequestDto(category: query)
         def result = stubApi.entries(request)
         log.trace 'Entries result from api -> {}', result
         result?.count

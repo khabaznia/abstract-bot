@@ -18,7 +18,6 @@ dependencies {
     implementation 'org.codehaus.groovy:groovy:3.0.8'
     implementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -34,6 +33,8 @@ dependencies {
     implementation 'io.github.openfeign:feign-core:11.8'
     implementation 'io.github.openfeign:feign-slf4j:11.8'
     implementation 'io.github.openfeign:feign-gson:11.8'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
 test {

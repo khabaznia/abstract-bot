@@ -3,8 +3,8 @@ package com.khabaznia.bot.integration.dto
 import groovy.transform.ToString
 
 @ToString
-class StubResponse {
+class StubResponseDto {
 
     Integer count
-    List<StubResponseEntry> entries
+    List<StubResponseEntryDto> entries
 }

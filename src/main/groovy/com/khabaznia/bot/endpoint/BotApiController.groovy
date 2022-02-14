@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.telegram.telegrambots.meta.api.objects.Update
 
 import java.lang.reflect.UndeclaredThrowableException
@@ -20,7 +17,7 @@ import static com.khabaznia.bot.exception.ExceptionUtil.getMessageFromUndeclared
 
 @Slf4j
 @RestController
-class FrontController implements Loggable {
+class BotApiController implements Loggable {
 
     @Autowired
     private UpdateHandler updateHandler
