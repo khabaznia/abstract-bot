@@ -2,7 +2,6 @@ package com.khabaznia.bot.security.authorization.voter
 
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
-import io.micrometer.core.instrument.util.StringUtils
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -57,7 +56,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     private static boolean isNotRedirectCallFromController() {
-        StringUtils.isNotEmpty(SessionUtil.getAttribute(IS_UPDATE_PROCESSED))
+        SessionUtil.getAttribute(IS_UPDATE_PROCESSED) && SessionUtil.getAttribute(IS_UPDATE_PROCESSED) != ''
     }
 
     private boolean isFeatureEnabled() {

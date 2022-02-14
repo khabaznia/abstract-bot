@@ -1,15 +1,15 @@
 package com.khabaznia.bot.integration.api
 
-import com.khabaznia.bot.integration.dto.StubRequest
-import com.khabaznia.bot.integration.dto.StubResponse
+import com.khabaznia.bot.integration.dto.StubRequestDto
+import com.khabaznia.bot.integration.dto.StubResponseDto
 import feign.QueryMap
 import feign.RequestLine
 
 interface StubApi {
 
     @RequestLine("GET /random")
-    StubResponse random()
+    StubResponseDto random()
 
     @RequestLine("GET /entries")
-    StubResponse entries(@QueryMap StubRequest request)
+    StubResponseDto entries(@QueryMap StubRequestDto request)
 }

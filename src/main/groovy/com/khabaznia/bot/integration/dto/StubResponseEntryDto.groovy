@@ -3,7 +3,7 @@ package com.khabaznia.bot.integration.dto
 import groovy.transform.ToString
 
 @ToString
-class StubResponseEntry {
+class StubResponseEntryDto {
 
     String API
     String Description

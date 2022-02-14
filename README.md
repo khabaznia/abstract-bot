@@ -438,6 +438,19 @@ expired.paths.in.days.count: 2
 clean.up.database.cron.expression: 0 0 2 * * *
 ```
 
+## API to send messages via bot
+
+You can send messages via bot using api endpoint `/api/sendMessage/`
+```json
+{
+    "chatId": "65534234", // optional. If empty sends message to admin user
+    "text": "Hi from api"
+}
+```
+
+Swagger documentation is available on `/swagger-ui`
+
+Link to [Swagger of Example bot](https://khabaznia-quest-bot.herokuapp.com/swagger-ui/#)
 
 ---
 ## Post MVP:

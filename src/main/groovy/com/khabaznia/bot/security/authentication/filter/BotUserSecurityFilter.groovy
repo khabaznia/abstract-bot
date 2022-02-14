@@ -5,37 +5,42 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.khabaznia.bot.service.UpdateService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
-import org.springframework.web.filter.GenericFilterBean
 import org.telegram.telegrambots.meta.api.objects.Update
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
+import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 
 @Slf4j
 @Component
-class BotUserSecurityFilter extends GenericFilterBean {
+class BotUserSecurityFilter implements Filter {
 
+    @Value('${env.only.bot.token}')
+    private String botToken
     @Autowired
     private AuthenticationManager authManager
 
     @Override
     void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.debug 'Try to get auth user'
         def wrappedRequest = new MultiReadHttpServletRequest((HttpServletRequest) request)
-        if (hasUpdate(wrappedRequest))
-            authenticateUser(getUserCode(wrappedRequest), wrappedRequest)
-        log.trace 'Authentication successful'
+        if (shouldFilter(wrappedRequest)) {
+            log.debug 'Try to get auth user'
+            if (hasUpdate(wrappedRequest))
+                authenticateUser(getUserCode(wrappedRequest), wrappedRequest)
+            log.trace 'Authentication finished'
+        }
         chain.doFilter(wrappedRequest, response)
+    }
+
+    private boolean shouldFilter(MultiReadHttpServletRequest request) {
+        "/$botToken" == request.getRequestURI()
     }
 
     private void authenticateUser(String userCode, MultiReadHttpServletRequest wrappedRequest) {
