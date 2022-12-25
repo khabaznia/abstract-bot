@@ -9,6 +9,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.UndeclaredThrowableException
 
 import static com.khabaznia.bot.exception.ExceptionUtil.getMessageFromUndeclaredThrowableException
+import static com.khabaznia.bot.exception.ExceptionUtil.isLogEventException
 
 @Slf4j
 @Component
@@ -21,6 +22,17 @@ class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler, Loggable {
                 ? getMessageFromUndeclaredThrowableException(throwable)
                 : throwable.message
         log.error 'Got async exception in method {}, -> {} : {}', method.name, throwable.class.name, message
-        sendWarnLog("Exception in async: $message")
+        tryToLogToChat(throwable, message)
+    }
+
+    private tryToLogToChat(Throwable throwable, String message) {
+        try {
+            sendWarnLog(isLogEventException(throwable)
+                    ? 'Exception during sending log event. Please re-check in logs.'
+                    : "Exception in async: $message")
+        } catch (Exception ex) {
+            log.error "Some issue during logging event. Minor - don't handle it"
+            ex.printStackTrace()
+        }
     }
 }

@@ -18,7 +18,7 @@ class ApiMethodExecutionTask {
 
     private List<BotRequestQueue> queuesWithRequests
 
-    @Scheduled(fixedRateString = '${env.only.requests.per.second}')
+    @Scheduled(fixedRateString = '${env.only.queue.requests.per.second}')
     void executeRequestTask() {
         if (!queueContainer.hasRequest.getAndSet(false))
             return // Don't check if no requests were found in previous run.
@@ -27,7 +27,7 @@ class ApiMethodExecutionTask {
         fillListWithReadyQueues(currentTime)
 
         def requestToExecute = queuesWithRequests?.find()?.getRequest(currentTime)
-        log.trace 'Send request job - execution request: {} - {}', requestToExecute?.class?.simpleName, requestToExecute?.chatId
+        log.trace 'Send request job - execution request: {} - {}', requestToExecute?.class?.simpleName, requestToExecute?.request?.chatId
         requestToExecute == null ?: botRequestService.sendToApi(requestToExecute)
     }
 

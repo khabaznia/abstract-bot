@@ -17,4 +17,5 @@ import org.springframework.stereotype.Component
 class DeleteMessage extends BaseRequest<BooleanResponse> {
 
     Integer messageId
+    String label //label of message that should be in DB
 }

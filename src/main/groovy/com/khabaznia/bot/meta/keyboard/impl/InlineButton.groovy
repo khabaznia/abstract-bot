@@ -17,6 +17,7 @@ class InlineButton extends Button {
 
     Map<String, String> params
     String callbackData
+    String url
 
     InlineButton() {
         super()
@@ -29,8 +30,13 @@ class InlineButton extends Button {
         return this
     }
 
+    InlineButton text(String text) {
+        super.text = text
+        return this
+    }
+
     @Override
     String toString() {
-        return "$id $type || $text $emoji $binding || $callbackData $params"
+        return "$id $type || $text $emoji $binding || $url $callbackData $params"
     }
 }

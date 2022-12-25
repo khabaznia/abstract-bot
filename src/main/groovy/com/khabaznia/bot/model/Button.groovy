@@ -28,6 +28,9 @@ class Button {
     @Column(name = "row_position")
     Integer rowPosition
 
+    @Column(name = "url")
+    String url
+
     @ElementCollection
     @CollectionTable(name = "binding_mapping",
             joinColumns = [@JoinColumn(name = "id", referencedColumnName = "id")])

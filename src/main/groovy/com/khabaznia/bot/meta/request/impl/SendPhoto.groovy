@@ -1,7 +1,5 @@
 package com.khabaznia.bot.meta.request.impl
 
-import com.khabaznia.bot.enums.MessageType
-import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.impl.MessageResponse
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
@@ -15,14 +13,5 @@ import org.springframework.stereotype.Component
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
-class SendPhoto extends BaseRequest<MessageResponse> {
-
-    String photo
-    String text
-    String emoji
-    Map<String, String> binding = [:]
-
-    MessageType getType() {
-        super.type ?: MessageType.MEDIA
-    }
+class SendPhoto extends AbstractMediaRequest<MessageResponse> {
 }

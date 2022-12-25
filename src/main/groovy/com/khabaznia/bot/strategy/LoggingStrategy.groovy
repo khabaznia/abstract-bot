@@ -4,41 +4,46 @@ import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.LoggingChat
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.event.LogEvent
+import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.request.impl.SendMessage
 import com.khabaznia.bot.model.Chat
+import com.khabaznia.bot.service.ChatService
+import com.khabaznia.bot.service.I18nService
 import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
+import com.khabaznia.bot.trait.BaseRequests
 import com.khabaznia.bot.trait.Configurable
-import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
+
 
 @Slf4j
-abstract class LoggingStrategy implements Configurable {
+abstract class LoggingStrategy implements Configurable, BaseRequests {
 
-    @Autowired
-    protected ApplicationContext context
     @Autowired
     protected UpdateService updateService
     @Autowired
     protected UserService userService
+    @Autowired
+    protected I18nService i18nService
+    @Autowired
+    protected ChatService chatService
 
     List<SendMessage> getRequestsForEvent(LogEvent event) {
-        getChatId(event) ? [getLogMessageRequest(event)] : []
+        getChat(event) ? [getLogMessageRequest(event)] : []
     }
 
-    protected getLogMessageRequest(LogEvent event) {
-        def request = event.getRequest() ?: context.getBean('sendMessage').text(event.text)
-        request.text((event.skipMetaInfo ? '' : metaInfo) + "$logEmoji " + request.text)
-                .chatId(getChatId(event)) as SendMessage
+    protected BaseRequest getLogMessageRequest(LogEvent event) {
+        def request = event.getRequest() ?: convertToRequest(event)
+        request.text("$logEmoji " + request.text)
+                .chatId(getChat(event)?.code) as SendMessage
     }
 
-    protected static String getMetaInfo() {
-        "${SessionUtil.currentChat?.code}:${SessionUtil.currentUser?.role?.toString()} "
+    private SendMessage convertToRequest(LogEvent event) {
+        sendMessage.text(i18nService.getFilledTemplate(event.text, event.binding, getChat(event)?.lang))
     }
 
-    protected String getChatId(LogEvent event) {
+    protected Chat getChat(LogEvent event) {
         if (event.logChat == LoggingChat.LOGGING)
             return loggingChat
         if (event.logChat == LoggingChat.ADMIN)
@@ -46,12 +51,13 @@ abstract class LoggingStrategy implements Configurable {
         null
     }
 
-    protected String getLoggingChat() {
-        userService.getChatForRole(ChatRole.LOGGING_CHAT)?.code
+    protected Chat getLoggingChat() {
+        userService.getChatForRole(ChatRole.LOGGING_CHAT)
     }
 
-    protected String getAdminChat() {
-        userService.getUserForRole(UserRole.ADMIN)?.code
+    protected Chat getAdminChat() {
+        def user = userService.getUserForRole(UserRole.ADMIN)
+        user ? chatService.getChatByCode(user?.code) : null
     }
 
     abstract String getLogEmoji()

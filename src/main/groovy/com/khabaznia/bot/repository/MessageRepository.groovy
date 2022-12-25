@@ -1,6 +1,6 @@
 package com.khabaznia.bot.repository
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.model.Message
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MessageRepository extends JpaRepository<Message, String> {
 
-    @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c WHERE m.type=:type AND m.messageId IS NOT NULL AND c.code=:chatCode AND m.updateId<>:updateId")
-    List<Message> findByTypeAndChatCodeThatNotOfUpdateId(@Param("type") MessageType type, @Param("chatCode") String chatCode, @Param("updateId") Integer updateId)
+    @Query(value = "SELECT m FROM message m LEFT JOIN m.chat c  WHERE :type MEMBER OF m.features AND m.messageId IS NOT NULL AND c.code=:chatCode AND m.updateId<>:updateId")
+    List<Message> findByTypeAndChatCodeThatNotOfUpdateId(@Param("type") MessageFeature type, @Param("chatCode") String chatCode, @Param("updateId") Integer updateId)
 
     @Query("SELECT m FROM message m where m.updateDate <= :updateTimeStamp")
     List<Message> findAllWithUpdateDateTimeBefore(@Param("updateTimeStamp") Date updateTimeStamp)

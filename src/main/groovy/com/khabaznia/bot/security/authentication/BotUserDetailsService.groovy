@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.security.Constants.*
+import static com.khabaznia.bot.security.Constants.CHAT_ID_DELIMITER
 
 @Slf4j
 @Component

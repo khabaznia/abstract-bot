@@ -1,6 +1,6 @@
 package com.khabaznia.bot.integration.dto
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import groovy.transform.ToString
 
 import javax.validation.constraints.NotBlank
@@ -11,6 +11,6 @@ class SendMessageDto {
     String chatId
     @NotBlank(message = "text must not be blank")
     String text
-    MessageType messageType
+    List<MessageFeature> features
     List<Map<String, String>> buttons
 }

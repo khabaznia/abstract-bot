@@ -10,5 +10,7 @@ class LogEvent {
     LoggingChat logChat = LoggingChat.LOGGING
     SendMessage request
     String text
+    Map<String, String> binding = [:]
     Boolean skipMetaInfo = false
+    String questId
 }

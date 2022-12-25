@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository
 interface ChatRepository extends JpaRepository<Chat, String> {
 
     List<Chat> findByRole(ChatRole role)
+
+    Chat getByCode(String code)
+
+    boolean existsByCode(String code)
 }

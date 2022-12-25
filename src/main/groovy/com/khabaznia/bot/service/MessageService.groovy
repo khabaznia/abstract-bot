@@ -1,6 +1,6 @@
 package com.khabaznia.bot.service
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.model.Button
 import com.khabaznia.bot.model.Keyboard
 import com.khabaznia.bot.model.Message
@@ -55,12 +55,12 @@ class MessageService implements Configurable {
                 ?: getByMessageId(uniqueId)
     }
 
-    List<Message> getMessagesForTypeExcludingUpdateId(MessageType type, String chatCode, Integer updateId) {
+    List<Message> getMessagesForTypeExcludingUpdateId(MessageFeature type, String chatCode, Integer updateId) {
         messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, chatCode, updateId)
     }
 
-    void removeMessagesOfTypeExcludingUpdateId(MessageType type, Integer updateId) {
-        messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, SessionUtil.currentChat.code, updateId)
+    void removeMessagesOfTypeExcludingUpdateId(MessageFeature type, Integer updateId) {
+        messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, SessionUtil.currentChat?.code, updateId)
                 .each { removeMessageForUid(it.uid) }
     }
 

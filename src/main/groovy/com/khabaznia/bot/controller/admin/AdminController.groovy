@@ -1,22 +1,21 @@
 package com.khabaznia.bot.controller.admin
 
 import com.khabaznia.bot.controller.AbstractBotController
-import com.khabaznia.bot.core.annotation.BotController
-import com.khabaznia.bot.core.annotation.BotRequest
-import com.khabaznia.bot.core.annotation.Localized
-import com.khabaznia.bot.core.annotation.Secured
+import com.khabaznia.bot.core.annotation.*
 import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.ChatType
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.enums.Role
+import com.khabaznia.bot.service.UpdateService
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.*
-import static com.khabaznia.bot.controller.Constants.COMMON.SETTINGS
-import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.EXAMPLE
-import static com.khabaznia.bot.enums.MessageType.INLINE_KEYBOARD_MESSAGE_GROUP
+import static com.khabaznia.bot.core.Constants.CHECK_MESSAGES_IN_LOGGING_CHAT
+import static com.khabaznia.bot.enums.MessageFeature.INLINE_KEYBOARD_MESSAGE_GROUP
 import static com.khabaznia.bot.meta.Emoji.*
+import static com.khabaznia.bot.util.DefaultRoleKeyboardsUtil.adminReplyKeyboard
 import static com.khabaznia.bot.util.SessionUtil.currentChat
 
 @Slf4j
@@ -24,10 +23,15 @@ import static com.khabaznia.bot.util.SessionUtil.currentChat
 @BotController
 class AdminController extends AbstractBotController {
 
+    @Autowired
+    private UpdateService updateService
+
     @Secured(roles = Role.ADMIN)
     @BotRequest(path = ADMIN_START)
     String onStart() {
-        sendMessage.text('message.admin.greeting').emoji(CROWN).type(MessageType.DELETE)
+        sendMessage.text('text.admin.greeting')
+                .emoji(CROWN)
+                .delete()
         ADMIN_TO_MAIN
     }
 
@@ -35,9 +39,9 @@ class AdminController extends AbstractBotController {
     @BotRequest(path = ADMIN_TO_MAIN)
     adminMenu() {
         deleteOldMessages(INLINE_KEYBOARD_MESSAGE_GROUP)
-        sendMessage.text('message.choose.action')
+        sendMessage.text('text.choose.action')
                 .emoji(FINGER_DOWN)
-                .replyKeyboard([[EXAMPLE.addEmoji(TEST_EMOJI_SET)], [FEATURES_LIST.addEmoji(CHECK)], [SETTINGS.addEmoji(GEAR)]])
+                .replyKeyboard(getAdminReplyKeyboard())
     }
 
     @Secured(roles = Role.ADMIN)
@@ -47,7 +51,7 @@ class AdminController extends AbstractBotController {
         def featuresKeyboard = inlineKeyboard
         switchableConfigs.each { featuresKeyboard.switchButton(it.name, SWITCH_FEATURE, Boolean.valueOf(it.value), [configKey: it.key]).row() }
         featuresKeyboard.button('button.back', LEFT_ARROW, ADMIN_TO_MAIN)
-        sendMessage.text('message.admin.switch.features')
+        sendMessage.text('text.admin.switch.features')
                 .keyboard(featuresKeyboard)
         log.debug "Return features menu to admin"
     }
@@ -63,11 +67,29 @@ class AdminController extends AbstractBotController {
     @BotRequest(path = SET_LOGGING)
     setLoggingChat() {
         if (currentChat.type == ChatType.PRIVATE) {
-            sendMessage.text('message.error.chat.set.logging')
+            sendMessage.text('text.error.chat.set.logging')
         } else {
             unsetOldChat()
             setNewChat()
-            sendMessage.text('message.chat.set.logging')
+            sendMessage.text('text.chat.set.logging')
+        }
+    }
+
+    @Action(skip = true)
+    @Secured(roles = Role.LOGGING_CHAT)
+    @BotRequest()
+    checkMessage() {
+        if (isEnabled(CHECK_MESSAGES_IN_LOGGING_CHAT)) {
+            def message = updateService.getMessageFromUpdate(update).strip()
+            def resultMessage = message.tokenize(' ')
+                    .collect { it.startsWith('\n') ? ['\n', it.substring('\n'.size())] : it }
+                    .flatten()
+                    .collect { it.startsWith('\\$') && it.endsWithIgnoreCase('id') ? '$' + '' : it }
+                    .collect { it.startsWith('$') ? it.bold() : it }
+                    .join(' ')
+            resultMessage = resultMessage.replaceAll ('\n ', '\n')
+            resultMessage = resultMessage.replaceAll('\\$', '')
+            sendMessage.text resultMessage
         }
     }
 

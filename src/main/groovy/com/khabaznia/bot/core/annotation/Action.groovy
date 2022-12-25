@@ -16,5 +16,7 @@ import java.lang.annotation.Target
 @Component
 @interface Action {
 
+    boolean skip() default false
+
     ActionType actionType() default ActionType.TYPING
 }

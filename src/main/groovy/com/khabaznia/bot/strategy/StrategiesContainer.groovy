@@ -2,7 +2,7 @@ package com.khabaznia.bot.strategy
 
 import com.khabaznia.bot.enums.ButtonType
 import com.khabaznia.bot.enums.LogType
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -17,18 +17,16 @@ class StrategiesContainer {
     private ApplicationContext context
 
     @Bean(name = 'requestProcessingStrategyMap')
-    Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap() {
-        Map<MessageType, RequestProcessingStrategy> map = [:]
-        map[MessageType.SKIP] = context.getBean('noActionRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.PERSIST] = context.getBean('saveMessageRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.DELETE] = context.getBean('saveMessageRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.INLINE_KEYBOARD] = context.getBean('inlineKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.ONE_TIME_INLINE_KEYBOARD] = context.getBean('oneTimeKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.PINNED] = context.getBean('pinnedRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.REPLY_KEYBOARD] = context.getBean('replyKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.EDIT] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.EDIT_AND_DELETE] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
-        map[MessageType.MEDIA] = context.getBean('noActionRequestProcessingStrategy') as RequestProcessingStrategy
+    Map<MessageFeature, RequestProcessingStrategy> requestProcessingStrategyMap() {
+        Map<MessageFeature, RequestProcessingStrategy> map = [:]
+        map[MessageFeature.PERSIST] = context.getBean('saveMessageRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.DELETE] = context.getBean('saveMessageRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.INLINE_KEYBOARD] = context.getBean('inlineKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.ONE_TIME_INLINE_KEYBOARD] = context.getBean('oneTimeKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.PINNED] = context.getBean('pinnedRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.REPLY_KEYBOARD] = context.getBean('replyKeyboardRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.EDIT] = context.getBean('editMessageRequestProcessingStrategy') as RequestProcessingStrategy
+        map[MessageFeature.MEDIA] = context.getBean('mediaRequestProcessingStrategy') as RequestProcessingStrategy
         log.debug 'Request strategies map: {}', map
         map
     }

@@ -15,6 +15,7 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 
 import static com.khabaznia.bot.core.Constants.*
+import static com.khabaznia.bot.service.UpdateService.ONE_VARIANT_CONTROLLER_GROUP
 
 @Slf4j
 @Component
@@ -49,8 +50,9 @@ class ControllerMetaDataConverter {
         controllerMetaData.previousPath = getPreviousPath(method)
         controllerMetaData.localizedPath = localizedPath
         controllerMetaData.originalPath = getOriginalPath(method)
-        controllerMetaData.controllerPath = getPreviousPath(method) + PREVIOUS_PATH_DELIMITER + localizedPath
+        controllerMetaData.controllerPath = getPreviousPath(method) + PREVIOUS_PATH_DELIMITER + localizedPath + roleSuffix(localizedPath, method)
         controllerMetaData.hasParameters = method.parameterCount > 0
+        controllerMetaData.rawParams = getRawParams(method)
         controllerMetaData.actionType = getActionType(method)
         controllerMetaData.params = getParams(method)
         controllerMetaData.enableDuplicateRequests = getEnableDuplicateRequests(method)
@@ -106,7 +108,7 @@ class ControllerMetaDataConverter {
 
     private static ActionType getActionType(Method method) {
         method.isAnnotationPresent(Action.class)
-                ? method.getAnnotation(Action.class)?.actionType()
+                ? method.getAnnotation(Action.class).skip() ? null : method.getAnnotation(Action.class)?.actionType()
                 : Action.class.getDeclaredMethod('actionType').getDefaultValue() as ActionType
     }
 
@@ -115,5 +117,28 @@ class ControllerMetaDataConverter {
         new DefaultParameterNameDiscoverer().getParameterNames(method).collectEntries {
             [(pos++): it]
         }
+    }
+
+    private static Boolean getRawParams(Method method) {
+        method.getAnnotation(BotRequest.class).rawParams()
+    }
+
+    private static String roleSuffix(String path, Method method) {
+        ONE_VARIANT_CONTROLLER_GROUP*.defaultController.contains(path) && hasSpecificRole(method)
+                ? SPECIFIC_ROLE_DELIMITER + getSpecificRole(method)
+                : ''
+    }
+
+    private static boolean hasSpecificRole(Method method) {
+        def roles = getRoles(method)
+        def allDefaultRoles = (defaultRoles*.toString()) << Role.BOT.toString()
+        !allDefaultRoles.containsAll(roles)
+                && roles.size() == 2
+                && roles.contains(Role.BOT.toString())
+    }
+
+    private static String getSpecificRole(Method method) {
+        def roles = getRoles(method) - Role.BOT.toString()
+        roles.get(0)
     }
 }

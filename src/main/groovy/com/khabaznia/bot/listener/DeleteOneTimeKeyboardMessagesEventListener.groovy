@@ -1,6 +1,6 @@
 package com.khabaznia.bot.listener
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.event.DeleteOneTimeKeyboardMessagesEvent
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.service.MessageService
@@ -24,7 +24,7 @@ class DeleteOneTimeKeyboardMessagesEventListener {
     @EventListener
     void onApplicationEvent(DeleteOneTimeKeyboardMessagesEvent event) {
         def messageToEdit = messageService.getMessage(event.messageUid)
-        if (messageToEdit?.type == MessageType.ONE_TIME_INLINE_KEYBOARD) {
+        if (messageToEdit?.features?.contains(MessageFeature.ONE_TIME_INLINE_KEYBOARD)) {
             log.trace 'Message with one-time keyboard -> {}', messageToEdit
             def editMessageRequest = context.getBean('editMessage')
             editMessageRequest.messageId(messageToEdit.messageId)

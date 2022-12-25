@@ -17,4 +17,5 @@ import org.springframework.stereotype.Component
 class PinMessage extends BaseRequest<BooleanResponse> {
 
     String messageId
+    String label //label of message that should be in DB
 }

@@ -1,9 +1,9 @@
 package com.khabaznia.bot.event
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 
 class DeleteMessagesEvent {
 
-    List<MessageType> types
+    List<MessageFeature> types
     Integer updateId
 }
