@@ -24,11 +24,17 @@ class BotControllerProxy {
         metaData.beforeExecuteMethod.invoke(metaData.bean, update)
         def params = updateService.getParametersFromUpdate(update)
         log.debug 'Params from update: {}. Params in controller: {}', params, metaData.params
-        def result = metaData.hasParameters
-                ? metaData.executeMethod.invoke(metaData.bean, metaData.params
-                    .collect { params.get(it.value) } as Object[])
-                : metaData.executeMethod.invoke(metaData.bean)
+        def result = metaData.hasParameters && !metaData.rawParams
+                ? callWithBindedParams(params)
+                : metaData.rawParams
+                    ? metaData.executeMethod.invoke(metaData.bean, params)
+                    : metaData.executeMethod.invoke(metaData.bean)
         metaData.afterExecuteMethod.invoke(metaData.bean, metaData.originalPath)
         metaData.returnString && result ? result as String : null
+    }
+
+    private Object callWithBindedParams(params) {
+        metaData.executeMethod.invoke(metaData.bean, metaData.params
+                .collect { params.get(it.value) } as Object[])
     }
 }

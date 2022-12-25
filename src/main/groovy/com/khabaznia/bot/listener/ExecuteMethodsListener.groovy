@@ -1,6 +1,6 @@
 package com.khabaznia.bot.listener
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.event.ExecuteMethodsEvent
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.strategy.RequestProcessingStrategy
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 class ExecuteMethodsListener {
 
     @Autowired
-    private Map<MessageType, RequestProcessingStrategy> requestProcessingStrategyMap
+    private Map<MessageFeature, RequestProcessingStrategy> requestProcessingStrategyMap
     @Autowired
     private ApplicationEventPublisher publisher
     @Autowired
@@ -24,8 +24,10 @@ class ExecuteMethodsListener {
     @EventListener
     void onApplicationEvent(ExecuteMethodsEvent event) {
         log.info 'Processing {} requests', event.requests.size()
-        event.requests.each {
-            requestProcessingStrategyMap.get(it.type).prepare(it)
+        event.requests.findAll().each {
+            it.features.each {feature ->
+                requestProcessingStrategyMap.get(feature).prepare(it)
+            }
             log.trace 'After prepare: {}', it
             requestService.execute(it)
         }

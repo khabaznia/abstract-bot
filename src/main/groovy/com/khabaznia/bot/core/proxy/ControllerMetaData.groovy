@@ -11,6 +11,7 @@ class ControllerMetaData {
     Object bean
     Map<Integer, String> params
     Boolean hasParameters
+    Boolean rawParams
     Method beforeExecuteMethod
     Method executeMethod
     Method afterExecuteMethod

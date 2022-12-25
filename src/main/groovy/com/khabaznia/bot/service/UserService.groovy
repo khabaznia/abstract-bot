@@ -4,6 +4,7 @@ import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.ChatType
 import com.khabaznia.bot.enums.UserRole
 import com.khabaznia.bot.model.Chat
+import com.khabaznia.bot.model.Subscription
 import com.khabaznia.bot.model.User
 import com.khabaznia.bot.repository.ChatRepository
 import com.khabaznia.bot.repository.ConfigRepository
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service
 
 import static com.khabaznia.bot.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
 import static com.khabaznia.bot.core.Constants.ADMIN_CHAT_ID
+import static com.khabaznia.bot.core.Constants.DEFAULT_LOCALE
+import static com.khabaznia.bot.util.LoggingUtil.getUserInfo
 
 @Slf4j
 @Service
@@ -43,8 +46,21 @@ class UserService implements Configurable, Loggable {
         userRepository.existsById(userCode) ? userRepository.getById(userCode) : createUser(userCode, userRole)
     }
 
+    User updateUser(org.telegram.telegrambots.meta.api.objects.User apiUser, User botUser = null) {
+        def user = botUser ?: getUserForCode(apiUser.id.toString())
+        user.username = apiUser.userName
+        user.firstName = apiUser.firstName
+        user.lastName = apiUser.lastName
+        log.trace 'Updating user data: {}', user
+        userRepository.save(user)
+    }
+
     Chat updateChat(Chat chat) {
         chatRepository.save(chat)
+    }
+
+    User updateUser(User user) {
+        userRepository.save(user)
     }
 
     Chat getChatForRole(ChatRole role) {
@@ -55,8 +71,12 @@ class UserService implements Configurable, Loggable {
         userRepository.findByRole(role).find()
     }
 
+    List<String> getSubscriptionUserCodes(boolean isGeneral) {
+        userRepository.allByGeneralSubscription*.code
+    }
+
     void setPreviousPath(String path) {
-        def lastActionFullPath = SessionUtil.getAttribute(UPDATE_MESSAGE)
+        def lastActionFullPath = SessionUtil.getStringAttribute(UPDATE_MESSAGE)
         def currentChat = SessionUtil.currentChat
         currentChat.lastAction = path
         if (lastActionFullPath) currentChat.lastActionFullPath = lastActionFullPath
@@ -72,18 +92,16 @@ class UserService implements Configurable, Loggable {
     }
 
     private Chat createChat(String chatCode, String userCode) {
-        def chat = new Chat(code: chatCode, role: ChatRole.NONE, type: getChatType(chatCode), users: [])
+        def chat = new Chat(code: chatCode,
+                role: ChatRole.NONE,
+                type: getChatType(chatCode),
+                users: [],
+                lang: getLang(chatCode),
+                additionalParams: [:])
         addUserToChat(chat, userRepository.getById(userCode))
     }
 
-    private User createUser(String code) {
-        sendLog("New user for code: $code")
-        userRepository.save(new User(code: code, role: getUserRole(code), chats: []))
-    }
-
     private Chat addUserToChat(Chat chat, User user) {
-//        chat.users = chat.users ?: []
-//        user.chats = user.chats ?: []
         chat.users << user
         chatRepository.save(chat)
         user.chats << chat
@@ -91,12 +109,23 @@ class UserService implements Configurable, Loggable {
         chat
     }
 
-    private User createUser(String code, UserRole userRole) {
-        sendLog("New user for code: $code, userRole: ${userRole.toString()}")
-        userRepository.save(new User(code: code, role: userRole, chats: []))
+    private User createUser(String code, UserRole userRole = null) {
+        def user = userRepository.save(new User(code: code, role: userRole ?: getUserRole(code), chats: [], subscription: createSubscription(userRole, code)))
+        sendLogToAdmin('text.new.user.created', [code: getUserInfo(code), userRole: user.role.toString()], true)
+        user
     }
 
-    private UserRole getUserRole(String code) {
+    private Subscription createSubscription(UserRole userRole, String code) {
+        def excludedRoles = [UserRole.ADMIN, UserRole.BOT]
+        var defaultValue = excludedRoles.contains(userRole) || excludedRoles.contains(getUserRole(code))
+        new Subscription(general: !defaultValue)
+    }
+
+    private String getLang(String chatCode) {
+        getChatType(chatCode) == ChatType.PRIVATE ? null : getConfig(DEFAULT_LOCALE)
+    }
+
+    UserRole getUserRole(String code) {
         code == getConfig(ADMIN_CHAT_ID) ? UserRole.ADMIN : UserRole.USER
     }
 

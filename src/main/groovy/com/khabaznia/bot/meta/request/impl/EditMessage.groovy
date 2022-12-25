@@ -1,6 +1,6 @@
 package com.khabaznia.bot.meta.request.impl
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.meta.response.impl.MessageResponse
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
@@ -8,8 +8,6 @@ import groovy.transform.builder.Builder
 import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-
-import static com.khabaznia.bot.enums.MessageType.getEditGroup
 
 @ToString(includeSuper = true, includeNames = true)
 @Component(value = 'editMessage')
@@ -22,14 +20,15 @@ class EditMessage extends AbstractKeyboardMessage<MessageResponse> {
     String emoji
     Integer messageId
     Map<String, String> binding
-    String label
+    String label //label of message that should be in DB
+    boolean disableWebPreview
 
-    MessageType getType() {
-        getEditGroup().contains(super.type) ? super.type : MessageType.EDIT
+    Set<MessageFeature> getFeatures(){
+        super.features << MessageFeature.EDIT
     }
 
     EditMessage delete() {
-        super.type = MessageType.EDIT_AND_DELETE
+        super.delete()
         this
     }
 }

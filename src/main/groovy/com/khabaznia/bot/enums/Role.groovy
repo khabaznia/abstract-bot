@@ -5,5 +5,7 @@ enum Role {
     ADMIN,
     USER,
     ALL,
-    BOT
+    BOT,
+    TEAM_CHAT,
+    LOGGING_CHAT
 }

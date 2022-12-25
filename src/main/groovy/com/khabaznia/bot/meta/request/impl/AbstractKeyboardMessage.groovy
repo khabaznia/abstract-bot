@@ -1,6 +1,6 @@
 package com.khabaznia.bot.meta.request.impl
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.meta.keyboard.Keyboard
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.request.BaseRequest
@@ -19,13 +19,13 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
 
     AbstractKeyboardMessage keyboard(Keyboard keyboard) {
         this.keyboard = keyboard
-        this.type = keyboard instanceof InlineKeyboard ? MessageType.INLINE_KEYBOARD : MessageType.REPLY_KEYBOARD
+        this.feature(keyboard instanceof InlineKeyboard ? MessageFeature.INLINE_KEYBOARD : MessageFeature.REPLY_KEYBOARD)
         this
     }
 
     AbstractKeyboardMessage oneTimeKeyboard(Keyboard keyboard) {
         this.keyboard = keyboard
-        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
+        this.feature(MessageFeature.ONE_TIME_INLINE_KEYBOARD)
         this
     }
 
@@ -33,7 +33,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
         def inlineKeyboard = context.getBean('inlineKeyboard')
         buttons.each { inlineKeyboard.button(it.key, it.value) }
         keyboard = inlineKeyboard
-        this.type = MessageType.INLINE_KEYBOARD
+        this.feature(MessageFeature.INLINE_KEYBOARD)
         this
     }
 
@@ -44,7 +44,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
             inlineKeyboard.row()
         }
         keyboard = inlineKeyboard
-        this.type = MessageType.INLINE_KEYBOARD
+        this.feature(MessageFeature.INLINE_KEYBOARD)
         this
     }
 
@@ -52,7 +52,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
         def inlineKeyboard = context.getBean('inlineKeyboard')
         buttons.each { inlineKeyboard.button(it.key, it.value) }
         keyboard = inlineKeyboard
-        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
+        this.feature(MessageFeature.ONE_TIME_INLINE_KEYBOARD)
         this
     }
 
@@ -63,7 +63,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
             inlineKeyboard.row()
         }
         keyboard = inlineKeyboard
-        this.type = MessageType.ONE_TIME_INLINE_KEYBOARD
+        this.feature(MessageFeature.ONE_TIME_INLINE_KEYBOARD)
         this
     }
 
@@ -71,7 +71,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
         def replyKeyboard = context.getBean('replyKeyboard')
         keys.each { replyKeyboard.button(it) }
         keyboard = replyKeyboard
-        this.type = MessageType.REPLY_KEYBOARD
+        this.feature(MessageFeature.REPLY_KEYBOARD)
         this
     }
 
@@ -82,7 +82,7 @@ abstract class AbstractKeyboardMessage<T extends MessageResponse> extends BaseRe
             replyKeyboard.row()
         }
         keyboard = replyKeyboard
-        this.type = MessageType.REPLY_KEYBOARD
+        this.feature(MessageFeature.REPLY_KEYBOARD)
         this
     }
 }

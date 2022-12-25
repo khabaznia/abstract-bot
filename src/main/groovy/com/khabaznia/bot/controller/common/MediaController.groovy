@@ -3,11 +3,13 @@ package com.khabaznia.bot.controller.common
 import com.khabaznia.bot.controller.AbstractBotController
 import com.khabaznia.bot.core.annotation.BotController
 import com.khabaznia.bot.core.annotation.BotRequest
+import com.khabaznia.bot.meta.request.impl.AbstractMediaRequest
 import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bot.controller.Constants.COMMON.*
+import static com.khabaznia.bot.controller.Constants.COMMON.ANIMATION_CONTROLLER
 import static com.khabaznia.bot.service.UpdateService.*
 
 @Slf4j
@@ -16,35 +18,44 @@ import static com.khabaznia.bot.service.UpdateService.*
 class MediaController extends AbstractBotController {
 
     @BotRequest(path = IMAGE_CONTROLLER, enableDuplicateRequests = true)
-    String processPhoto() {
-        sendMessage.text('message.good.photo')
-        sendPhoto.photo(getPhotoId(update))
-                .text('message.admin.media.from.chat')
-                .binding([chatId: SessionUtil.currentChat.code])
-                .chatId(adminChatId)
+    processPhoto() {
+        sendMessage.text('text.good.photo')
+        fillMediaRequest(sendPhoto)
         log.debug 'Processing image (nope)'
-        DEFAULT
     }
 
     @BotRequest(path = VIDEO_CONTROLLER, enableDuplicateRequests = true)
-    String processVideo() {
-        sendMessage.text('message.good.video')
-        sendVideo.video(getVideoId(update))
-                .text('message.admin.media.from.chat')
-                .binding([chatId: SessionUtil.currentChat.code])
-                .chatId(adminChatId)
+    processVideo() {
+        sendMessage.text('text.good.video')
+        fillMediaRequest(sendVideo)
         log.debug 'Processing video (nope)'
-        DEFAULT
     }
 
     @BotRequest(path = AUDIO_CONTROLLER, enableDuplicateRequests = true)
-    String processAudio() {
-        sendMessage.text('message.good.audio')
-        sendAudio.audio(getAudioId(update))
-                .text('message.admin.media.from.chat')
+    processAudio() {
+        sendMessage.text('text.good.audio')
+        fillMediaRequest(sendAudio)
+        log.debug 'Processing audio (nope)'
+    }
+
+    @BotRequest(path = ANIMATION_CONTROLLER, enableDuplicateRequests = true)
+    processAnimation() {
+        sendMessage.text('text.good.animation')
+        fillMediaRequest(sendAnimation)
+        log.debug 'Processing document (nope)'
+    }
+
+    @BotRequest(path = DOCUMENT_CONTROLLER, enableDuplicateRequests = true)
+    processDocument() {
+        sendMessage.text('text.good.document')
+        fillMediaRequest(sendDocument)
+        log.debug 'Processing document (nope)'
+    }
+
+    protected void fillMediaRequest(AbstractMediaRequest request) {
+        request.fileIdentifier(getFileId(update))
+                .text('text.admin.media.from.chat')
                 .binding([chatId: SessionUtil.currentChat.code])
                 .chatId(adminChatId)
-        log.debug 'Processing audio (nope)'
-        DEFAULT
     }
 }

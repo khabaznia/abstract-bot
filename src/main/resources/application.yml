@@ -8,7 +8,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DB_DDL_AUTO}
     show_sql: false
     open-in-view: false
     properties:
@@ -22,17 +22,27 @@ logging:
     com.khabaznia.bot: ${LOGGING_LEVEL}
 
 env.only:
-  chat.inactive.minutes: 15
-  requests.per.second: 33
-  requests.delay.limit.in.single.chat: 450
-  expired.paths.in.days.count: 2
+  block.duplicate.requests: false
+  check.messages.in.logging.chat: true
+  ignore.chat.actions.for.group: true
   clean.up.database.cron.expression: 0 0 2 * * *
-  block.duplicate.requests: true
+
+  queue:
+    only.for.group.chat: true
+    chat.inactive.minutes: 15
+    requests.per.second: 333 # 1000/30 = 33 nanoseconds - because of limit 30 messages per second in different chats
+    requests.delay.limit.in.single.chat: 1000 # 1000 nanoseconds - 1 message per 1 second because of limit
+    # Telegram API requirements:
+    # If you're sending bulk notifications to multiple users, the API will not allow more than 30 messages per second or so.
+    # When sending messages inside a particular chat, avoid sending more than one message per second.
+    # Also note that your bot will not be able to send more than 20 messages per minute to the same group. (unresolved issue)
+    expired.paths.in.days.count: 2
   locale:
-    default: ru
-    available: ru,en,uk
+    default: uk
+    available: uk,en,ru
   bot:
     token: ${BOT_TOKEN}
+    name: ${BOT_NAME}
     admin.chat.id: ${CHAT_ADMIN}
     restricted.mode: false
     restricted.mode.users: ${RESTRICTED_USERS}

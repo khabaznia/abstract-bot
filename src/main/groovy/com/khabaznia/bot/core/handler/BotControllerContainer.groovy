@@ -1,6 +1,7 @@
 package com.khabaznia.bot.core.handler
 
 import com.khabaznia.bot.core.proxy.BotControllerProxy
+import com.khabaznia.bot.enums.UpdateType
 import com.khabaznia.bot.exception.ControllerGenerationException
 import com.khabaznia.bot.meta.Emoji
 import groovy.util.logging.Slf4j
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Component
 
 import java.lang.reflect.Modifier
 
-import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bot.core.Constants.PREVIOUS_PATH_DELIMITER
 
 @Slf4j
@@ -37,11 +37,13 @@ class BotControllerContainer {
     }
 
     Map<String, BotControllerProxy> getMatchingControllers(String path) {
-        controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$path/ }
+        def specialCharRegex = /[\W_&&[^\s]]/;
+        def escapedPath = path.replaceAll(specialCharRegex, /\\$0/);
+        controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$escapedPath/ }
     }
 
     BotControllerProxy getDefaultController() {
-        log.info "Controller not found. Using $DEFAULT controller"
-        controllerMap[PREVIOUS_PATH_DELIMITER + DEFAULT]
+        log.info "Controller not found. Using ${UpdateType.UNDEFINED.defaultController} controller"
+        controllerMap[PREVIOUS_PATH_DELIMITER + UpdateType.UNDEFINED.defaultController]
     }
 }

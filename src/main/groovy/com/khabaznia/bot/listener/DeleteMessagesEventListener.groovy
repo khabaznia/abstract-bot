@@ -1,6 +1,6 @@
 package com.khabaznia.bot.listener
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.event.DeleteMessagesEvent
 import com.khabaznia.bot.meta.request.impl.DeleteMessage
 import com.khabaznia.bot.model.Message
@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bot.enums.MessageType.DELETE_MESSAGE_GROUP
+import static com.khabaznia.bot.enums.MessageFeature.DELETE
 
 @Slf4j
 @Component
@@ -30,7 +30,7 @@ class DeleteMessagesEventListener {
     @Async
     @EventListener
     void onApplicationEvent(DeleteMessagesEvent event) {
-        def messageTypes = event.types ?: DELETE_MESSAGE_GROUP
+        def messageTypes = event.types ?: [DELETE]
         def currentChatCode = SessionUtil.currentChat.code
         def messagesToDelete = getMessagesToDelete(messageTypes, currentChatCode, event.updateId)
         messagesToDelete.collect { convertToRequest(it) }
@@ -39,7 +39,7 @@ class DeleteMessagesEventListener {
         log.info 'Delete {} messages of type {} from chat {}', messagesToDelete?.size(), messageTypes, currentChatCode
     }
 
-    private List<Message> getMessagesToDelete(List<MessageType> messageTypes, String currentChatCode, Integer updateId) {
+    private List<Message> getMessagesToDelete(List<MessageFeature> messageTypes, String currentChatCode, Integer updateId) {
         messageTypes.collect { messageService.getMessagesForTypeExcludingUpdateId(it, currentChatCode, updateId) }
                 .flatten().collect { it as Message }
                 .findAll { it.messageId != null && it.messageId != 0 }

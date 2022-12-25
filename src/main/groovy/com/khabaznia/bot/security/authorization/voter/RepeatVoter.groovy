@@ -27,7 +27,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {
         def result = ACCESS_GRANTED
-        def updateMessage = SessionUtil.getAttribute(UPDATE_MESSAGE)
+        def updateMessage = SessionUtil.getStringAttribute(UPDATE_MESSAGE)
         if (isFeatureEnabled()
                 && isNotRedirectCallFromController()
                 && isNotSpecialButton(updateMessage)
@@ -56,7 +56,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     private static boolean isNotRedirectCallFromController() {
-        SessionUtil.getAttribute(IS_UPDATE_PROCESSED) && SessionUtil.getAttribute(IS_UPDATE_PROCESSED) != ''
+        SessionUtil.getStringAttribute(IS_UPDATE_PROCESSED) && SessionUtil.getStringAttribute(IS_UPDATE_PROCESSED) != ''
     }
 
     private boolean isFeatureEnabled() {

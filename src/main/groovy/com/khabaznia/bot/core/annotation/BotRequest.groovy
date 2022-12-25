@@ -31,4 +31,6 @@ import static com.khabaznia.bot.controller.Constants.COMMON.ANY_STRING
      * Enables repeating of the request for same user. Works only if feature enabled in 'block.duplicate.requests' configuration
      */
     boolean enableDuplicateRequests() default false
+
+    boolean rawParams() default false
 }

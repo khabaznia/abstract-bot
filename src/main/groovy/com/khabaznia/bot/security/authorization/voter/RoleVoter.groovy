@@ -15,10 +15,10 @@ class RoleVoter extends AbstractBotAuthorizationVoter {
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {
         def targetRoles = getMetaData(method)?.roles
-        def userRole = getUserRoles(authentication)
-        log.debug 'User role -> {}, target roles: {},', userRole, targetRoles
+        def userRoles = getUserRoles(authentication)
+        log.debug 'User roles -> {}, target roles: {},', userRoles, targetRoles
 
-        targetRoles.contains(Role.ALL.toString()) || targetRoles.intersect(userRole)
+        targetRoles.contains(Role.ALL.toString()) || targetRoles.intersect(userRoles)
                 ? ACCESS_GRANTED
                 : ACCESS_DENIED
     }

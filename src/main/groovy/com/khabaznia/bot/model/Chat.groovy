@@ -3,6 +3,8 @@ package com.khabaznia.bot.model
 import com.khabaznia.bot.enums.ChatRole
 import com.khabaznia.bot.enums.ChatType
 import groovy.transform.ToString
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -16,13 +18,16 @@ class Chat {
     @Column(name = "chat_id")
     String code
 
+    @Column(name = "title")
+    String title
+
     @Column(name = "lang")
     String lang
 
     @Column(name = "last_action")
     String lastAction
 
-    @Column(name = "last_action_full_path")
+    @Column(name = "last_action_full_path", columnDefinition="TEXT")
     String lastActionFullPath
 
     @Enumerated(EnumType.STRING)
@@ -44,4 +49,16 @@ class Chat {
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     List<User> users
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = 'permissions')
+    Permissions permissions
+
+    @ElementCollection
+    @CollectionTable(name = "additional_params_mapping",
+            joinColumns = [@JoinColumn(name = "id", referencedColumnName = "chat_id")])
+    @MapKeyColumn(name = "key")
+    @Column(name = "value")
+    Map<String, String> additionalParams
 }

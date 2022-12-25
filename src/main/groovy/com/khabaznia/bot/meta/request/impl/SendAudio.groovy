@@ -1,7 +1,5 @@
 package com.khabaznia.bot.meta.request.impl
 
-import com.khabaznia.bot.enums.MessageType
-import com.khabaznia.bot.meta.request.BaseRequest
 import com.khabaznia.bot.meta.response.impl.MessageResponse
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
@@ -16,14 +14,5 @@ import org.springframework.stereotype.Component
 @Scope('prototype')
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
-class SendAudio extends BaseRequest<MessageResponse> {
-
-    String audio
-    String text
-    String emoji
-    Map<String, String> binding = [:]
-
-    MessageType getType() {
-        super.type ?: MessageType.MEDIA
-    }
+class SendAudio extends AbstractMediaRequest<MessageResponse> {
 }

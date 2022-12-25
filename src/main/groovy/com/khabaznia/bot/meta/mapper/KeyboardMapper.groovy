@@ -5,7 +5,10 @@ import com.khabaznia.bot.meta.keyboard.Button
 import com.khabaznia.bot.meta.keyboard.impl.InlineButton
 import com.khabaznia.bot.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboard
+import com.khabaznia.bot.meta.keyboard.impl.ReplyKeyboardRemove
+import com.khabaznia.bot.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bot.model.Keyboard
+import com.khabaznia.bot.service.ChatService
 import com.khabaznia.bot.service.I18nService
 import com.khabaznia.bot.service.PathCryptService
 import groovy.util.logging.Slf4j
@@ -27,23 +30,29 @@ class KeyboardMapper {
     private I18nService i18nService
     @Autowired
     private ApplicationContext context
+    @Autowired
+    private ChatService chatService
 
-    org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard toApiKeyboard(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
-        keyboard ?
+    org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard toApiKeyboard(AbstractKeyboardMessage request) {
+        def keyboard = request.keyboard
+        if (keyboard instanceof ReplyKeyboardRemove) return toReplyKeyboardRemoveApiKeyboard(keyboard)
+        !keyboard ? null :
                 keyboard instanceof InlineKeyboard
-                        ? toInlineApiKeyboard(keyboard)
-                        : keyboard instanceof ReplyKeyboard ? toReplyApiKeyboard(keyboard) : null
-                : null
+                        ? toInlineApiKeyboard(request)
+                        : keyboard instanceof ReplyKeyboard ? toReplyApiKeyboard(request) : null
     }
 
-    InlineKeyboardMarkup toInlineApiKeyboard(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
+    InlineKeyboardMarkup toInlineApiKeyboard(AbstractKeyboardMessage request) {
+        def keyboard = request.keyboard
+        def chatLang = chatService.getChatLang(request.chatId)
         if (keyboard instanceof InlineKeyboard) {
             def result = new InlineKeyboardMarkup()
             result.setKeyboard(keyboard.get().collect {
-                it.each { it.params.putAll(keyboard.getKeyboardParams()) }
+                it.findAll().each { it.params.putAll(keyboard.getKeyboardParams()) }
                         .collect {
                             new InlineKeyboardButton(
-                                    text: getButtonText(it),
+                                    text: getButtonText(it, chatLang),
+                                    url: it.url,
                                     callbackData: getCallBackData(it))
                         }
             })
@@ -52,42 +61,51 @@ class KeyboardMapper {
         null
     }
 
-    private ReplyKeyboardMarkup toReplyApiKeyboard(ReplyKeyboard keyboard) {
+    private ReplyKeyboardMarkup toReplyApiKeyboard(AbstractKeyboardMessage request) {
+        def keyboard = request.keyboard
+        def chatLang = chatService.getChatLang(request.chatId)
         def result = new ReplyKeyboardMarkup()
         result.setKeyboard(keyboard.get().collect {
             def row = new KeyboardRow()
-            row.addAll(it.collect { getButtonText(it) })
+            row.addAll(it.collect { getButtonText(it, chatLang) })
             row
         })
         result.setResizeKeyboard(true)
         result.setOneTimeKeyboard(false)
-        result.setInputFieldPlaceholder(i18nService.getFilledTemplate('reply.keyboard.placeholder', [:]))
+        result.setInputFieldPlaceholder(i18nService.getFilledTemplate('text.reply.keyboard.placeholder'))
         result
     }
 
-    private String getCallBackData(InlineButton button) {
-        pathCryptService.encryptPath(button.params.isEmpty() ? button.callbackData : button.callbackData.addParams(button.params))
+    private org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove toReplyKeyboardRemoveApiKeyboard(ReplyKeyboardRemove keyboard) {
+        def removeKeyboard = new org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove()
+        removeKeyboard.setRemoveKeyboard(keyboard.removeKeyboard)
+        removeKeyboard
     }
 
-    private String getButtonText(Button button) {
-        i18nService.getFilledTemplate(button.text, button.binding, button.emoji)
+    private String getCallBackData(InlineButton button) {
+        !button.callbackData ? null :
+                pathCryptService.encryptPath(button.params.isEmpty() ? button.callbackData : button.callbackData.addParams(button.params))
+    }
+
+    private String getButtonText(Button button, String chatLang) {
+        i18nService.getFilledTemplateWithEmoji(button.text, button.binding, button.emoji, chatLang)
     }
 
     static Keyboard toKeyboardModel(com.khabaznia.bot.meta.keyboard.Keyboard keyboard) {
         def rowPosition = 0
         !keyboard ? null :
-        new Keyboard(buttons: keyboard.get().collect {
-            def buttonPosition = 0
-            def rowButtons = it.each {
-                if (it instanceof InlineButton) {
-                    it.params.putAll(keyboard.getKeyboardParams())
-                }
-            }
-                    .collect { convertToButtonModel((Button) it, rowPosition, buttonPosition++) }
-            rowPosition++
-            rowButtons
-            }.flatten(),
-                type: keyboard instanceof InlineKeyboard ? KeyboardType.INLINE : KeyboardType.REPLY)
+                new Keyboard(buttons: keyboard.get().collect {
+                    def buttonPosition = 0
+                    def rowButtons = it.each {
+                        if (it instanceof InlineButton) {
+                            it.params.putAll(keyboard.getKeyboardParams())
+                        }
+                    }
+                            .findAll().collect { convertToButtonModel((Button) it, rowPosition, buttonPosition++) }
+                    rowPosition++
+                    rowButtons
+                }.flatten(),
+                        type: keyboard instanceof InlineKeyboard ? KeyboardType.INLINE : KeyboardType.REPLY)
     }
 
     static InlineKeyboard fromKeyboardModel(Keyboard keyboard) {
@@ -111,6 +129,7 @@ class KeyboardMapper {
                 key: source.text,
                 emoji: source.emoji,
                 binding: source.binding,
+                url: source instanceof InlineButton ? source.url: '',
                 callbackData: source instanceof InlineButton ? source.callbackData : '',
                 params: source instanceof InlineButton ? source.params : [:],
                 type: source.type,
@@ -126,6 +145,7 @@ class KeyboardMapper {
                 emoji: source.emoji,
                 binding: source.binding,
                 type: source.type,
+                url: source.url,
                 id: source.id)
     }
 }

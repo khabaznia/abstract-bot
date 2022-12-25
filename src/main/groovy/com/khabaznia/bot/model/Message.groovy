@@ -1,6 +1,6 @@
 package com.khabaznia.bot.model
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import groovy.transform.ToString
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -19,7 +19,7 @@ class Message {
     @Column(name = "message_id")
     Integer messageId
 
-    @Column(name = "text")
+    @Column(name = "text", columnDefinition = "TEXT")
     String text
 
     @Column(name = "label")
@@ -32,9 +32,10 @@ class Message {
     @Column(name = "update_id")
     Integer updateId
 
+    @ElementCollection
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "type")
-    MessageType type
+    @Column(name = "features")
+    Set<MessageFeature> features
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
@@ -44,4 +45,7 @@ class Message {
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "keyboard_id")
     Keyboard keyboard
+
+    @Column(name = 'related_media_id')
+    Long relatedMediaId
 }

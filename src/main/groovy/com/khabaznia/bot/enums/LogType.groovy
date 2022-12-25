@@ -2,5 +2,5 @@ package com.khabaznia.bot.enums
 
 enum LogType {
 
-    DEBUG, INFO, WARN
+    DEBUG, INFO, WARN, QUEST_EVENT
 }

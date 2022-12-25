@@ -1,23 +1,28 @@
 package com.khabaznia.bot.endpoint
 
 import com.khabaznia.bot.exception.BotExecutionApiMethodException
+import com.khabaznia.bot.exception.BotServiceException
 import com.khabaznia.bot.handler.UpdateHandler
+import com.khabaznia.bot.trait.Configurable
 import com.khabaznia.bot.trait.Loggable
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import org.telegram.telegrambots.meta.api.objects.Update
 
 import java.lang.reflect.UndeclaredThrowableException
 
-import static com.khabaznia.bot.exception.ExceptionUtil.getMessageFromUndeclaredThrowableException
+import static com.khabaznia.bot.exception.ExceptionUtil.*
 
 @Slf4j
 @RestController
-class BotApiController implements Loggable {
+class BotApiController implements Loggable, Configurable {
 
     @Autowired
     private UpdateHandler updateHandler
@@ -36,11 +41,15 @@ class BotApiController implements Loggable {
     }
 
     @ExceptionHandler(UndeclaredThrowableException.class)
-    ResponseEntity handleUndeclaredThrowableException(UndeclaredThrowableException e) {
-        e.printStackTrace()
-        def message = getMessageFromUndeclaredThrowableException(e)
-        log.error message
-        sendWarnLog "Exception: $message"
+    ResponseEntity handleUndeclaredThrowableException(UndeclaredThrowableException ex) {
+        if (isBotServiceException(ex)) {
+            updateHandler.handleServiceException(getTargetException(ex) as BotServiceException)
+        } else {
+            ex.printStackTrace()
+            def message = getMessageFromUndeclaredThrowableException(ex)
+            log.error message
+            sendWarnLog "Exception: $message"
+        }
         new ResponseEntity(HttpStatus.OK)
     }
 

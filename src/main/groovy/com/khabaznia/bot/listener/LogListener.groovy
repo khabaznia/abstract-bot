@@ -2,6 +2,7 @@ package com.khabaznia.bot.listener
 
 import com.khabaznia.bot.enums.LogType
 import com.khabaznia.bot.event.LogEvent
+import com.khabaznia.bot.exception.BotLogEventException
 import com.khabaznia.bot.service.BotRequestService
 import com.khabaznia.bot.strategy.LoggingStrategy
 import groovy.util.logging.Slf4j
@@ -22,9 +23,14 @@ class LogListener {
     @Async
     @EventListener
     void onApplicationEvent(LogEvent event) {
-        def strategy = loggingStrategyMap.get(event.logType)
-        def requests = strategy.getRequestsForEvent(event)
-        log.trace 'Log event: {}', requests[0]?.text
-        requests.each { requestService.execute it }
+        try {
+            def strategy = loggingStrategyMap.get(event.logType)
+            def requests = strategy.getRequestsForEvent(event)
+                    .findAll { it.chatId }
+            log.trace 'Log event: {}', requests[0]?.text
+            requests.each { requestService.execute it }
+        } catch (Exception ex) {
+            throw new BotLogEventException(ex.message, ex.cause)
+        }
     }
 }

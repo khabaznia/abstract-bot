@@ -25,12 +25,12 @@ class SessionUtil {
         (principal && principal instanceof BotUserPrincipal) ? principal : null
     }
 
-    static void setAttribute(String name, String value) {
+    static void setAttribute(String name, Object value) {
         RequestContextHolder.getRequestAttributes().setAttribute(name, value, SCOPE_SESSION)
     }
 
-    static String getAttribute(String name) {
-        RequestContextHolder?.getRequestAttributes()?.getAttribute(name, SCOPE_SESSION)
+    static String getStringAttribute(String name) {
+        RequestContextHolder?.getRequestAttributes()?.getAttribute(name, SCOPE_SESSION)?.toString()
     }
 
 }

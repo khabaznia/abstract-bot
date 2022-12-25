@@ -18,12 +18,18 @@ import static com.khabaznia.bot.core.Constants.*
 class ClientBuilder<T> implements Configurable{
 
     T getClient(Class<T> instance, @NonNull String rootUri) {
-        return Feign.builder()
-                .retryer(new Retryer.Default(getLongConfig(INTEGRATION_RETYER_PERIOD), TimeUnit.SECONDS.toMillis(getLongConfig(INTEGRATION_RETYER_MAX_PERIOD)), getIntConfig(INTEGRATION_RETYER_MAX_ATTEMPTS)))
+        Feign.builder()
+                .retryer(retryer)
                 .encoder(new GsonEncoder())
                 .decoder(new GsonDecoder())
                 .logger(new Slf4jLogger(instance))
                 .logLevel(Logger.Level.FULL)
-                .target(instance, rootUri);
+                .target(instance, rootUri)
+    }
+
+    private Retryer.Default getRetryer() {
+        new Retryer.Default(getLongConfig(INTEGRATION_RETYER_PERIOD),
+                TimeUnit.SECONDS.toMillis(getLongConfig(INTEGRATION_RETYER_MAX_PERIOD)),
+                getIntConfig(INTEGRATION_RETYER_MAX_ATTEMPTS))
     }
 }

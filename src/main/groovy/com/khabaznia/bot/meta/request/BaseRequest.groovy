@@ -1,6 +1,6 @@
 package com.khabaznia.bot.meta.request
 
-import com.khabaznia.bot.enums.MessageType
+import com.khabaznia.bot.enums.MessageFeature
 import com.khabaznia.bot.meta.response.BaseResponse
 import com.khabaznia.bot.sender.BotRequestQueueContainer
 import com.khabaznia.bot.util.SessionUtil
@@ -14,15 +14,29 @@ import groovy.transform.builder.SimpleStrategy
 @TupleConstructor(includeSuperFields = true)
 abstract class BaseRequest<T extends BaseResponse> {
 
+    protected static final String MOCK_CHAT_ID = 'unusedChatId'
+
     Integer order = BotRequestQueueContainer.requestOrder.getAndIncrement()
     String chatId = SessionUtil.currentChat?.code
-    MessageType type = MessageType.SKIP
+    Set<MessageFeature> features = []
     String relatedMessageUid
     Object apiMethod
     Integer updateId
+    boolean isOmissible = false
+    boolean disableNotification = false
 
     BaseRequest delete() {
-        type = MessageType.DELETE
+        features << MessageFeature.DELETE
+        this
+    }
+
+    BaseRequest persist() {
+        features << MessageFeature.PERSIST
+        this
+    }
+
+    BaseRequest feature(MessageFeature feature){
+        features << feature
         this
     }
 }

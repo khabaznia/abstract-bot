@@ -13,20 +13,29 @@ trait Loggable {
     @Autowired
     private ApplicationEventPublisher publisher
 
-    void sendLog(String text) {
-        publisher.publishEvent(new LogEvent(text: text))
+    void sendLog(String text, Map<String, String> binding = null) {
+        publisher.publishEvent(new LogEvent(
+                text: text,
+                binding: binding))
     }
 
-    void sendWarnLog(String text) {
-        publisher.publishEvent(new LogEvent(text: text, logType: LogType.WARN))
+    void sendWarnLog(String text, Map<String, String> binding = null) {
+        publisher.publishEvent(new LogEvent(
+                text: text,
+                binding: binding,
+                logType: LogType.WARN))
     }
 
     void sendLog(LogEvent event) {
         publisher.publishEvent(event)
     }
 
-    void sendLogToAdmin(String text) {
-        publisher.publishEvent(new LogEvent(text: text, logChat: LoggingChat.ADMIN))
+    void sendLogToAdmin(String text, Map<String, String> binding = null, boolean skipMetaInfo = false) {
+        publisher.publishEvent(new LogEvent(
+                text: text,
+                binding: binding,
+                logChat: LoggingChat.ADMIN,
+                skipMetaInfo: skipMetaInfo))
     }
 
 }
