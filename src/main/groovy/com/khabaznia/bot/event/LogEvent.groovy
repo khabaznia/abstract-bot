@@ -12,5 +12,4 @@ class LogEvent {
     String text
     Map<String, String> binding = [:]
     Boolean skipMetaInfo = false
-    String questId
 }

@@ -18,6 +18,6 @@ class ApiMethodSender extends DefaultAbsSender {
 
     @Override
     String getBotToken() {
-        env.getProperty("bot.token")
+        env.getProperty("env.only.bot.token")
     }
 }
