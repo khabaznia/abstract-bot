@@ -13,8 +13,12 @@ import com.khabaznia.bot.service.UpdateService
 import com.khabaznia.bot.service.UserService
 import com.khabaznia.bot.trait.BaseRequests
 import com.khabaznia.bot.trait.Configurable
+import com.khabaznia.bot.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+
+import static com.khabaznia.bot.util.SessionUtil.currentChat
+import static com.khabaznia.bot.util.SessionUtil.currentUser
 
 
 @Slf4j
@@ -35,12 +39,16 @@ abstract class LoggingStrategy implements Configurable, BaseRequests {
 
     protected BaseRequest getLogMessageRequest(LogEvent event) {
         def request = event.getRequest() ?: convertToRequest(event)
-        request.text("$logEmoji " + request.text)
+        request.text((event.skipMetaInfo ? '' : metaInfo) + "$logEmoji " + request.text)
                 .chatId(getChat(event)?.code) as SendMessage
     }
 
     private SendMessage convertToRequest(LogEvent event) {
         sendMessage.text(i18nService.getFilledTemplate(event.text, event.binding, getChat(event)?.lang))
+    }
+
+    protected static String getMetaInfo() {
+        "${currentChat?.code}:${currentUser?.role?.toString()?.linkUrl(currentUser?.code?.userMentionUrl())} "
     }
 
     protected Chat getChat(LogEvent event) {
