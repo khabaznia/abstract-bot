@@ -28,6 +28,4 @@ class DebugLoggingStrategy extends LoggingStrategy {
     String getLogEmoji() {
         LOG_DEBUG
     }
-
-
 }

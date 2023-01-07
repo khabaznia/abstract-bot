@@ -16,7 +16,6 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Slf4j
 abstract class AbstractBotController implements Configurable, Loggable, BotControllerBaseRequests {
 
-
     @Autowired
     protected ApplicationEventPublisher publisher
     @Autowired

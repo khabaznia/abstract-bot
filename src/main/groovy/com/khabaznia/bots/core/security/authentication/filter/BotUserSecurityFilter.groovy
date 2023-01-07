@@ -1,6 +1,5 @@
 package com.khabaznia.bots.core.security.authentication.filter
 
-
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.khabaznia.bots.core.service.UpdateService
 import groovy.util.logging.Slf4j

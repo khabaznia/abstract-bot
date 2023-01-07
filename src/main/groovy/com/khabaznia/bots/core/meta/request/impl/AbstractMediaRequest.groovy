@@ -10,7 +10,6 @@ import groovy.transform.builder.SimpleStrategy
 @ToString(includeSuper = true, includeNames = true)
 abstract class AbstractMediaRequest<T extends MessageResponse> extends AbstractKeyboardMessage {
 
-    // to use this - media should be in format "media_".
     //     for resource strategy file should be without prefix: e.g. file - help.gif, fileIdentifier - media_help.gif
     //     for api strategy should be used as it is returned from dto
     String fileIdentifier

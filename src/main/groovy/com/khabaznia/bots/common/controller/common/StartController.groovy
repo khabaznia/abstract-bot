@@ -42,5 +42,4 @@ class StartController extends AbstractBotController {
     deleteReplyKeyboard() {
         sendMessage.text(Emoji.OKAY).keyboard(replyKeyboardRemove)
     }
-
 }

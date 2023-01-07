@@ -50,5 +50,4 @@ class StrategiesContainer {
         log.debug 'Logging strategies map: {}', map
         map
     }
-
 }

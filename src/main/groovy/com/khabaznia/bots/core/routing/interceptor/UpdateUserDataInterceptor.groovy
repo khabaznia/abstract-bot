@@ -1,6 +1,5 @@
 package com.khabaznia.bots.core.routing.interceptor
 
-
 import com.khabaznia.bots.core.security.authentication.filter.MultiReadHttpServletRequest
 import com.khabaznia.bots.core.service.UserService
 import groovy.util.logging.Slf4j

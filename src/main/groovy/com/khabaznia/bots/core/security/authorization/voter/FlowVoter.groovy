@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 import static com.khabaznia.bots.core.routing.Constants.AVAILABLE_LOCALES
 import static com.khabaznia.bots.core.routing.Constants.CONFIGS_DELIMITER
 
-
 @Slf4j
 @Component
 class FlowVoter extends AbstractBotAuthorizationVoter {

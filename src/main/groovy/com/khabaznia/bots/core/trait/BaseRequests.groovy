@@ -19,7 +19,6 @@ trait BaseRequests {
     @Autowired
     UserService userService
 
-
     public <T> T get(Class<T> beanClass) {
         context.getBean(beanClass) as T
     }

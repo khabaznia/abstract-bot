@@ -18,7 +18,7 @@ class ApiDtoMapper {
         SendMessage target = context.getBean("sendMessage")
         target.setChatId(source.getChatId())
         target.setText(source.getText())
-        target.setFeatures(source.getFeatures())
+        target.setFeatures(source.getFeatures().toSet())
         target.inlineKeyboard(source.getButtons())
         target
     }

@@ -79,5 +79,4 @@ class BotRequestQueue implements Configurable {
     Integer size() {
         requestQueue.size()
     }
-
 }

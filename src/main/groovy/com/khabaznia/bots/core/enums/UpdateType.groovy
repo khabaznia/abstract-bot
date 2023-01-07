@@ -27,5 +27,4 @@ enum UpdateType {
     UpdateType(String defaultController) {
         this.defaultController = defaultController
     }
-
 }

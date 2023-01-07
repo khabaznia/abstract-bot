@@ -58,5 +58,4 @@ class LoggingUtil {
         !chat ? '' : "Chat ${chat.code?.bold()} " +
                 "${chat.role != ChatRole.NONE ? chat.role.toString() : ''}"
     }
-
 }

@@ -36,5 +36,4 @@ class WarnLoggingStrategy extends LoggingStrategy {
                 .find { !it.chatId?.isEmpty() }
                 .collect()
     }
-
 }

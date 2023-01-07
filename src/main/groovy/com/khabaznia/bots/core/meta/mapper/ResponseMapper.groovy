@@ -55,5 +55,4 @@ class ResponseMapper {
     private static com.khabaznia.bots.core.meta.response.dto.User mapUser(User user) {
         new com.khabaznia.bots.core.meta.response.dto.User(id: user.id)
     }
-
 }
