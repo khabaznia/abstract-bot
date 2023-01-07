@@ -23,5 +23,5 @@ class ConfirmationFlowDto {
     String declinePathMessage
     String backPathMessage
 
-    Map<String, String> params
+    Map<String, String> params = [:]
 }

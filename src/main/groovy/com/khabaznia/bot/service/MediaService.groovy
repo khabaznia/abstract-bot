@@ -8,8 +8,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class MediaService {
 
-    public static final String MEDIA_FILE_PREFIX = 'media_'
-
     MediaRepository mediaRepository
     MediaFileRetrievingStrategy mediaFileRetrievingStrategy
 

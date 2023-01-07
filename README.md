@@ -7,7 +7,16 @@ This is ready-to-use bot abstraction that based on:
 
 **[Check an example of current version](https://t.me/example_abstract_bot)**
 
-_Release 1.0.0_
+_Release 2.0_
+
+#### Release notes:
+* Confirmation flow inline buttons
+* Jobs support
+* Sending media requests (photo, audio, documents)
+* SetMyCommands method support
+* Parsing methods: link urls, mentions
+* Refactoring MessageFeatures. Small fixes
+
 
 ---
 ## How to start with your bot
@@ -184,7 +193,7 @@ For adding custom role you need:
 ## Available methods.
 
 The app has implementation of [wrappers](/src/main/groovy/com/khabaznia/bot/meta/request/impl) to main api method:
-_SendMessage, EditMessage, DeleteMessage, PinMessage, SendAudio, SendVideo, SendPhoto, SendChatAction._
+_SendMessage, EditMessage, DeleteMessage, PinMessage, SendAudio, SendVideo, SendPhoto, SendChatAction, SetMyCommands, BanChatMember, LeaveChat, etc._
 These objects intended to wrap data that should be sent to user in convenient way. 
 Objects are based on Builder pattern, so you can fill its fields easily. 
 
@@ -205,7 +214,7 @@ class ExampleController extends AbstractBotController {
         .keyboard(inlineKeyboard.button("Edit this message", '/editMessage'))
     sendAudio // this invokes method getSendAudio() from AbstractBotController that creates sendAudio object and then will execute it 
         .text('some caption to audio')
-        .audio(SOME_SAVED_AUDIO_ID)
+        .fileIdentifier('some_audio.mp3') // this media file should be stored in resources/media
   }
 
   @BotRequest(path = '/editMessage')
@@ -274,15 +283,62 @@ Let's proceed with example:
 ```
 ![](demo/inline_keyboard.gif)
 
+#### Confirmation FLow
+
+Often it is required to implement a confirmation of the action of a button. To unify this approach, support for the confirmation flow is provided.
+
+All you need is to create a button with **confirmationFlowDto** and specify an **accept** path and a **decline** path.
+
+##### Let's check an example:
+
+```groovy
+@BotRequest(path="/testConfirmation")
+confirmation(){
+    sendMessage.text('Very important button 👇🏽')
+            .keyboard(inlineKeyboard
+                    .button('DELETE EVERYTHING', confirmationFlowDto
+                            .acceptPath('/confirm')
+                            .declinePath('/decline')))
+}
+
+@BotRequest(path = '/confirm')
+confirmationYes() {
+    sendMessage.text "Done ✅"
+    ... your code
+}
+
+@BotRequest(path = '/decline')
+confirmationNo(String reason) {
+    sendMessage.text "You saved your data"
+    ... your code
+}
+```
+![](demo/confirmation_flow.gif)
+
+Additionally, you can specify **back path**, **specific texts** for each button and add **params** next path processing.
+```groovy
+...
+inlineKeybaord.button('button.with.confirmation', confirmationFlowDto
+    .acceptPath('/confirmationYes')
+    .acceptPathMessage('button.custom.yes')
+    .declinePath('/confirmationNo')
+    .declinePathMessage('button.custom.no')
+    .backPathMessage('button.custom.back')
+    .backPath(TO_MAIN)
+    .params([reason: 'some reason']))
+```
+
 You can check how keyboards and buttons can be implemented in [ExampleController](/src/main/groovy/com/khabaznia/bot/controller/example/ExampleController.groovy).
 
 ### Additional `String` methods
 
-There are some additional methods available on `String` class:
-- bold
-- italic
-- underline
-- strikethrough
+[Formatting options](https://core.telegram.org/bots/api#formatting-options) available as methods on `String` class:
+- bold()
+- italic()
+- underline()
+- strikethrough()
+- linkUrl(), linkText()- creates markup with link
+- mentionUrl() - creates user mention link
 
 ```groovy
 @BotRequest(path = '/checkTexts')
@@ -291,6 +347,8 @@ There are some additional methods available on `String` class:
     sendMessage.text('some italic'.italic())
     sendMessage.text('some underline'.underline())
     sendMessage.text('some strikethrough'.strikethrough())
+    sendMessage.text('go to ' + 'github repo'.linkUrl('https://github.com/khabaznia/abstract-bot'))
+    sendMessage.text('user'.linkUrl(currentChat.code.userMentionUrl()))
 
     // for localized values
     sendMessage.text('test.bold'.bold()) 
@@ -302,10 +360,9 @@ There are some additional methods available on `String` class:
 
 ![](demo/check_texts.gif)
 
-### MessageTypes
+### MessageFeature
 Each api method wrapper (BaseRequest) has [`MessageType`](/src/main/groovy/com/khabaznia/bot/enums/MessageType.groovy) that provides additional pre- and post- processing of the request.
 
-- **SKIP** - Do not save in DB, default `SendMessage`
 - **PERSIST** - Just save to DB
 - **DELETE** - Send message and deletes it with next request.
 - **INLINE_KEYBOARD** - Default for message with inline keyboard. Inline keyboards can be updated. Saved in DB.
@@ -313,7 +370,6 @@ Each api method wrapper (BaseRequest) has [`MessageType`](/src/main/groovy/com/k
 - **ONE_TIME_INLINE_KEYBOARD** -  Message with inline keyboard that should be deleted after its any button click.
 - **PINNED** - After sending, saved to DB, send additional request to pin the message.
 - **EDIT** - Edit existing message. Updates it in db. Default for `EditMessage`.
-- **EDIT_AND_DELETE** - Edit existing message. Updates in db. Deleted it with next message.
 - **MEDIA** -  For AUDIO, IMAGE, VIDEO messages. Default for `SendPhoto`, `SendVideo`, `SendAudio`.
 
 You can explicitly specify it in builder
@@ -321,11 +377,11 @@ You can explicitly specify it in builder
 ```groovy
 sendMessage
         .text('This message should be pinned')
-        .type(MessageType.PINNED)
+        .feature(MessageFeature.PINNED)
 
 sendMessage
         .text('This message will be deleted')
-        .type(MessageType.DELETE)
+        .feature(MessageFeature.DELETE)
 
 // or another variant for MessageType.DELETE   
 sendMessage
@@ -438,6 +494,65 @@ expired.paths.in.days.count: 2
 clean.up.database.cron.expression: 0 0 2 * * *
 ```
 
+#### Media service
+Media service allows not to upload file if it used multiple times. It's saved in database with fileId that telegram API uses as unique identifier.
+
+For following use of the file this unique **fileId** is sent instead of uploading file again.
+[Read more](https://core.telegram.org/bots/api#sending-files)
+
+#### Job service
+Supports creating scheduled jobs that are saved and restored from database after server downtime
+
+Steps to implement:
+* Create you Job class extends `AbstractJob`
+* Add **public** fields. These fields will be populated to model and saved to database.
+* Override method `executeInternal()`
+* Schedule job via `JobService`
+
+```groovy
+@Slf4j
+@Component(value = 'exampleJob')
+@Scope(value = 'prototype')
+@Builder(builderStrategy = SimpleStrategy, prefix = '')
+class ExampleJob extends AbstractJob {
+
+    public String chatToSend
+
+    @Autowired
+    private ExampleMessagesService exampleMessagesService
+
+    @Override
+    protected void executeInternal() {
+        requestsContainer << exampleMessagesService.simpleJobMessage(chatToSend)
+        super.executeInternal()
+    }
+
+    @Override
+    protected String getJobTitle() {
+        'EXAMPLE JOB'
+    }
+}
+
+
+ExampleJob job = context.getBean('exampleJob')
+job.chatToSend = currentChat.code
+jobService.scheduleJob(job, LocalDateTime.now().plusSeconds(5).toDate())
+```
+
+#### Deep linking support
+
+You can pass additional params to /start command with `DeepLinkingService`.
+
+[Read more](https://core.telegram.org/api/links#bot-links)
+
+```groovy
+inlineKeyboard.addButton(inlineButton
+    .text('Deep link button')
+    .url(deepLinkingPathService.generateDeepLinkPath('/commandToRedirectAfterStart', [param: currentChat.code])))
+```
+
+![](demo/deep_linking.gif)
+
 ## API to send messages via bot
 
 You can send messages via bot using api endpoint `/api/sendMessage/`
@@ -462,5 +577,5 @@ Link to [Swagger of Example bot](https://example-abstract-bot.herokuapp.com//swa
 
 ---
 ### Useful links
-- [Heroku](https://dashboard.heroku.com/apps/anyway-bot)
+- [Heroku](https://dashboard.heroku.com/)
 - [Telegram API](https://core.telegram.org/bots/api)
