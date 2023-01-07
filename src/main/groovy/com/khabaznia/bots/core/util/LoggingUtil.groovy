@@ -6,15 +6,16 @@ import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.model.Chat
 import com.khabaznia.bots.core.model.User
 
-import static com.khabaznia.bots.core.util.SessionUtil.*
+import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
+import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
 
 class LoggingUtil {
 
-    static String getUserInfo(String userCode){
+    static String getUserInfo(String userCode) {
         userCode.linkUrl(userCode.userMentionUrl())
     }
 
-    static String getUsersInfo(List<String> userCodes){
+    static String getUsersInfo(List<String> userCodes) {
         userCodes.collect { getUserInfo(it) }.join(' ')
     }
 

@@ -13,13 +13,11 @@ import com.khabaznia.bots.core.service.UpdateService
 import com.khabaznia.bots.core.service.UserService
 import com.khabaznia.bots.core.trait.BaseRequests
 import com.khabaznia.bots.core.trait.Configurable
-import com.khabaznia.bots.core.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 
 import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 import static com.khabaznia.bots.core.util.SessionUtil.currentUser
-
 
 @Slf4j
 abstract class LoggingStrategy implements Configurable, BaseRequests {

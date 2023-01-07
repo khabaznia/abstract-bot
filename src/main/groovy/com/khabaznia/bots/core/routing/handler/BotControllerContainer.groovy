@@ -1,9 +1,9 @@
 package com.khabaznia.bots.core.routing.handler
 
-import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import com.khabaznia.bots.core.enums.UpdateType
 import com.khabaznia.bots.core.exception.ControllerGenerationException
 import com.khabaznia.bots.core.meta.Emoji
+import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -37,8 +37,8 @@ class BotControllerContainer {
     }
 
     Map<String, BotControllerProxy> getMatchingControllers(String path) {
-        def specialCharRegex = /[\W_&&[^\s]]/;
-        def escapedPath = path.replaceAll(specialCharRegex, /\\$0/);
+        def specialCharRegex = /[\W_&&[^\s]]/
+        def escapedPath = path.replaceAll(specialCharRegex, /\\$0/)
         controllerMap.findAll { it.key ==~ /.*\$PREVIOUS_PATH_DELIMITER$escapedPath/ }
     }
 

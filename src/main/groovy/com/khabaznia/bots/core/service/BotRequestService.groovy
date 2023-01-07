@@ -117,7 +117,7 @@ class BotRequestService implements Configurable {
                 def messageCode = request.messageId.toString() ?: request.label
                 messageService.removeMessage(messageCode)
             }
-        } else if (e.message ==~ /.*\[403].*bot is not a member of the group chat.*/){
+        } else if (e.message ==~ /.*\[403].*bot is not a member of the group chat.*/) {
             log.warn 'Bot is not member of chat. Possibly can be ignored.'
             e.printStackTrace()
         } else {

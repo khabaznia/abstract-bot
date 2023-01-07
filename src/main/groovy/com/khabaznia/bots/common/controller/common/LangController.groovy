@@ -1,11 +1,11 @@
 package com.khabaznia.bots.common.controller.common
 
 import com.khabaznia.bots.core.controller.AbstractBotController
+import com.khabaznia.bots.core.enums.ChatType
+import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Localized
-import com.khabaznia.bots.core.enums.ChatType
-import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bots.core.service.I18nService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.common.Constants.LANG_CONTROLLER.*
-import static com.khabaznia.bots.core.routing.Constants.*
 import static com.khabaznia.bots.core.meta.Emoji.FINGER_DOWN
+import static com.khabaznia.bots.core.routing.Constants.*
 import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 
 @Slf4j

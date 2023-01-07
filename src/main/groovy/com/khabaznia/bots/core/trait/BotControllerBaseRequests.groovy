@@ -3,11 +3,7 @@ package com.khabaznia.bots.core.trait
 import com.khabaznia.bots.core.dto.ConfirmationFlowDto
 import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
-import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
-import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
-import com.khabaznia.bots.core.meta.keyboard.impl.ReplyButton
-import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboard
-import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboardRemove
+import com.khabaznia.bots.core.meta.keyboard.impl.*
 import com.khabaznia.bots.core.meta.object.BotCommand
 import com.khabaznia.bots.core.meta.object.BotCommandScope
 import com.khabaznia.bots.core.meta.request.BaseRequest
@@ -91,7 +87,7 @@ trait BotControllerBaseRequests {
         context.getBean 'unpinMessage'
     }
 
-    UnpinAllMessages getUnpinAllMessages(){
+    UnpinAllMessages getUnpinAllMessages() {
         context.getBean 'unpinAllMessages'
     }
 

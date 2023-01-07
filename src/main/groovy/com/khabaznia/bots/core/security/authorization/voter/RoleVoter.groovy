@@ -6,7 +6,7 @@ import org.aopalliance.intercept.MethodInvocation
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.security.Constants.*
+import static com.khabaznia.bots.core.security.Constants.ROLE_PREFIX
 
 @Slf4j
 @Component

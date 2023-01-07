@@ -2,7 +2,6 @@ package com.khabaznia.bots.core.meta.request.impl
 
 import com.khabaznia.bots.core.meta.request.BaseRequest
 import com.khabaznia.bots.core.meta.response.impl.ChatResponse
-import com.khabaznia.bots.core.meta.response.impl.UserResponse
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder

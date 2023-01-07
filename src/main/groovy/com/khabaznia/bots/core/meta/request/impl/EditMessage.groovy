@@ -23,7 +23,7 @@ class EditMessage extends AbstractKeyboardMessage<MessageResponse> {
     String label //label of message that should be in DB
     boolean disableWebPreview
 
-    Set<MessageFeature> getFeatures(){
+    Set<MessageFeature> getFeatures() {
         super.features << MessageFeature.EDIT
     }
 

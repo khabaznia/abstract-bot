@@ -1,15 +1,15 @@
 package com.khabaznia.bots.common.controller.common
 
 import com.khabaznia.bots.core.controller.AbstractBotController
+import com.khabaznia.bots.core.meta.request.impl.AbstractMediaRequest
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
-import com.khabaznia.bots.core.meta.request.impl.AbstractMediaRequest
 import com.khabaznia.bots.core.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.COMMON.*
-import static com.khabaznia.bots.core.service.UpdateService.*
+import static com.khabaznia.bots.core.service.UpdateService.getFileId
 
 @Slf4j
 @Component

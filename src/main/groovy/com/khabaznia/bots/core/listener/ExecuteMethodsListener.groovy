@@ -25,7 +25,7 @@ class ExecuteMethodsListener {
     void onApplicationEvent(ExecuteMethodsEvent event) {
         log.info 'Processing {} requests', event.requests.size()
         event.requests.findAll().each {
-            it.features.each {feature ->
+            it.features.each { feature ->
                 requestProcessingStrategyMap.get(feature).prepare(it)
             }
             log.trace 'After prepare: {}', it

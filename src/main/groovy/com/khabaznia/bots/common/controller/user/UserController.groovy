@@ -1,17 +1,18 @@
 package com.khabaznia.bots.common.controller.user
 
 import com.khabaznia.bots.core.controller.AbstractBotController
+import com.khabaznia.bots.core.enums.Role
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Secured
-import com.khabaznia.bots.core.enums.Role
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.util.DefaultRoleKeyboardsUtil.getUserReplyKeyboard
 import static com.khabaznia.bots.common.Constants.USER_CONTROLLER.USER_START
 import static com.khabaznia.bots.common.Constants.USER_CONTROLLER.USER_TO_MAIN
-import static com.khabaznia.bots.core.meta.Emoji.*
+import static com.khabaznia.bots.common.util.DefaultRoleKeyboardsUtil.getUserReplyKeyboard
+import static com.khabaznia.bots.core.meta.Emoji.FINGER_DOWN
+import static com.khabaznia.bots.core.meta.Emoji.SCREAMING_FACE
 
 @Slf4j
 @Component

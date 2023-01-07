@@ -2,9 +2,7 @@ package com.khabaznia.bots.common
 
 import static com.khabaznia.bots.common.Constants.ADMIN_CONTROLLER.SET_LOGGING
 import static com.khabaznia.bots.common.Constants.LANG_CONTROLLER.CHANGE_LANG_AS_COMMAND
-import static com.khabaznia.bots.core.meta.Emoji.LANG_EN
-import static com.khabaznia.bots.core.meta.Emoji.LANG_RU
-import static com.khabaznia.bots.core.meta.Emoji.LANG_UK
+import static com.khabaznia.bots.core.meta.Emoji.*
 
 final class Constants {
 
@@ -79,6 +77,6 @@ final class Constants {
     static final class MAPPINGS {
         public static final def langCommand = [(CHANGE_LANG_AS_COMMAND): 'path.lang.settings.display']
 
-        public static final def adminAllChatsCommands = [(SET_LOGGING)      : 'command.set.logging']
+        public static final def adminAllChatsCommands = [(SET_LOGGING): 'command.set.logging']
     }
 }

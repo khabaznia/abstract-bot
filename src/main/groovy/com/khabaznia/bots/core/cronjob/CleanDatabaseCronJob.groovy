@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.meta.Emoji.TRIANGLE_LEFT
 import static com.khabaznia.bots.core.meta.Emoji.TRIANGLE_RIGHT
 
 @Slf4j

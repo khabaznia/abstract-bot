@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 import static com.khabaznia.bots.core.routing.Constants.*
 
 @Service
-class ClientBuilder<T> implements Configurable{
+class ClientBuilder<T> implements Configurable {
 
     T getClient(Class<T> instance, @NonNull String rootUri) {
         Feign.builder()

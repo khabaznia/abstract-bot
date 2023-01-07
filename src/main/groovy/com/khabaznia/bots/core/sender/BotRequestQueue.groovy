@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
-import static com.khabaznia.bots.core.routing.Constants.*
+import static com.khabaznia.bots.core.routing.Constants.CHAT_INACTIVE_MINUTES
+import static com.khabaznia.bots.core.routing.Constants.REQUESTS_DELAY_LIMIT_IN_SINGLE_CHAT
 
 @Slf4j
 @Component(value = 'botRequestQueue')

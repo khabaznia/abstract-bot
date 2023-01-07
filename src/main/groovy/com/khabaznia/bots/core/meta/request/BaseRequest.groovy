@@ -35,7 +35,7 @@ abstract class BaseRequest<T extends BaseResponse> {
         this
     }
 
-    BaseRequest feature(MessageFeature feature){
+    BaseRequest feature(MessageFeature feature) {
         features << feature
         this
     }

@@ -17,7 +17,7 @@ class EncryptedPath {
     @Column(name = 'key')
     String key
 
-    @Column(name = 'value', columnDefinition="TEXT")
+    @Column(name = 'value', columnDefinition = "TEXT")
     String value
 
     @Column(name = "update_date")

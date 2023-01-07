@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class ApiDtoMapper {
 
     @Autowired
-    private ApplicationContext context;
+    private ApplicationContext context
 
     SendMessage toBotRequest(SendMessageDto source) {
         SendMessage target = context.getBean("sendMessage")

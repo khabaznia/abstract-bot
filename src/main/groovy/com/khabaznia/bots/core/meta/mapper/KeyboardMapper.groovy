@@ -129,7 +129,7 @@ class KeyboardMapper {
                 key: source.text,
                 emoji: source.emoji,
                 binding: source.binding,
-                url: source instanceof InlineButton ? source.url: '',
+                url: source instanceof InlineButton ? source.url : '',
                 callbackData: source instanceof InlineButton ? source.callbackData : '',
                 params: source instanceof InlineButton ? source.params : [:],
                 type: source.type,

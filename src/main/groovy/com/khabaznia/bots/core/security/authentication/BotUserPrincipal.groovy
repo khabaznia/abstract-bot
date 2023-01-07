@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-import static com.khabaznia.bots.core.security.Constants.*
+import static com.khabaznia.bots.core.security.Constants.CHAT_ID_DELIMITER
 
 class BotUserPrincipal implements UserDetails {
 

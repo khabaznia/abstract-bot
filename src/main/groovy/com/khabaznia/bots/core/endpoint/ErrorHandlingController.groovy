@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class ErrorHandlingController {
 
-    private static final String FORM_VALIDATION_ERROR_MESSAGE = "Form validation error";
-    private static final String FORM_VALIDATION_ERROR_KEY = "FORM_VALIDATION_ERROR";
-    private static final String ILLEGAL_ARGUMENT_ERROR_KEY = "ILLEGAL_ARGUMENT_ERROR";
+    private static final String FORM_VALIDATION_ERROR_MESSAGE = "Form validation error"
+    private static final String FORM_VALIDATION_ERROR_KEY = "FORM_VALIDATION_ERROR"
+    private static final String ILLEGAL_ARGUMENT_ERROR_KEY = "ILLEGAL_ARGUMENT_ERROR"
 
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ErrorResponseDto> handleIncorrectArgumentInRequest(IllegalArgumentException ex) {

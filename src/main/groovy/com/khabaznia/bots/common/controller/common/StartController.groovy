@@ -1,12 +1,12 @@
 package com.khabaznia.bots.common.controller.common
 
 import com.khabaznia.bots.core.controller.AbstractBotController
-import com.khabaznia.bots.core.routing.annotation.BotController
-import com.khabaznia.bots.core.routing.annotation.BotRequest
-import com.khabaznia.bots.core.routing.annotation.Localized
 import com.khabaznia.bots.core.enums.ChatType
 import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.meta.Emoji
+import com.khabaznia.bots.core.routing.annotation.BotController
+import com.khabaznia.bots.core.routing.annotation.BotRequest
+import com.khabaznia.bots.core.routing.annotation.Localized
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
