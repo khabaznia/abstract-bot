@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 import static com.khabaznia.bot.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
 import static com.khabaznia.bot.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bot.controller.Constants.COMMON.TO_MAIN
-import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.*
+import static com.khabaznia.example.Constants.*
 import static com.khabaznia.bot.core.Constants.COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS
 import static com.khabaznia.bot.meta.Emoji.*
 import static com.khabaznia.bot.util.SessionUtil.currentChat

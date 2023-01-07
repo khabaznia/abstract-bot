@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import static com.khabaznia.bot.controller.Constants.ADMIN_CONTROLLER.FEATURES_LIST
 import static com.khabaznia.bot.controller.Constants.COMMON.*
 import static com.khabaznia.bot.controller.Constants.LANG_CONTROLLER.DISPLAY_CHANGE_LANG
-import static com.khabaznia.bot.controller.Constants.EXAMPLE_CONTROLLER.EXAMPLE
+import static com.khabaznia.example.Constants.EXAMPLE
 import static com.khabaznia.bot.controller.Constants.LANG_CONTROLLER.LANG_EMOJI
 import static com.khabaznia.bot.core.Constants.USE_ONLY_DEFAULT_LANGUAGE
 import static com.khabaznia.bot.meta.Emoji.*
