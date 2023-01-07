@@ -1,12 +1,12 @@
 package com.khabaznia.bots.common.controller.common
 
 import com.khabaznia.bots.core.controller.AbstractBotController
+import com.khabaznia.bots.core.enums.Role
+import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.routing.annotation.Action
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Secured
-import com.khabaznia.bots.core.enums.Role
-import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.service.ChatService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired

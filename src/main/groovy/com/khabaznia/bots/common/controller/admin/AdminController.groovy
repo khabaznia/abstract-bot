@@ -1,20 +1,20 @@
 package com.khabaznia.bots.common.controller.admin
 
 import com.khabaznia.bots.core.controller.AbstractBotController
-import com.khabaznia.bots.core.routing.annotation.*
 import com.khabaznia.bots.core.enums.ChatRole
 import com.khabaznia.bots.core.enums.ChatType
 import com.khabaznia.bots.core.enums.Role
+import com.khabaznia.bots.core.routing.annotation.*
 import com.khabaznia.bots.core.service.UpdateService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.ADMIN_CONTROLLER.*
-import static com.khabaznia.bots.core.routing.Constants.CHECK_MESSAGES_IN_LOGGING_CHAT
+import static com.khabaznia.bots.common.util.DefaultRoleKeyboardsUtil.adminReplyKeyboard
 import static com.khabaznia.bots.core.enums.MessageFeature.INLINE_KEYBOARD_MESSAGE_GROUP
 import static com.khabaznia.bots.core.meta.Emoji.*
-import static com.khabaznia.bots.common.util.DefaultRoleKeyboardsUtil.adminReplyKeyboard
+import static com.khabaznia.bots.core.routing.Constants.CHECK_MESSAGES_IN_LOGGING_CHAT
 import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 
 @Slf4j
@@ -86,7 +86,7 @@ class AdminController extends AbstractBotController {
                     .collect { it.startsWith('\\$') && it.endsWithIgnoreCase('id') ? '$' + '' : it }
                     .collect { it.startsWith('$') ? it.bold() : it }
                     .join(' ')
-            resultMessage = resultMessage.replaceAll ('\n ', '\n')
+            resultMessage = resultMessage.replaceAll('\n ', '\n')
             resultMessage = resultMessage.replaceAll('\\$', '')
             sendMessage.text resultMessage
         }

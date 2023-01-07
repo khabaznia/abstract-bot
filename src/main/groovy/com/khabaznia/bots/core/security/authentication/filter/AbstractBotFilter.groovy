@@ -1,7 +1,6 @@
 package com.khabaznia.bots.core.security.authentication.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.khabaznia.bots.core.security.authentication.filter.MultiReadHttpServletRequest
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Value
 import org.telegram.telegrambots.meta.api.objects.Update

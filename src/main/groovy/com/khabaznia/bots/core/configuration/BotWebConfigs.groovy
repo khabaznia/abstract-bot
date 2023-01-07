@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class BotWebConfigs implements WebMvcConfigurer{
+class BotWebConfigs implements WebMvcConfigurer {
 
     @Autowired
     private UpdateUserDataInterceptor updateUserDataInterceptor

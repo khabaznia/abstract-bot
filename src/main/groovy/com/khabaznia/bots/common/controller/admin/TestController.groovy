@@ -1,10 +1,10 @@
 package com.khabaznia.bots.common.controller.admin
 
 import com.khabaznia.bots.core.controller.AbstractBotController
+import com.khabaznia.bots.core.enums.Role
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Secured
-import com.khabaznia.bots.core.enums.Role
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -15,7 +15,6 @@ class TestController extends AbstractBotController {
 
     private void doTest() {
         //write your test here
-
 
 
     }

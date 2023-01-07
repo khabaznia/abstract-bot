@@ -26,7 +26,7 @@ abstract class AbstractMediaRequest<T extends MessageResponse> extends AbstractK
         this
     }
 
-    Set<MessageFeature> getFeatures(){
+    Set<MessageFeature> getFeatures() {
         super.features << MessageFeature.MEDIA
     }
 

@@ -10,8 +10,9 @@ import com.khabaznia.bots.core.trait.Configurable
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Service
 
+import static com.khabaznia.bots.common.Constants.MAPPINGS.adminAllChatsCommands
+import static com.khabaznia.bots.common.Constants.MAPPINGS.langCommand
 import static com.khabaznia.bots.core.routing.Constants.*
-import static com.khabaznia.bots.common.Constants.MAPPINGS.*
 
 @Slf4j
 @Service

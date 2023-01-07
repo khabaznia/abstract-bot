@@ -9,7 +9,6 @@ import org.springframework.context.event.ApplicationEventMulticaster
 import org.springframework.context.event.SimpleApplicationEventMulticaster
 import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

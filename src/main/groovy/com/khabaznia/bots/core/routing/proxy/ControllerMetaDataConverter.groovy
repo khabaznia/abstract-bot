@@ -1,7 +1,7 @@
 package com.khabaznia.bots.core.routing.proxy
 
-import com.khabaznia.bots.core.routing.annotation.*
 import com.khabaznia.bots.core.enums.Role
+import com.khabaznia.bots.core.routing.annotation.*
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext

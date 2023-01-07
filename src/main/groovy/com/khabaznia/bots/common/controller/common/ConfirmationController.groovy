@@ -1,16 +1,17 @@
 package com.khabaznia.bots.common.controller.common
 
 import com.khabaznia.bots.core.controller.AbstractBotController
-import com.khabaznia.bots.core.routing.annotation.BotController
-import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.dto.ConfirmationFlowDto
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
+import com.khabaznia.bots.core.routing.annotation.BotController
+import com.khabaznia.bots.core.routing.annotation.BotRequest
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_ACTION
 import static com.khabaznia.bots.common.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
-import static com.khabaznia.bots.core.meta.Emoji.*
+import static com.khabaznia.bots.core.meta.Emoji.LEFT_ARROW
+import static com.khabaznia.bots.core.meta.Emoji.THUMB_UP
 
 @Slf4j
 @Component

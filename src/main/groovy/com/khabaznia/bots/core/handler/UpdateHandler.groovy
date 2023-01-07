@@ -1,14 +1,14 @@
 package com.khabaznia.bots.core.handler
 
-import com.khabaznia.bots.core.routing.Constants
-import com.khabaznia.bots.core.routing.handler.UpdateBotControllerResolver
-import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import com.khabaznia.bots.core.enums.ButtonType
 import com.khabaznia.bots.core.enums.ChatType
 import com.khabaznia.bots.core.enums.LogType
 import com.khabaznia.bots.core.enums.MessageFeature
 import com.khabaznia.bots.core.event.*
 import com.khabaznia.bots.core.exception.BotServiceException
+import com.khabaznia.bots.core.routing.Constants
+import com.khabaznia.bots.core.routing.handler.UpdateBotControllerResolver
+import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import com.khabaznia.bots.core.service.BotMessagesService
 import com.khabaznia.bots.core.service.MessageService
 import com.khabaznia.bots.core.service.UpdateService
@@ -23,8 +23,8 @@ import org.telegram.telegrambots.meta.api.objects.Update
 
 import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.*
 import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.*
-import static com.khabaznia.bots.core.routing.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 import static com.khabaznia.bots.core.enums.MessageFeature.INLINE_KEYBOARD_MESSAGE_GROUP
+import static com.khabaznia.bots.core.routing.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 import static com.khabaznia.bots.core.service.UpdateService.getParametersFromMessage
 import static com.khabaznia.bots.core.service.UpdateService.getUpdateType
 import static com.khabaznia.bots.core.util.HTMLParsingUtil.mapHTMLParsableSymbols

@@ -1,7 +1,6 @@
 package com.khabaznia.bots.core.meta.mapper
 
 import com.khabaznia.bots.core.meta.request.BaseRequest
-import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bots.core.service.ChatService
 import com.khabaznia.bots.core.service.I18nService
 import com.khabaznia.bots.core.service.MessageService
@@ -32,8 +31,8 @@ class MappingHelper {
         apiScope
     }
 
-    String getLocalizedText(BaseRequest source){
+    String getLocalizedText(BaseRequest source) {
         String chatLang = chatService.getChatLang(source.chatId)
-        i18nService.getFilledTemplateWithEmoji(source.text, source.binding, source.emoji, chatLang);
+        i18nService.getFilledTemplateWithEmoji(source.text, source.binding, source.emoji, chatLang)
     }
 }

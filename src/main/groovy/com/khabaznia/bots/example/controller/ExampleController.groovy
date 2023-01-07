@@ -1,10 +1,10 @@
 package com.khabaznia.bots.example.controller
 
 import com.khabaznia.bots.core.controller.AbstractBotController
+import com.khabaznia.bots.core.enums.MessageFeature
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Localized
-import com.khabaznia.bots.core.enums.MessageFeature
 import com.khabaznia.bots.core.service.DeepLinkingPathService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.example.job.ExampleJob
@@ -18,10 +18,10 @@ import java.time.LocalDateTime
 import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
 import static com.khabaznia.bots.common.Constants.COMMON.DEFAULT
 import static com.khabaznia.bots.common.Constants.COMMON.TO_MAIN
-import static com.khabaznia.bots.example.Constants.*
-import static com.khabaznia.bots.core.routing.Constants.COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS
 import static com.khabaznia.bots.core.meta.Emoji.*
+import static com.khabaznia.bots.core.routing.Constants.COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS
 import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.example.Constants.*
 
 @Slf4j
 @Component

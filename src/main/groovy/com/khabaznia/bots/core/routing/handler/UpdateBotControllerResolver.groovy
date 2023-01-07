@@ -1,7 +1,7 @@
 package com.khabaznia.bots.core.routing.handler
 
-import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import com.khabaznia.bots.core.enums.UpdateType
+import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import com.khabaznia.bots.core.service.UpdateService
 import com.khabaznia.bots.core.trait.Configurable
 import com.khabaznia.bots.core.util.SessionUtil
@@ -40,7 +40,7 @@ class UpdateBotControllerResolver implements Configurable {
 
     private BotControllerProxy getControllerInternal(String path) {
         def emojiFromPath = controllerContainer.emojiList.find { path.endsWith(it) }
-        def pathWithoutEmoji = emojiFromPath ? path.tokenize(emojiFromPath)[0]?.strip() ?:'' : path
+        def pathWithoutEmoji = emojiFromPath ? path.tokenize(emojiFromPath)[0]?.strip() ?: '' : path
         log.info 'Try to find controller for path {}', pathWithoutEmoji
         def pathMatchingControllers = getMatchingControllers(pathWithoutEmoji)
         getDefiniteController(pathMatchingControllers)

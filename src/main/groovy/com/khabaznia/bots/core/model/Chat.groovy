@@ -27,7 +27,7 @@ class Chat {
     @Column(name = "last_action")
     String lastAction
 
-    @Column(name = "last_action_full_path", columnDefinition="TEXT")
+    @Column(name = "last_action_full_path", columnDefinition = "TEXT")
     String lastActionFullPath
 
     @Enumerated(EnumType.STRING)

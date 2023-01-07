@@ -8,9 +8,7 @@ import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.routing.Constants.CONFIGS_DELIMITER
-import static com.khabaznia.bots.core.routing.Constants.RESTRICTED_MODE
-import static com.khabaznia.bots.core.routing.Constants.RESTRICTED_MODE_USERS
+import static com.khabaznia.bots.core.routing.Constants.*
 
 @Slf4j
 @Component

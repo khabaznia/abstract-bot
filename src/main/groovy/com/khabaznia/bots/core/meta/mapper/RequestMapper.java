@@ -14,8 +14,8 @@ import org.telegram.telegrambots.meta.api.methods.GetMe;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.*;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
-import org.telegram.telegrambots.meta.api.methods.pinnedmessages.UnpinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.UnpinAllChatMessages;
+import org.telegram.telegrambots.meta.api.methods.pinnedmessages.UnpinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -85,7 +85,7 @@ public abstract class RequestMapper {
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toApiKeyboard(source))")
     @Mapping(target = "parseMode", constant = "HTML")
     public abstract SendPhoto toApiMethod(com.khabaznia.bots.core.meta.request.impl.SendPhoto source);
-    
+
     @Mapping(target = "animation", expression = "java(mediaMapper.toApiInputFile(source))")
     @Mapping(target = "caption", expression = "java(mappingHelper.getLocalizedText(source))")
     @Mapping(target = "replyMarkup", expression = "java(keyboardMapper.toApiKeyboard(source))")

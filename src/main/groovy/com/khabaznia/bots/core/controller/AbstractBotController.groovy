@@ -5,8 +5,8 @@ import com.khabaznia.bots.core.event.DeleteMessagesEvent
 import com.khabaznia.bots.core.event.ExecuteMethodsEvent
 import com.khabaznia.bots.core.service.UpdateService
 import com.khabaznia.bots.core.service.UserService
-import com.khabaznia.bots.core.trait.Configurable
 import com.khabaznia.bots.core.trait.BotControllerBaseRequests
+import com.khabaznia.bots.core.trait.Configurable
 import com.khabaznia.bots.core.trait.Loggable
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
