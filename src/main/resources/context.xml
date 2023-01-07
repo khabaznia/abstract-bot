@@ -19,6 +19,6 @@
         <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
     </bean>
 
-    <jpa:repositories base-package="com.khabaznia.bot.model"/>
+    <jpa:repositories base-package="com.khabaznia.bots.core.model"/>
 
 </beans>
