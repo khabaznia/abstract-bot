@@ -17,10 +17,10 @@ class MediaService {
         log.debug 'Try to get media for identifier: {}', identifier
         def media = identifier
                 ? (mediaRepository.existsByFileId(identifier)
-                ? mediaRepository.findByFileId(identifier)
-                : identifier.isNumber()
-                ? mediaRepository.getById(Long.valueOf(identifier))
-                : mediaRepository.findByCode(identifier))
+                    ? mediaRepository.findByFileId(identifier)
+                    : identifier.isNumber()
+                        ? mediaRepository.getById(Long.valueOf(identifier))
+                        : mediaRepository.findByCode(identifier))
                 : null
         logMedia(media)
         media
@@ -31,24 +31,16 @@ class MediaService {
         label ? mediaRepository.findByLabel(label) : null
     }
 
-    static boolean isMediaCode(String code) {
-        code?.startsWith(MEDIA_FILE_PREFIX)
-    }
-
     InputStream getFileInputStreamForMediaCode(String fileIdentifier) {
         log.debug 'Try to resolve media with strategy'
-        mediaFileRetrievingStrategy.getMediaForCode(
-                isMediaCode(fileIdentifier)
-                        ? fileIdentifier.substring(MEDIA_FILE_PREFIX.size())
-                        : fileIdentifier
-        )
+        mediaFileRetrievingStrategy.getMediaForCode(fileIdentifier)
     }
 
     Media saveMedia(String id, String label) {
-        def media = getMediaForLabel(label) ?: getMedia(id) ?: new Media(label: label)
+        def media = getMediaForLabel(label)
+                ?: getMedia(id)
+                ?: new Media(code: id, label: label)
         if (label) media.setLabel(label)
-        isMediaCode(id) ? media.setCode(id) : media.setFileId(id)
-        log.trace 'Saving media with id {}', media.fileId
         mediaRepository.save(media)
     }
 
