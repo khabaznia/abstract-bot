@@ -1,0 +1,30 @@
+package com.khabaznia.bots.core.enums
+
+import static com.khabaznia.bots.core.controller.Constants.COMMON.*
+import static com.khabaznia.bots.core.controller.Constants.GROUP_CHATS_ACTIONS_CONTROLLER.*
+
+enum UpdateType {
+
+    UNDEFINED_MESSAGE(ANY_STRING),
+    IMAGE(IMAGE_CONTROLLER),
+    VIDEO(VIDEO_CONTROLLER),
+    AUDIO(AUDIO_CONTROLLER),
+    ANIMATION(ANIMATION_CONTROLLER),
+    DOCUMENT(DOCUMENT_CONTROLLER),
+    UNDEFINED(DEFAULT),
+    BOT_CHAT_MEMBER_UPDATED(BOT_CHAT_MEMBER_STATUS_UPDATED),
+    USER_CHAT_MEMBER_UPDATED(USER_CHAT_MEMBER_STATUS_UPDATED),
+    CHAT_JOIN_REQUEST(PROCESS_JOIN_REQUEST),
+    NEW_CHAT_MEMBERS(PROCESS_NEW_CHAT_MEMBERS),
+    CHAT_SERVICE_MESSAGES(PROCESS_SERVICE_MESSAGE),
+    GROUP_CHAT_CREATED(PROCESS_GROUP_CHAT_CREATED),
+    USER_LEFT_CHAT(PROCESS_USER_LEFT_CHAT),
+    MIGRATE_TO_CHAT_ID(PROCESS_MIGRATE_TO_CHAT_ID),
+    DEEP_LINK(START)
+
+    String defaultController
+
+    UpdateType(String defaultController) {
+        this.defaultController = defaultController
+    }
+}
