@@ -406,7 +406,7 @@ Next properties are needed to start application and should be specified as syste
 logging:
   level:
  ...
-    com.khabaznia.bot: ${LOGGING_LEVEL} // mandatory to specify logging level
+    com.khabaznia.bots: ${LOGGING_LEVEL} // mandatory to specify logging level
 
 env.only:  
  ...
