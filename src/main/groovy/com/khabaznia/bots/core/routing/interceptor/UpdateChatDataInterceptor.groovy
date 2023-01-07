@@ -1,6 +1,5 @@
 package com.khabaznia.bots.core.routing.interceptor
 
-
 import com.khabaznia.bots.core.security.authentication.filter.MultiReadHttpServletRequest
 import com.khabaznia.bots.core.service.ChatService
 import com.khabaznia.bots.core.service.I18nService
@@ -52,6 +51,4 @@ class UpdateChatDataInterceptor implements HandlerInterceptor, Configurable {
             chatService.updateChat(currentChat)
         }
     }
-
-
 }

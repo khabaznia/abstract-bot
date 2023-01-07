@@ -13,5 +13,4 @@ import java.lang.annotation.Target
 @interface SecuredBotMethod {
 
     List<String> roles
-
 }

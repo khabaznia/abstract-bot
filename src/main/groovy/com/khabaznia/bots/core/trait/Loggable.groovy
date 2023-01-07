@@ -37,5 +37,4 @@ trait Loggable {
                 logChat: LoggingChat.ADMIN,
                 skipMetaInfo: skipMetaInfo))
     }
-
 }

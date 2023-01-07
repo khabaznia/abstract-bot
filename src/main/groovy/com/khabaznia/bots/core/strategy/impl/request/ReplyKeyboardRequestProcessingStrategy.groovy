@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.UPDATE_ID
 
-
 @Slf4j
 @Component(value = 'replyKeyboardRequestProcessingStrategy')
 class ReplyKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<AbstractKeyboardMessage, BaseResponse> {

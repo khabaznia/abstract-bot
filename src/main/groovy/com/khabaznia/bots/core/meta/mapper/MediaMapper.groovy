@@ -25,6 +25,10 @@ class MediaMapper {
             log.trace 'Found cached media in db. Sending by direct file id'
             return new InputFile(media.fileId)
         } else {
+            if (fileIdentifier.size() > 60) {
+                log.trace 'Seems it unique file id of telegram media. Sending by direct file id'
+                return new InputFile(fileIdentifier)
+            }
             log.trace 'Media in db is not found. Resolving new file by strategy'
             return loadNewFile(fileIdentifier, mediaService)
         }

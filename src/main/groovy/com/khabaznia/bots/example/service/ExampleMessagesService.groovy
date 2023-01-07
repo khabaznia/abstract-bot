@@ -12,5 +12,4 @@ class ExampleMessagesService extends BotMessagesService {
                 .text('This message from example job')
                 .chatId(chatId)
     }
-
 }

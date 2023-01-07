@@ -19,5 +19,4 @@ class DefaultController extends AbstractBotController {
     defaultAction() {
         log.debug 'In default controller'
     }
-
 }

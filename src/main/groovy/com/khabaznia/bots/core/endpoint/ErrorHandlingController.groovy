@@ -37,5 +37,4 @@ class ErrorHandlingController {
                 ?.collect { it as FieldError }
                 ?.collectEntries { [(it.field): it.defaultMessage] }
     }
-
 }

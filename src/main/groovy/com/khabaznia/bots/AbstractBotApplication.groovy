@@ -11,5 +11,4 @@ class AbstractBotApplication {
     static void main(String[] args) {
         SpringApplication.run(AbstractBotApplication, args)
     }
-
 }

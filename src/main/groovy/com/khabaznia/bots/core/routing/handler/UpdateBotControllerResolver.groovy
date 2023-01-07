@@ -91,5 +91,4 @@ class UpdateBotControllerResolver implements Configurable {
     private static boolean isCommand(Map<String, BotControllerProxy> matchingControllers) {
         matchingControllers?.entrySet()[0]?.key?.startsWith(PREVIOUS_PATH_DELIMITER)
     }
-
 }

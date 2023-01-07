@@ -108,5 +108,4 @@ abstract class RequestsContainer implements BaseRequests {
             i18nService.getFilledTemplate(it, binding, chatService.getChatLang(chatCode))
         }
     }
-
 }

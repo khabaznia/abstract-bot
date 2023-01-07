@@ -32,5 +32,4 @@ class SessionUtil {
     static String getStringAttribute(String name) {
         RequestContextHolder?.getRequestAttributes()?.getAttribute(name, SCOPE_SESSION)?.toString()
     }
-
 }

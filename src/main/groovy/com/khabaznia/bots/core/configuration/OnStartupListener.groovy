@@ -83,5 +83,4 @@ class OnStartupListener implements Configurable {
             requestService.execute(it, false)
         }
     }
-
 }

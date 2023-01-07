@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.meta.mapper.KeyboardMapper.toKeyboardModel
 
-
 @Slf4j
 @Component(value = 'editMessageRequestProcessingStrategy')
 class EditMessageRequestProcessingStrategy extends RequestProcessingStrategy<EditMessage, BaseResponse> {
