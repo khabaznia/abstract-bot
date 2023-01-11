@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Chat
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.api.objects.User
 
 import static com.khabaznia.bots.core.routing.Constants.*
 import static com.khabaznia.bots.core.security.Constants.CHAT_ID_DELIMITER
@@ -26,7 +27,7 @@ class UpdateService {
     static String getChatInfoFromUpdate(Update update) {
         def message = getMessage(update)
         if (message) {
-            return message?.chat?.id + CHAT_ID_DELIMITER + message?.from?.id
+            return message?.chat?.id + CHAT_ID_DELIMITER + getUserFromUpdate(update).id
         } else {
             return update.myChatMember?.chat?.id + CHAT_ID_DELIMITER + update.myChatMember?.from?.id
         }
@@ -88,6 +89,13 @@ class UpdateService {
         if (update.hasMessage()) return update?.message
         if (update.hasCallbackQuery()) return update?.callbackQuery?.message
         if (update.hasEditedMessage()) return update?.editedMessage
+        return null
+    }
+
+    static User getUserFromUpdate(Update update) {
+        if (update.hasMessage()) return update?.message?.from
+        if (update.hasCallbackQuery()) return update?.callbackQuery?.from
+        if (update.hasEditedMessage()) return update?.editedMessage?.from
         return null
     }
 

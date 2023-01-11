@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import static com.khabaznia.bots.core.security.authentication.filter.AbstractBotFilter.getUpdate
-import static com.khabaznia.bots.core.service.UpdateService.getMessage
+import static com.khabaznia.bots.core.service.UpdateService.getUserFromUpdate
 
 @Slf4j
 @Component
@@ -26,8 +26,8 @@ class UpdateUserDataInterceptor implements HandlerInterceptor {
         try {
             def wrappedRequest = new MultiReadHttpServletRequest((HttpServletRequest) request)
             def update = getUpdate(wrappedRequest)
-            def message = getMessage(update)
-            message?.from?.id?.toString() ? userService.updateUser(message.from) : null
+            def user = getUserFromUpdate(update)
+            user?.id?.toString() ? userService.updateUser(user) : null
         } catch (Exception ex) {
             log.error('[Minor] Cant update user info: ' + ex.message)
         }
