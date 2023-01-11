@@ -6,4 +6,6 @@ import groovy.transform.ToString
 class User {
 
     Long id
+    String userName
+    String firstName
 }
