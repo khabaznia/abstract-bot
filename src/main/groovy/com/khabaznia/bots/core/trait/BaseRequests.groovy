@@ -1,6 +1,7 @@
 package com.khabaznia.bots.core.trait
 
 import com.khabaznia.bots.core.dto.ConfirmationFlowDto
+import com.khabaznia.bots.core.dto.FieldEditFlowDto
 import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.meta.keyboard.impl.*
 import com.khabaznia.bots.core.meta.object.BotCommand
@@ -19,7 +20,7 @@ trait BaseRequests {
     @Autowired
     UserService userService
 
-    public <T> T get(Class<T> beanClass) {
+    def <T> T get(Class<T> beanClass) {
         context.getBean(beanClass) as T
     }
 
@@ -130,6 +131,10 @@ trait BaseRequests {
 
     ConfirmationFlowDto getConfirmationFlowDto() {
         context.getBean 'confirmationFlowDto'
+    }
+
+    FieldEditFlowDto getFieldEditFlowDto() {
+        context.getBean 'fieldEditFlowDto'
     }
 
     BotCommand getBotCommand() {

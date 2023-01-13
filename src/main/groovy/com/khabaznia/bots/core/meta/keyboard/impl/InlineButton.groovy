@@ -7,7 +7,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.BUTTON_ID
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.BUTTON_ID
 
 @Component(value = 'inlineButton')
 @Scope(value = 'prototype')

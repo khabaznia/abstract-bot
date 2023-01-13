@@ -9,9 +9,9 @@ import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
-import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.IS_UPDATE_PROCESSED
-import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
+import static com.khabaznia.bots.core.controller.Constants.SESSION_ATTRIBUTES.IS_UPDATE_PROCESSED
+import static com.khabaznia.bots.core.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
 import static com.khabaznia.bots.core.routing.Constants.BLOCK_DUPLICATE_REQUESTS
 import static com.khabaznia.bots.core.service.UpdateService.getParametersFromMessage
 

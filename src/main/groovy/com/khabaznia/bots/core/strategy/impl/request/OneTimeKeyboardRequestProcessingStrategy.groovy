@@ -7,8 +7,8 @@ import com.khabaznia.bots.core.strategy.RequestProcessingStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.MESSAGE_UID
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.ONE_TIME_KEYBOARD
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.MESSAGE_UID
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.ONE_TIME_KEYBOARD
 import static com.khabaznia.bots.core.meta.mapper.KeyboardMapper.toKeyboardModel
 
 @Slf4j

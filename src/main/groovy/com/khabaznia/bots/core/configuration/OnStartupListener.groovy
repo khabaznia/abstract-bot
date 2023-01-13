@@ -1,10 +1,10 @@
 package com.khabaznia.bots.core.configuration
 
+import com.khabaznia.bots.common.util.CommandsUtil
 import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.meta.mapper.RequestMapper
 import com.khabaznia.bots.core.meta.request.impl.GetMe
 import com.khabaznia.bots.core.meta.response.impl.UserResponse
-import com.khabaznia.bots.core.service.BotCommandService
 import com.khabaznia.bots.core.service.BotRequestService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.core.service.UserService
@@ -33,7 +33,7 @@ class OnStartupListener implements Configurable {
     @Autowired
     private JobService jobService
     @Autowired
-    private BotCommandService commandService
+    private CommandsUtil commandsUtil
 
     @EventListener
     void onApplicationEvent(ContextRefreshedEvent event) {
@@ -79,7 +79,7 @@ class OnStartupListener implements Configurable {
     }
 
     private setAdminAllChatsCommands() {
-        commandService.getAdminAllGroupChatsCommands().each {
+        commandsUtil.getAdminAllGroupChatsCommands().each {
             requestService.execute(it, false)
         }
     }

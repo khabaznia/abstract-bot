@@ -7,7 +7,7 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
-import static com.khabaznia.bots.common.Constants.COMMON.ANY_STRING
+import static com.khabaznia.bots.core.controller.Constants.COMMON.ANY_STRING
 
 /**
  * Marks method in {@link com.khabaznia.bots.core.routing.annotation.BotController} as mapping for some command.

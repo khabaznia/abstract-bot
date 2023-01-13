@@ -1,4 +1,4 @@
-package com.khabaznia.bots.common.controller.common
+package com.khabaznia.bots.core.controller.impl
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.enums.ChatType
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.ADMIN_CONTROLLER.ADMIN_START
 import static com.khabaznia.bots.common.Constants.ADMIN_CONTROLLER.ADMIN_TO_MAIN
-import static com.khabaznia.bots.common.Constants.COMMON.*
 import static com.khabaznia.bots.common.Constants.USER_CONTROLLER.USER_START
 import static com.khabaznia.bots.common.Constants.USER_CONTROLLER.USER_TO_MAIN
+import static com.khabaznia.bots.core.controller.Constants.COMMON.*
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
 

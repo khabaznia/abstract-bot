@@ -6,9 +6,9 @@ import com.khabaznia.bots.core.trait.Configurable
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.common.Constants.ADMIN_CONTROLLER.FEATURES_LIST
-import static com.khabaznia.bots.common.Constants.COMMON.*
-import static com.khabaznia.bots.common.Constants.LANG_CONTROLLER.DISPLAY_CHANGE_LANG
-import static com.khabaznia.bots.common.Constants.LANG_CONTROLLER.LANG_EMOJI
+import static com.khabaznia.bots.core.controller.Constants.COMMON.*
+import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.DISPLAY_CHANGE_LANG
+import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.USE_ONLY_DEFAULT_LANGUAGE
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat

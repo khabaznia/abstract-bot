@@ -1,4 +1,4 @@
-package com.khabaznia.bots.common.controller.common
+package com.khabaznia.bots.core.controller.impl
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.enums.Role
@@ -12,8 +12,8 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.COMMON.DEFAULT
-import static com.khabaznia.bots.common.Constants.GROUP_CHATS_ACTIONS_CONTROLLER.*
+import static com.khabaznia.bots.core.controller.Constants.COMMON.DEFAULT
+import static com.khabaznia.bots.core.controller.Constants.GROUP_CHATS_ACTIONS_CONTROLLER.*
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
 

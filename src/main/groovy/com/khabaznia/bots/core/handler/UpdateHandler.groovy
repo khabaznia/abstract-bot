@@ -21,8 +21,8 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.*
-import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.*
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.*
+import static com.khabaznia.bots.core.controller.Constants.SESSION_ATTRIBUTES.*
 import static com.khabaznia.bots.core.enums.MessageFeature.INLINE_KEYBOARD_MESSAGE_GROUP
 import static com.khabaznia.bots.core.routing.Constants.DELETE_PREVIOUS_INLINE_KEYBOARDS
 import static com.khabaznia.bots.core.service.UpdateService.getParametersFromMessage

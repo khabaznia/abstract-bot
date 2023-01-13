@@ -1,6 +1,5 @@
-package com.khabaznia.bots.common.controller.common
+package com.khabaznia.bots.core.controller.impl
 
-import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.dto.ConfirmationFlowDto
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bots.core.routing.annotation.BotController
@@ -8,15 +7,15 @@ import com.khabaznia.bots.core.routing.annotation.BotRequest
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_ACTION
-import static com.khabaznia.bots.common.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
+import static com.khabaznia.bots.core.controller.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_ACTION
+import static com.khabaznia.bots.core.controller.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
 import static com.khabaznia.bots.core.meta.Emoji.LEFT_ARROW
 import static com.khabaznia.bots.core.meta.Emoji.THUMB_UP
 
 @Slf4j
 @Component
 @BotController
-class ConfirmationController extends AbstractBotController {
+class ConfirmationController extends AbstractFlowController {
 
     @BotRequest(path = CONFIRMATION_ACTION, rawParams = true)
     String confirmationAction(Map<String, String> params) {
@@ -36,11 +35,9 @@ class ConfirmationController extends AbstractBotController {
     }
 
     private ConfirmationFlowDto getConfirmationFlowDto(Map<String, String> params) {
-        def dto = confirmationFlowDto
-        params.findAll { dto.hasProperty(it.key) }
-                .each { dto.setProperty(it.key, (it.value == 'null' ? null : it.value)) }
-        dto.params(params.findAll { !dto.hasProperty(it.key) })
-        dto.menuTextBinding(params.findAll { !dto.hasProperty(it.key) })
+        def dto = fillDto(params, confirmationFlowDto)
+        setParams(params, dto, 'params')
+        setParams(params, dto, 'menuTextBinding')
     }
 
     private InlineKeyboard getConfirmationKeyboard(ConfirmationFlowDto confirmationFlowDto) {

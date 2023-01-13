@@ -1,6 +1,7 @@
 package com.khabaznia.bots.core.trait
 
 import com.khabaznia.bots.core.dto.ConfirmationFlowDto
+import com.khabaznia.bots.core.dto.FieldEditFlowDto
 import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.*
@@ -23,7 +24,7 @@ trait BotControllerBaseRequests {
     @Autowired
     DefaultRequestContainer requests
 
-    public <T extends BaseRequest> T get(Class<T> beanClass) {
+    def <T extends BaseRequest> T get(Class<T> beanClass) {
         def message = context.getBean(beanClass) as T
         requests << message
         message
@@ -152,6 +153,10 @@ trait BotControllerBaseRequests {
 
     ConfirmationFlowDto getConfirmationFlowDto() {
         context.getBean 'confirmationFlowDto'
+    }
+
+    FieldEditFlowDto getFieldEditFlowDto() {
+        context.getBean 'fieldEditFlowDto'
     }
 
     BotCommand getBotCommand() {
