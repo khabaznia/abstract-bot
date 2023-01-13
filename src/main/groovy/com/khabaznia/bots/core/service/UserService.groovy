@@ -16,7 +16,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
+import static com.khabaznia.bots.core.controller.Constants.SESSION_ATTRIBUTES.UPDATE_MESSAGE
 import static com.khabaznia.bots.core.routing.Constants.ADMIN_CHAT_ID
 import static com.khabaznia.bots.core.routing.Constants.DEFAULT_LOCALE
 import static com.khabaznia.bots.core.util.LoggingUtil.getUserInfo

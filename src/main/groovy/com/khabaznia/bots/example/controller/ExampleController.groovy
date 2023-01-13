@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component
 
 import java.time.LocalDateTime
 
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
-import static com.khabaznia.bots.common.Constants.COMMON.DEFAULT
-import static com.khabaznia.bots.common.Constants.COMMON.TO_MAIN
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
+import static com.khabaznia.bots.core.controller.Constants.COMMON.DEFAULT
+import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS
 import static com.khabaznia.bots.core.util.SessionUtil.currentChat

@@ -1,6 +1,6 @@
 package com.khabaznia.bots.core.service
 
-import com.khabaznia.bots.core.enums.Scope
+
 import com.khabaznia.bots.core.meta.object.BotCommand
 import com.khabaznia.bots.core.meta.object.BotCommandScope
 import com.khabaznia.bots.core.meta.request.BaseRequest
@@ -10,17 +10,12 @@ import com.khabaznia.bots.core.trait.Configurable
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Service
 
-import static com.khabaznia.bots.common.Constants.MAPPINGS.adminAllChatsCommands
-import static com.khabaznia.bots.common.Constants.MAPPINGS.langCommand
+import static com.khabaznia.bots.core.controller.Constants.MAPPINGS.langCommand
 import static com.khabaznia.bots.core.routing.Constants.*
 
 @Slf4j
 @Service
 class BotCommandService implements BaseRequests, Configurable {
-
-    List<BaseRequest> getAdminAllGroupChatsCommands() {
-        convertToSetMyCommands([(botCommandScope.type(Scope.ALL_CHAT_ADMINISTRATORS)): adminAllChatsCommands])
-    }
 
     List<BaseRequest> convertToSetMyCommands(Map<BotCommandScope, Map<String, String>> commandsMap,
                                              boolean allLocalization = false,

@@ -8,7 +8,7 @@ import com.khabaznia.bots.core.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.SESSION_ATTRIBUTES.UPDATE_ID
+import static com.khabaznia.bots.core.controller.Constants.SESSION_ATTRIBUTES.UPDATE_ID
 
 @Slf4j
 @Component(value = 'replyKeyboardRequestProcessingStrategy')

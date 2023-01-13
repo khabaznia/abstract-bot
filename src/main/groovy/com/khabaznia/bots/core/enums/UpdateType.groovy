@@ -1,7 +1,7 @@
 package com.khabaznia.bots.core.enums
 
-import static com.khabaznia.bots.common.Constants.COMMON.*
-import static com.khabaznia.bots.common.Constants.GROUP_CHATS_ACTIONS_CONTROLLER.*
+import static com.khabaznia.bots.core.controller.Constants.COMMON.*
+import static com.khabaznia.bots.core.controller.Constants.GROUP_CHATS_ACTIONS_CONTROLLER.*
 
 enum UpdateType {
 

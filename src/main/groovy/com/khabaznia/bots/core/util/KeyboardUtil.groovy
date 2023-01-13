@@ -3,7 +3,7 @@ package com.khabaznia.bots.core.util
 import com.khabaznia.bots.core.dto.ConfirmationFlowDto
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
 
-import static com.khabaznia.bots.common.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
+import static com.khabaznia.bots.core.controller.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
 
 class KeyboardUtil {
 

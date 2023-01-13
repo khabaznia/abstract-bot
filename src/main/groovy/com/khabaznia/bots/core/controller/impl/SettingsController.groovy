@@ -1,4 +1,4 @@
-package com.khabaznia.bots.common.controller.common
+package com.khabaznia.bots.core.controller.impl
 
 import com.khabaznia.bots.common.util.DefaultRoleKeyboardsUtil
 import com.khabaznia.bots.core.controller.AbstractBotController
@@ -11,8 +11,8 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.COMMON.GENERAL_SUBSCRIPTION_NOTIFY_ALL
-import static com.khabaznia.bots.common.Constants.COMMON.SETTINGS
+import static com.khabaznia.bots.core.controller.Constants.COMMON.GENERAL_SUBSCRIPTION_NOTIFY_ALL
+import static com.khabaznia.bots.core.controller.Constants.COMMON.SETTINGS
 import static com.khabaznia.bots.core.meta.Emoji.FINGER_DOWN
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
 

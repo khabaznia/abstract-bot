@@ -1,4 +1,4 @@
-package com.khabaznia.bots.common.controller.common
+package com.khabaznia.bots.core.controller.impl
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.meta.request.impl.AbstractMediaRequest
@@ -8,7 +8,7 @@ import com.khabaznia.bots.core.util.SessionUtil
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.COMMON.*
+import static com.khabaznia.bots.core.controller.Constants.COMMON.*
 import static com.khabaznia.bots.core.service.UpdateService.getFileId
 
 @Slf4j

@@ -9,8 +9,8 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
-import static com.khabaznia.bots.common.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
+import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
+import static com.khabaznia.bots.core.controller.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
 import static com.khabaznia.bots.core.meta.Emoji.CHECKED_MARK
 import static com.khabaznia.bots.core.meta.Emoji.CROSS_MARK
 import static com.khabaznia.bots.core.util.KeyboardUtil.fillButton

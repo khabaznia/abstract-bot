@@ -5,7 +5,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.common.Constants.COMMON.START
+import static com.khabaznia.bots.core.controller.Constants.COMMON.START
 import static com.khabaznia.bots.core.routing.Constants.BOT_NAME
 import static com.khabaznia.bots.core.routing.Constants.ENCRYPTED_PATH_SALT
 
