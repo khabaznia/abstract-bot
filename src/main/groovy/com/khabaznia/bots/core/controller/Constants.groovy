@@ -10,6 +10,15 @@ class Constants {
         public static final String CONFIRMATION_MENU = '/confirmation_menu'
     }
 
+    static final class EDIT_FIELD_CONTROLLER {
+        public static final String EDIT_ENTITIES_FOR_CLASS_ENTER = '/editEntitiesForClassEnter'
+        public static final String EDIT_FIELD_ENTER = '/editFieldEnter'
+        public static final String EDIT_LOCALIZED_FIELD_MENU = '/editLocalizedFieldMenu'
+        public static final String EDIT_BOOLEAN_FIELD = '/editBooleanFieldMenu'
+        public static final String EDIT_ENTITY_ENTER = '/editEntityEnter'
+        public static final String EDIT_FIELD_VALIDATION_FAILED = '/editFieldValidationFailed'
+    }
+
     static final class LANG_CONTROLLER {
         static final Map<String, String> LANG_EMOJI = [en: LANG_EN, ru: LANG_RU, uk: LANG_UK]
 

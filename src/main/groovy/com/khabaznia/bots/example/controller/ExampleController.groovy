@@ -8,6 +8,7 @@ import com.khabaznia.bots.core.routing.annotation.Localized
 import com.khabaznia.bots.core.service.DeepLinkingPathService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.example.job.ExampleJob
+import com.khabaznia.bots.example.service.ExampleModelService
 import com.khabaznia.bots.example.stub.StubService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,6 +35,8 @@ class ExampleController extends AbstractBotController {
     private JobService jobService
     @Autowired
     private DeepLinkingPathService deepLinkingPathService
+    @Autowired
+    private ExampleModelService exampleModelService
 
     @Localized
     @BotRequest(path = EXAMPLE, enableDuplicateRequests = true)
@@ -42,7 +45,7 @@ class ExampleController extends AbstractBotController {
                 .text('Here is your reply keyboard')
                 .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
                                 [JOB_TEST, SEND_MEDIA],
-                                [EXAMPLE.addEmoji(TEST_EMOJI_SET), TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
+                                [EDIT_FLOW, TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
     }
 
     @Localized
@@ -183,8 +186,7 @@ class ExampleController extends AbstractBotController {
                 .keyboard(inlineKeyboard.button('Yes', YES_ACTION)
                         .button("No, just count", NO_ACTION, [category: 'science'])
                         .row()
-                        .button('button.example.back', LEFT_ARROW, BACK_ACTION)
-                )
+                        .button('button.example.back', LEFT_ARROW, BACK_ACTION))
                 .feature(MessageFeature.ONE_TIME_INLINE_KEYBOARD)
     }
 
@@ -196,6 +198,35 @@ class ExampleController extends AbstractBotController {
         ExampleJob job = context.getBean('exampleJob')
         job.chatToSend = currentChat.code
         jobService.scheduleJob(job, LocalDateTime.now().plusSeconds(5).toDate())
+    }
+
+    @Localized
+    @BotRequest(path = EDIT_FLOW)
+    editFlowExample() {
+        exampleModelService.getAll().each {
+            sendMessage.text('Add new or edit existing')
+                    .keyboard(inlineKeyboard.button('edit number',
+                            editFlowDto
+                                    .successPath(EDIT_FLOW)
+                                    .successText('Yeap! updated')
+                                    .entityToEdit(it)
+                                    .fieldName('number'))
+                            .button('edit field1', CHECK,
+                                    editFlowDto
+                                            .successPath(TO_MAIN)
+                                            .entityToEdit(it)
+                                            .fieldName('field1'))
+                            .button('edit boolean', CHECK,
+                                    editFlowDto
+                                            .successPath(EDIT_FLOW)
+                                            .entityToEdit(it)
+                                            .fieldName('flag'))
+                            .button('edit localized', CHECK,
+                                    editFlowDto
+                                            .successPath(EDIT_FLOW)
+                                            .entityToEdit(it)
+                                            .fieldName('name')))
+        }
     }
 
     @Localized

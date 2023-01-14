@@ -1,7 +1,8 @@
 package com.khabaznia.bots.core.meta.keyboard.impl
 
-import com.khabaznia.bots.core.dto.ConfirmationFlowDto
 import com.khabaznia.bots.core.enums.ButtonType
+import com.khabaznia.bots.core.flow.dto.ConfirmationFlowDto
+import com.khabaznia.bots.core.flow.dto.EditFlowDto
 import com.khabaznia.bots.core.meta.keyboard.Keyboard
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
@@ -10,10 +11,10 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.controller.Constants.BUTTON_PARAMETERS.UNLIMITED_CALL
-import static com.khabaznia.bots.core.controller.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_MENU
+import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.fillConfirmationButton
+import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.fillEditFlowButton
 import static com.khabaznia.bots.core.meta.Emoji.CHECKED_MARK
 import static com.khabaznia.bots.core.meta.Emoji.CROSS_MARK
-import static com.khabaznia.bots.core.util.KeyboardUtil.fillButton
 
 @Component(value = 'inlineKeyboard')
 @Scope("prototype")
@@ -169,18 +170,12 @@ class InlineKeyboard extends Keyboard<InlineButton> {
     }
 
     InlineKeyboard button(String text, String emoji = null, ConfirmationFlowDto confirmationFlowDto) {
-        currentRow.add fillButton(button, text, confirmationFlowDto, emoji)
+        currentRow.add fillConfirmationButton(button, text, confirmationFlowDto, emoji)
         this
     }
 
-    InlineKeyboard oneTimeButton(String text, ConfirmationFlowDto confirmationFlowDto) {
-        def params = getConfirmationFlowButtonParams(confirmationFlowDto)
-        params.put(ButtonType.ONE_TIME.paramKey, 'true')
-        def button = button
-                .callbackData(CONFIRMATION_MENU)
-                .params(params)
-                .text(text)
-        currentRow.add button as InlineButton
+    InlineKeyboard button(String text, String emoji = null, EditFlowDto editFlowDto) {
+        currentRow.add fillEditFlowButton(button, text, editFlowDto, emoji)
         this
     }
 
@@ -217,16 +212,5 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         get().collect {
             "row: { " + it + " } \n"
         }
-    }
-
-    private static Map<String, String> getConfirmationFlowButtonParams(ConfirmationFlowDto confirmationFlowDto) {
-        confirmationFlowDto.getClass()
-                .declaredFields
-                .findAll { !it.synthetic }
-                .findAll { it.name != "params" }
-                .findAll { it.name != 'menuTextBinding' }
-                .collectEntries { field ->
-                    [field.name, confirmationFlowDto."$field.name"]
-                } << confirmationFlowDto.params << confirmationFlowDto.menuTextBinding
     }
 }

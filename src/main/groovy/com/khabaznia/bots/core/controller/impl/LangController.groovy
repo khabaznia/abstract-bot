@@ -75,13 +75,13 @@ class LangController extends AbstractBotController {
 
     private Map<String, String> getLocaleButtons() {
         getConfigs(AVAILABLE_LOCALES)
-                .collectEntries({ [(CHANGE_LANG.concat('.').concat(it)): com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI[it]] })
+                .collectEntries({ [(CHANGE_LANG.concat('.').concat(it)): LANG_EMOJI[it]] })
     }
 
     private boolean canChangeLang() {
         if (isEnabled(USE_ONLY_DEFAULT_LANGUAGE)) {
             sendMessage.text('text.lang.only.one.lang.is.available.for.now')
-                    .binding([lang: com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI.get(getConfig(DEFAULT_LOCALE))])
+                    .binding([lang: LANG_EMOJI.get(getConfig(DEFAULT_LOCALE))])
             return false
         }
         if (currentChat.type == ChatType.GROUP && isEnabled(DEFAULT_LANGUAGE_FOR_GROUPS)) return false

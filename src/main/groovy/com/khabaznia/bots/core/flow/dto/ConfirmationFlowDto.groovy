@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.dto
+package com.khabaznia.bots.core.flow.dto
 
 import groovy.transform.TupleConstructor
 import groovy.transform.builder.Builder
