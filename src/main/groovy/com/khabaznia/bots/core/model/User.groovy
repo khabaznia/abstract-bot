@@ -38,6 +38,6 @@ class User {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = 'field_edit_flow')
-    FieldEditFlow fieldEditFlow
+    @JoinColumn(name = 'edit_flow')
+    EditFlow editFlow
 }

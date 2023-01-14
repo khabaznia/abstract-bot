@@ -15,4 +15,5 @@ final class Constants {
     public static final String NO_ACTION = '/no'
     public static final String BACK_ACTION = '/back'
     public static final String DEEP_LINK_PATH = '/deepLinkPath'
+    public static final String EDIT_FLOW = 'path.edit.flow.example'
 }

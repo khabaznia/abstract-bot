@@ -1,8 +1,8 @@
 package com.khabaznia.bots.core.trait
 
-import com.khabaznia.bots.core.dto.ConfirmationFlowDto
-import com.khabaznia.bots.core.dto.FieldEditFlowDto
 import com.khabaznia.bots.core.enums.UserRole
+import com.khabaznia.bots.core.flow.dto.ConfirmationFlowDto
+import com.khabaznia.bots.core.flow.dto.EditFlowDto
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.*
 import com.khabaznia.bots.core.meta.object.BotCommand
@@ -155,8 +155,8 @@ trait BotControllerBaseRequests {
         context.getBean 'confirmationFlowDto'
     }
 
-    FieldEditFlowDto getFieldEditFlowDto() {
-        context.getBean 'fieldEditFlowDto'
+    EditFlowDto getEditFlowDto() {
+        context.getBean 'editFlowDto'
     }
 
     BotCommand getBotCommand() {
