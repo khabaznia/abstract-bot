@@ -9,12 +9,11 @@ import com.khabaznia.bots.core.service.UserService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.support.Repositories
 import org.springframework.stereotype.Service
 import org.springframework.validation.annotation.Validated
 
-import javax.annotation.PostConstruct
+import javax.persistence.EntityManager
+import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
 import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI
@@ -25,20 +24,17 @@ import static javax.validation.Validation.buildDefaultValidatorFactory
 @Slf4j
 @Service
 @Validated
+@Transactional
 class EditFlowService {
 
-    private Repositories repositories
+    @Autowired
+    private EntityManager entityManager
     @Autowired
     private ApplicationContext context
     @Autowired
     private EditFlowRepository editFlowRepository
     @Autowired
     private UserService userService
-
-    @PostConstruct
-    private void postConstruct() {
-        repositories = new Repositories(context)
-    }
 
     void saveEditFlowModel(String entityClassName, String entityId, EditFlowDto editFlowDto) {
         deleteOldFlow()
@@ -58,7 +54,8 @@ class EditFlowService {
     void updateEntityWithInput(String input) {
         validateInput(input, currentUser.editFlow.fieldName)
         def entity = getFilledEntity(input)
-        getRepository(entity.class).save(entity)
+        entityManager.persist(entity)
+        entityManager.flush()
     }
 
     void setFieldLang(String lang) {
@@ -111,7 +108,7 @@ class EditFlowService {
 
     private Object getFilledEntity(String input) {
         def editFlow = currentUser.editFlow
-        def entity = getRepository(entityClass).getById(editFlow.entityId)
+        def entity = entityManager.find(entityClass, editFlow.entityId)
         fillEntity(input, entity, editFlow)
         entity
     }
@@ -169,14 +166,10 @@ class EditFlowService {
     }
 
     private Object getCurrentValueInternal(EditFlow editFlow) {
-        getRepository(entityClass).getById(editFlow.entityId)."${editFlow.fieldName}"
+        entityManager.find(entityClass, editFlow.entityId)."${editFlow.fieldName}"
     }
 
     private static Class<?> getEntityClass() {
         Class.forName(currentUser.editFlow.entityClassName)
-    }
-
-    JpaRepository getRepository(Class entityClass) {
-        repositories.getRepositoryFor(entityClass).get() as JpaRepository
     }
 }
