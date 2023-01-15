@@ -4,6 +4,7 @@ import com.khabaznia.bots.core.flow.annotation.Editable
 import com.khabaznia.bots.core.flow.dto.EditFlowDto
 import com.khabaznia.bots.core.flow.validation.InputNumberValidator
 import com.khabaznia.bots.core.model.EditFlow
+import com.khabaznia.bots.core.model.User
 import com.khabaznia.bots.core.repository.EditFlowRepository
 import com.khabaznia.bots.core.service.UserService
 import groovy.util.logging.Slf4j
@@ -39,15 +40,16 @@ class EditFlowService {
     void saveEditFlowModel(String entityClassName, String entityId, EditFlowDto editFlowDto) {
         deleteOldFlow()
         def user = currentUser
-        user.editFlow = new EditFlow(
+        def newEditFlowModel = new EditFlow(
                 entityClassName: entityClassName,
                 entityId: Long.valueOf(entityId),
                 fieldName: editFlowDto.fieldName,
                 enterText: editFlowDto.enterText,
                 enterTextBinding: editFlowDto.enterTextBinding,
                 successMessage: editFlowDto.successText,
-                successPath: editFlowDto.successPath
+                successPath: editFlowDto.successPath,
         )
+        updateOldValue(editFlowDto, entityClassName, newEditFlowModel, user)
         userService.updateUser(user)
     }
 
@@ -86,29 +88,39 @@ class EditFlowService {
     }
 
     static String getEnterMessage() {
-        entityClass.getDeclaredField(currentUser.editFlow.fieldName)
+        getEntityClass().getDeclaredField(currentUser.editFlow.fieldName)
                 .getAnnotation(Editable.class).enterMessage()
     }
 
-    String getCurrentValue(boolean localized = false) {
-        def editFlow = currentUser.editFlow
+    static boolean isValueClearingEnabled() {
+        getEntityClass().getDeclaredField(currentUser.editFlow.fieldName)
+                .getAnnotation(Editable.class).enableClear()
+    }
+
+    String getCurrentValue(boolean localized = false, EditFlow editFlow = null) {
+        editFlow = editFlow ?: currentUser.editFlow
         isLocalized(editFlow) || localized
                 ? lineSeparator().concat(getLocalizedCurrentValues(editFlow))
                 : getCurrentValueInternal(editFlow)?.toString()
     }
 
+    private void updateOldValue(EditFlowDto editFlowDto, String entityClassName, EditFlow newEditFlowModel, User user) {
+        def oldValue = getCurrentValue(isLocalizedField(editFlowDto.fieldName, entityClassName), newEditFlowModel)
+        newEditFlowModel.oldValue = oldValue
+        user.editFlow = newEditFlowModel
+    }
 
     private static validateInput(String input, String fieldName) {
         validateNumberField(fieldName, input)
         def constraintViolations =
-                buildDefaultValidatorFactory().getValidator().validateValue(entityClass, fieldName, getClassSpecificValue(input, fieldName))
+                buildDefaultValidatorFactory().getValidator().validateValue(getEntityClass(), fieldName, getClassSpecificValue(input, fieldName))
         if (!constraintViolations.findAll().isEmpty())
             throw new ConstraintViolationException('Validation of input failed', constraintViolations)
     }
 
     private Object getFilledEntity(String input) {
         def editFlow = currentUser.editFlow
-        def entity = entityManager.find(entityClass, editFlow.entityId)
+        def entity = entityManager.find(getEntityClass(editFlow), editFlow.entityId)
         fillEntity(input, entity, editFlow)
         entity
     }
@@ -155,7 +167,7 @@ class EditFlowService {
     }
 
     private static Class getFieldClass(String fieldName) {
-        entityClass.getDeclaredField(fieldName).type
+        getEntityClass().getDeclaredField(fieldName).type
     }
 
     private String getLocalizedCurrentValues(EditFlow editFlow) {
@@ -166,10 +178,10 @@ class EditFlowService {
     }
 
     private Object getCurrentValueInternal(EditFlow editFlow) {
-        entityManager.find(entityClass, editFlow.entityId)."${editFlow.fieldName}"
+        entityManager.find(getEntityClass((editFlow)), editFlow.entityId)?."${editFlow.fieldName}"
     }
 
-    private static Class<?> getEntityClass() {
-        Class.forName(currentUser.editFlow.entityClassName)
+    private static Class<?> getEntityClass(EditFlow editFlow = null) {
+        Class.forName((editFlow ?: currentUser.editFlow).entityClassName)
     }
 }

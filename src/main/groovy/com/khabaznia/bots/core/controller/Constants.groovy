@@ -17,6 +17,7 @@ class Constants {
         public static final String EDIT_BOOLEAN_FIELD = '/editBooleanFieldMenu'
         public static final String EDIT_ENTITY_ENTER = '/editEntityEnter'
         public static final String EDIT_FIELD_VALIDATION_FAILED = '/editFieldValidationFailed'
+        public static final String EDIT_FIELD_CLEAR_VALUE = '/editFieldClearValue'
     }
 
     static final class LANG_CONTROLLER {

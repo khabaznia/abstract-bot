@@ -203,31 +203,37 @@ class ExampleController extends AbstractBotController {
     @Localized
     @BotRequest(path = EDIT_FLOW)
     editFlowExample() {
-        exampleModelService.getAll().each {
-            sendMessage.text('Add new or edit existing')
-                    .keyboard(inlineKeyboard.button('edit number',
-                            editFlowDto
-                                    .successPath(EDIT_FLOW)
-                                    .successText('Yeap! updated')
-                                    .entityToEdit(it)
-                                    .fieldName('number'))
-                            .button('edit field1', CHECK,
-                                    editFlowDto
-                                            .successPath(TO_MAIN)
-                                            .entityToEdit(it)
-                                            .fieldName('field1'))
-                            .button('edit boolean', CHECK,
-                                    editFlowDto
-                                            .successPath(EDIT_FLOW)
-                                            .entityToEdit(it)
-                                            .fieldName('flag'))
-                            .button('edit localized', CHECK,
-                                    editFlowDto
-                                            .successPath(EDIT_FLOW)
-                                            .entityToEdit(it)
-                                            .fieldName('name')))
-        }
+        def model = exampleModelService.getAll().find()
+        sendMessage.text('Add new or edit existing')
+                .keyboard(inlineKeyboard.button('number', editFlowDto
+                                .successPath(EDIT_FLOW)
+                                .successText('Yeap! updated')
+                                .entityToEdit(model)
+                                .fieldName('number'))
+                        .button('field1', CHECK, editFlowDto
+                                        .successPath(EXAMPLE)
+                                        .entityToEdit(model)
+                                        .fieldName('field1'))
+                        .button('boolean', editFlowDto
+                                        .successPath(EDIT_FLOW)
+                                        .entityToEdit(model)
+                                        .fieldName('flag'))
+                        .button('localized', CHECK, editFlowDto
+                                        .successPath(EDIT_FLOW)
+                                        .entityToEdit(model)
+                                        .fieldName('name')))
+
     }
+
+//    @Localized
+//    @BotRequest(path = EDIT_FLOW)
+//    editFlowExample() {
+//        def model = exampleModelService.getAll().find()
+//        sendMessage.text('Add new or edit existing')
+//                .keyboard(inlineKeyboard.button('edit number',
+//                        editFlowDto.entityToEdit(model)))
+//
+//    }
 
     @Localized
     @BotRequest(path = SEND_MEDIA)

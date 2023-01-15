@@ -17,7 +17,7 @@ class ExampleModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @Editable(localized = true, enterMessage = 'example.model.enter.message.name')
+    @Editable(localized = true, enterMessage = 'example.model.enter.message.name', enableClear = true)
     @ElementCollection
     @CollectionTable(name = 'example_localized_name',
             joinColumns = [@JoinColumn(name = 'id', referencedColumnName = 'id')])
@@ -31,7 +31,7 @@ class ExampleModel {
     @Column(name = 'number')
     Integer number
 
-    @Editable(enterMessage = 'example.model.enter.message.field1')
+    @Editable(enterMessage = 'example.model.enter.message.field1', enableClear = true)
     @Pattern(regexp = /..+/, message = 'example.model.field1.pattern.validation')
     @Column(name = 'field1')
     String field1

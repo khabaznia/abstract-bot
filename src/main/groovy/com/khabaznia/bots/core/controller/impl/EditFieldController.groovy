@@ -59,11 +59,6 @@ class EditFieldController extends AbstractBotController {
         }
     }
 
-    @BotRequest(path = EDIT_BOOLEAN_FIELD, after = EDIT_FIELD_ENTER)
-    editBooleanField(String value) {
-        editFieldInternal(value)
-    }
-
     @BotRequest(path = EDIT_LOCALIZED_FIELD_MENU, after = EDIT_FIELD_ENTER)
     editLocalizedField(String lang) {
         botMessagesService.updateEditFlowChooseLangMenu(lang)
@@ -71,6 +66,9 @@ class EditFieldController extends AbstractBotController {
         def editFlow = currentUser.editFlow
         botMessagesService.editFlowEnterMessage(editFlow.enterText, editFlow.enterTextBinding)
     }
+
+    @BotRequest(path = EDIT_BOOLEAN_FIELD, after = EDIT_FIELD_ENTER)
+    String editBooleanField(String value) { editFieldInternal(value) }
 
     @BotRequest(path = EDIT_FIELD_VALIDATION_FAILED)
     fieldValidationFailed() {
@@ -86,12 +84,18 @@ class EditFieldController extends AbstractBotController {
     @BotRequest(after = EDIT_FIELD_VALIDATION_FAILED)
     String addFieldAfterValidation() { editFieldInternal() }
 
-    private String editFieldInternal(String input = null) {
+    @BotRequest(path = EDIT_FIELD_CLEAR_VALUE, after = EDIT_LOCALIZED_FIELD_MENU)
+    String clearLocalizedValue() { editFieldInternal(null, true) }
+
+    @BotRequest(path = EDIT_FIELD_CLEAR_VALUE, after = EDIT_FIELD_ENTER)
+    String clearValue() { editFieldInternal(null, true) }
+
+    private String editFieldInternal(String input = null, boolean clear = false) {
         try {
             def editFlow = currentUser.editFlow
-            input = input ?: updateService.getMappedMessageText(update)
+            input = clear ? null : input ?: updateService.getMappedMessageText(update)
             editFlowService.updateEntityWithInput(input)
-            botMessagesService.editFlowSuccessMessage(editFlow.successMessage)
+            botMessagesService.editFlowSuccessMessage(editFlow.successMessage, clear)
             botMessagesService.deleteEditFlowChooseLangMessage()
             botMessagesService.updateEditFlowCurrentValueMessage(editFlowService.currentValue, isBooleanField())
             editFlowService.deleteOldFlow()

@@ -15,5 +15,7 @@ import java.lang.annotation.Target
 
     boolean localized() default false
 
-    String enterMessage() default 'text.edit.flow.enter.new.value'
+    boolean enableClear() default false
+
+    String enterMessage() default ''
 }
