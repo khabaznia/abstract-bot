@@ -29,6 +29,8 @@ class EditFlow {
 
     @Column
     String enterText
+    @Column
+    String oldValue
 
     @ElementCollection
     @CollectionTable(name = 'edit_flow_enter_text_binding',
