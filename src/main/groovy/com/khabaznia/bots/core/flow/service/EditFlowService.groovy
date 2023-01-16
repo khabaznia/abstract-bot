@@ -1,7 +1,7 @@
 package com.khabaznia.bots.core.flow.service
 
 import com.khabaznia.bots.core.flow.annotation.Editable
-import com.khabaznia.bots.core.flow.dto.EditFlowDto
+import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
 import com.khabaznia.bots.core.flow.validation.InputNumberValidator
 import com.khabaznia.bots.core.model.EditFlow
 import com.khabaznia.bots.core.model.User
@@ -37,19 +37,20 @@ class EditFlowService {
     @Autowired
     private UserService userService
 
-    void saveEditFlowModel(String entityClassName, String entityId, EditFlowDto editFlowDto) {
+    void saveEditFlowModel(String entityClassName, String entityId, EditFieldFlowDto editFieldFlowDto) {
         deleteOldFlow()
         def user = currentUser
         def newEditFlowModel = new EditFlow(
                 entityClassName: entityClassName,
                 entityId: Long.valueOf(entityId),
-                fieldName: editFlowDto.fieldName,
-                enterText: editFlowDto.enterText,
-                enterTextBinding: editFlowDto.enterTextBinding,
-                successMessage: editFlowDto.successText,
-                successPath: editFlowDto.successPath,
+                fieldName: editFieldFlowDto.fieldName,
+                enterText: editFieldFlowDto.enterText,
+                enterTextBinding: editFieldFlowDto.enterTextBinding,
+                successMessage: editFieldFlowDto.successText,
+                successPath: editFieldFlowDto.successPath,
+                params: editFieldFlowDto.redirectParams
         )
-        updateOldValue(editFlowDto, entityClassName, newEditFlowModel, user)
+        updateOldValue(editFieldFlowDto, entityClassName, newEditFlowModel, user)
         userService.updateUser(user)
     }
 
@@ -104,8 +105,12 @@ class EditFlowService {
                 : getCurrentValueInternal(editFlow)?.toString()
     }
 
-    private void updateOldValue(EditFlowDto editFlowDto, String entityClassName, EditFlow newEditFlowModel, User user) {
-        def oldValue = getCurrentValue(isLocalizedField(editFlowDto.fieldName, entityClassName), newEditFlowModel)
+    Map<String, String> getEditableFields(String entityClassName){
+
+    }
+
+    private void updateOldValue(EditFieldFlowDto editFieldFlowDto, String entityClassName, EditFlow newEditFlowModel, User user) {
+        def oldValue = getCurrentValue(isLocalizedField(editFieldFlowDto.fieldName, entityClassName), newEditFlowModel)
         newEditFlowModel.oldValue = oldValue
         user.editFlow = newEditFlowModel
     }
@@ -178,7 +183,7 @@ class EditFlowService {
     }
 
     private Object getCurrentValueInternal(EditFlow editFlow) {
-        entityManager.find(getEntityClass((editFlow)), editFlow.entityId)?."${editFlow.fieldName}"
+        entityManager.find(getEntityClass(editFlow), editFlow.entityId)?."${editFlow.fieldName}"
     }
 
     private static Class<?> getEntityClass(EditFlow editFlow = null) {

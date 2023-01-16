@@ -17,5 +17,9 @@ import java.lang.annotation.Target
 
     boolean enableClear() default false
 
+    boolean id() default false
+
     String enterMessage() default ''
+
+    String fieldButtonMessage() default ''
 }

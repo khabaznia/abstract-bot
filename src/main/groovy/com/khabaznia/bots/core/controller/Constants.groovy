@@ -11,7 +11,7 @@ class Constants {
     }
 
     static final class EDIT_FIELD_CONTROLLER {
-        public static final String EDIT_ENTITIES_FOR_CLASS_ENTER = '/editEntitiesForClassEnter'
+        public static final String EDIT_ENTRIES_FOR_CLASS_ENTER = '/editEntriesForClassEnter'
         public static final String EDIT_FIELD_ENTER = '/editFieldEnter'
         public static final String EDIT_LOCALIZED_FIELD_MENU = '/editLocalizedFieldMenu'
         public static final String EDIT_BOOLEAN_FIELD = '/editBooleanFieldMenu'
@@ -57,6 +57,7 @@ class Constants {
         public static final String UPDATE_MESSAGE = 'updateMessage'
         public static final String UPDATE_ID = 'updateId'
         public static final String IS_UPDATE_PROCESSED = 'isUpdateProcessed'
+        public static final String REDIRECT_PARAMETERS = 'redirectParameters'
     }
 
     static final class GROUP_CHATS_ACTIONS_CONTROLLER {
