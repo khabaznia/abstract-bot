@@ -7,23 +7,15 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@Component(value = 'confirmationFlowDto')
+@Component(value = 'editEntryFlowDto')
 @Scope("prototype")
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
-@ToString
-class ConfirmationFlowDto {
+@ToString(includeSuper = true)
+class EditEntryFlowDto extends EditFlowDto {
 
-    String menuText
-    Map<String, String> menuTextBinding = [:]
-
-    String acceptPath
-    String declinePath
-    String backPath
-
-    String acceptPathMessage
-    String declinePathMessage
-    String backPathMessage
-
-    Map<String, String> redirectParams = [:]
+    Class entityClass
+    Long entityId
+    // OR
+    Object entityToEdit
 }

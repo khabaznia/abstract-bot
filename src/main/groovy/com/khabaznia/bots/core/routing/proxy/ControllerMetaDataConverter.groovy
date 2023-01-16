@@ -10,6 +10,7 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ActionType
 
+import java.lang.annotation.Annotation
 import java.lang.reflect.Method
 import java.util.stream.Collectors
 import java.util.stream.Stream
@@ -56,6 +57,7 @@ class ControllerMetaDataConverter {
         controllerMetaData.actionType = getActionType(method)
         controllerMetaData.params = getParams(method)
         controllerMetaData.enableDuplicateRequests = getEnableDuplicateRequests(method)
+        controllerMetaData.inputParameterName = getInputParameterName(method)
         controllerMetaData
     }
 
@@ -140,5 +142,16 @@ class ControllerMetaDataConverter {
     private static String getSpecificRole(Method method) {
         def roles = getRoles(method) - Role.BOT.toString()
         roles.get(0)
+    }
+
+    private static String getInputParameterName(Method method) {
+        Integer position = 0
+        for (Annotation[] row : method.getParameterAnnotations()) {
+            for (Annotation ann : row)
+                if (Input.class.isInstance(ann))
+                    return getParams(method)[position]
+            position++
+        }
+        null
     }
 }

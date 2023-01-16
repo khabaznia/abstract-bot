@@ -88,6 +88,12 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
                 .delete()
     }
 
+    void editFlowEntityFieldsSelectMessage(Map<String, String> fields, Map<String, String> params, String backPath) {
+        requests << sendMessage.text('text.edit.flow.select.field.to.edit')
+                .keyboard(setEditableFieldsButtons(inlineKeyboard, fields, params, backPath))
+                .delete()
+    }
+
     private InlineKeyboard setLocaleButtons(InlineKeyboard inlineKeyboard) {
         getConfigs(AVAILABLE_LOCALES)
                 .collectEntries { [(it): LANG_EMOJI[it]] }
@@ -98,6 +104,16 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
                             [lang: it.key.toString()])
                 }
         inlineKeyboard
+    }
+
+    private InlineKeyboard setEditableFieldsButtons(InlineKeyboard inlineKeyboard, Map<String, String> fields, Map<String, String> params, String backPath) {
+        fields.each {
+            inlineKeyboard.button(it.value, editFieldFlowDto
+                    .successPath(EDIT_ENTITY_ENTER)
+                    .redirectParams(params)
+                    .fieldName(it.key))
+        }
+        inlineKeyboard.row().button('button.back', Emoji.LEFT_ARROW, backPath)
     }
 
     private static String getEditFlowCurrentValueText(String currentValue) {

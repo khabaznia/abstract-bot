@@ -19,13 +19,15 @@ class BotControllerProxy {
     ControllerMetaData metaData
 
     @SecuredBotMethod
-    String process(Update update) {
+    String process(Update update, Map<String, String> redirectParams) {
         log.info 'Executing method from class {} ----------> {}', metaData.bean.class.simpleName, metaData.controllerPath
         metaData.beforeExecuteMethod.invoke(metaData.bean, update)
         def params = updateService.getParametersFromUpdate(update)
+        log.debug 'redirect -> {}', redirectParams 
+        if (redirectParams) params.putAll(redirectParams)
         log.debug 'Params from update: {}. Params in controller: {}', params, metaData.params
         def result = metaData.hasParameters && !metaData.rawParams
-                ? callWithBindedParams(params)
+                ? callWithBindedParams(params, metaData.inputParameterName, update)
                 : metaData.rawParams
                     ? metaData.executeMethod.invoke(metaData.bean, params)
                     : metaData.executeMethod.invoke(metaData.bean)
@@ -33,8 +35,9 @@ class BotControllerProxy {
         metaData.returnString && result ? result as String : null
     }
 
-    private Object callWithBindedParams(params) {
-        metaData.executeMethod.invoke(metaData.bean, metaData.params
-                .collect { params.get(it.value) } as Object[])
+    private Object callWithBindedParams(Map<String, String> params, String inputParamName, Update update) {
+        metaData.executeMethod.invoke(metaData.bean, metaData.params*.value.collect {
+            (inputParamName && it == inputParamName) ? updateService.getMappedMessageText(update) : params.get(it)
+        } as Object[])
     }
 }

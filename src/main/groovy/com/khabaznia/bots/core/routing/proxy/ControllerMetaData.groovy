@@ -12,6 +12,7 @@ class ControllerMetaData {
     Map<Integer, String> params
     Boolean hasParameters
     Boolean rawParams
+    String inputParameterName
     Method beforeExecuteMethod
     Method executeMethod
     Method afterExecuteMethod
