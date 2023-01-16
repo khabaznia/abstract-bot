@@ -207,23 +207,20 @@ class ExampleController extends AbstractBotController {
         def model = exampleModelService.getAll().find()
         sendMessage.text('Add new or edit existing')
                 .keyboard(inlineKeyboard
-                        .button('number', editFieldFlowDto
-                                .fieldName('number')
-                                .entityToEdit(model)
-                                .successText('Yeap! updated')
-                                .successPath(EDIT_FLOW))
-                        .button('field1', CHECK, editFieldFlowDto
+                        .button(null, CHECK, editFieldFlowDto
                                 .fieldName('field1')
                                 .entityToEdit(model)
                                 .successPath(EXAMPLE))
-                        .button('boolean', editFieldFlowDto
+                        .button('Super -flag', editFieldFlowDto
                                 .entityToEdit(model)
                                 .fieldName('flag')
+                                .successText('Yeap! updated')
                                 .successPath('/queryWithParam')
                                 .redirectParams([someUniqueId: 'someUniqueId']))
-                        .button('localized', CHECK, editFieldFlowDto
-                                .entityToEdit(model)
+                        .button('localized', FEEDBACK, editFieldFlowDto
+                                .entityId(model.id)
                                 .fieldName('name')
+                                .entityClass(model.class)
                                 .successPath(EDIT_FLOW))
                         .row()
                         .button('Edit entry ', editEntryFlowDto
@@ -235,11 +232,10 @@ class ExampleController extends AbstractBotController {
                                 .redirectParams([someUniqueId: 'someUniqueId']))
                         .row()
                         .button('Edit entries of class ExampleModel', editEntriesFlowDto
-                                .entityClass(ExampleModel.class)
                                 .canCreate(true)
-                                .canDelete(true)))
+                                .canDelete(true)
+                                .entityClass(ExampleModel.class)))
     }
-
 
     @Localized
     @BotRequest(path = SEND_MEDIA)

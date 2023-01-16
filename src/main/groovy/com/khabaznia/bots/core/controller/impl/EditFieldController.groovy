@@ -7,6 +7,7 @@ import com.khabaznia.bots.core.flow.dto.EditEntryFlowDto
 import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
 import com.khabaznia.bots.core.flow.service.EditFlowService
 import com.khabaznia.bots.core.flow.util.FlowConversionUtil
+import com.khabaznia.bots.core.meta.Emoji
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Input
@@ -20,8 +21,7 @@ import javax.validation.ConstraintViolationException
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.*
 import static com.khabaznia.bots.core.flow.service.EditFlowService.isBooleanField
 import static com.khabaznia.bots.core.flow.service.EditFlowService.isLocalizedField
-import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.ENTITY_CLASS_NAME
-import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.ENTITY_ID
+import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.*
 import static com.khabaznia.bots.core.util.SessionUtil.currentUser
 import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
 
@@ -42,27 +42,21 @@ class EditFieldController extends AbstractBotController {
         def editEntriesFlowDto = flowConversionUtil.getEditFieldFlowDto(EditEntriesFlowDto.class, params)
         log.debug 'Converted flow dto: {}', editEntriesFlowDto.toString()
 
-        setRedirectParams(editEntriesFlowDto.redirectParams)
-        return editEntriesFlowDto.successPath
     }
 
     @BotRequest(path = EDIT_ENTITY_ENTER, rawParams = true)
     editEntity(Map<String, String> params) {
         def editEntryFlowDto = flowConversionUtil.getEditFieldFlowDto(EditEntryFlowDto.class, params)
-        log.debug 'Converted flow dto: {}', editEntryFlowDto.toString()
-//        def fields = editFlowService.getEditableFields(params.get(ENTITY_CLASS_NAME))
-//        botMessagesService.editFlowEntityFieldsSelectMessage(fields, params)
-        setRedirectParams(editEntriesFlowDto.redirectParams)
-        return editEntriesFlowDto.successPath
+        def fields = editFlowService.getEditableFields(editEntryFlowDto.entityClass)
+        botMessagesService.editFlowEntityFieldsSelectMessage(fields, editEntryFlowDto)
     }
 
     @BotRequest(path = EDIT_FIELD_ENTER, rawParams = true)
     editFieldEnter(Map<String, String> params) {
         def editFieldFlowDto = flowConversionUtil.getEditFieldFlowDto(EditFieldFlowDto.class, params)
-        log.debug 'Converted flow dto: {}', editFieldFlowDto.toString()
-        editFlowService.saveEditFlowModel(params.get(ENTITY_CLASS_NAME), params.get(ENTITY_ID), editFieldFlowDto)
+        editFlowService.saveEditFlowModel(editFieldFlowDto)
         // send enter message (with back path, (POST MVP): options to check, print previous value)
-        if (isLocalizedField(editFieldFlowDto.fieldName, params.get(ENTITY_CLASS_NAME))) {
+        if (isLocalizedField(editFieldFlowDto.fieldName, editFieldFlowDto.entityClass)) {
             botMessagesService.editFlowCurrentValueMessage(editFlowService.getCurrentValue(true))
             botMessagesService.editFlowChooseLangMessage()
         } else if (isBooleanField()) {
@@ -112,9 +106,7 @@ class EditFieldController extends AbstractBotController {
             botMessagesService.editFlowSuccessMessage(editFlow.successMessage, input == null)
             botMessagesService.deleteEditFlowChooseLangMessage()
             botMessagesService.updateEditFlowCurrentValueMessage(editFlowService.currentValue, isBooleanField())
-            Map<String, String> params = [:]
-            params.putAll(editFlow.params)
-            setRedirectParams(params)
+            setRedirectParams([:] + editFlow.params)
             editFlowService.deleteOldFlow()
             return editFlow.successPath ?: Constants.COMMON.TO_MAIN
         } catch (ConstraintViolationException ex) {

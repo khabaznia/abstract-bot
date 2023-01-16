@@ -14,8 +14,7 @@ import org.springframework.stereotype.Component
 @ToString(includeSuper = true)
 class EditEntryFlowDto extends EditFlowDto {
 
-    Class entityClass
-    Long entityId
-    // OR
     Object entityToEdit
+    // OR set class and
+    Long entityId
 }

@@ -1,5 +1,6 @@
 package com.khabaznia.bots.core.flow.util
 
+import com.khabaznia.bots.core.flow.annotation.Editable
 import com.khabaznia.bots.core.flow.dto.*
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
@@ -15,40 +16,38 @@ import static com.khabaznia.bots.core.meta.Emoji.THUMB_UP
 @Component
 class FlowConversionUtil implements BaseRequests {
 
-    public static final String ENTITY_CLASS_NAME = 'entityClassName'
+    public static final String ENTITY_CLASS_NAME = 'entityClass'
     public static final String ENTITY_ID = 'entityId'
     private static final String REDIRECT_PARAMS_PREFIX = 'FLOW_REDIRECT_PARAM__'
+    public static final String MESSAGE_BINDING_PARAMS_PREFIX = 'MESSAGE_BINDING_PARAM__'
+    public static final String FLOW_PARAM_PREFIX = 'flow_param__'
 
     ConfirmationFlowDto getConfirmationFlowDto(Map<String, String> allParams) {
+        allParams = getPrefixUnmappedParams(allParams, FLOW_PARAM_PREFIX)
         def dto = fillDto(allParams, confirmationFlowDto)
-        setParams(getRedirectParams(allParams), dto, 'redirectParams')
-        setParams(allParams, dto, 'menuTextBinding')
+        dto.redirectParams(getPrefixUnmappedParams(allParams, REDIRECT_PARAMS_PREFIX))
+        dto.menuTextBinding(getPrefixUnmappedParams(allParams, MESSAGE_BINDING_PARAMS_PREFIX))
     }
 
     def <T extends EditFlowDto> T getEditFieldFlowDto(Class<T> editFlowDtoClass, Map<String, String> allParams) {
+        allParams = getPrefixUnmappedParams(allParams, FLOW_PARAM_PREFIX)
         def dto = fillDto(allParams, get(editFlowDtoClass))
-        setParams(getRedirectParams(allParams), dto, 'redirectParams')
-        setParams(allParams, dto, 'enterTextBinding')
+        dto.redirectParams(getPrefixUnmappedParams(allParams, REDIRECT_PARAMS_PREFIX))
+        dto.enterTextBinding(getPrefixUnmappedParams(allParams, MESSAGE_BINDING_PARAMS_PREFIX))
+        dto
     }
 
     static InlineButton fillEditFlowButton(InlineButton inlineButton, String text, EditFlowDto editFlowDto, String emoji = null) {
         inlineButton.callbackData(getPath(editFlowDto))
-                .params(populateParams(editFlowDto))
-                .text(text)
+                .params(getPrefixMappedParams(getEditFLowDtoParams(editFlowDto), FLOW_PARAM_PREFIX))
+                .text(text ?: getFieldDefaultMessage(editFlowDto as EditFieldFlowDto))
                 .emoji(emoji)
         inlineButton
     }
 
     static InlineButton fillConfirmationButton(InlineButton inlineButton, String text, ConfirmationFlowDto confirmationFlowDto, String emoji = null) {
         inlineButton.callbackData(CONFIRMATION_MENU)
-                .params(confirmationFlowDto.getClass()
-                        .declaredFields
-                        .findAll { !it.synthetic }
-                        .findAll { it.name != "redirectParams" }
-                        .findAll { it.name != 'menuTextBinding' }
-                        .collectEntries { field ->
-                            [field.name, confirmationFlowDto."$field.name".toString()]
-                        } << getMappedRedirectParams(confirmationFlowDto.redirectParams) << confirmationFlowDto.menuTextBinding)
+                .params(getPrefixMappedParams(getConfirmationFlowDtoParams(confirmationFlowDto), FLOW_PARAM_PREFIX))
                 .text(text)
                 .emoji(emoji)
         inlineButton
@@ -74,7 +73,6 @@ class FlowConversionUtil implements BaseRequests {
         return dto
     }
 
-
     private static Object getValue(String fieldName, String value, Object dto) {
         if (value == null) value
         // Get class of property: it can be either in this class or in super class
@@ -83,15 +81,13 @@ class FlowConversionUtil implements BaseRequests {
                 : dto.class.superclass
         // 'Cast' it to field class
         def fieldClass = targetFieldClass.getDeclaredField(fieldName).type
+        if (Class.class.isAssignableFrom(fieldClass))
+            return Class.forName(value)
         if (Boolean.class.isAssignableFrom(fieldClass))
             return Boolean.valueOf(value)
         if (Number.class.isAssignableFrom(fieldClass))
             return fieldClass.valueOf(value)
         value
-    }
-
-    private static <T> T setParams(Map<String, String> params, T dto, String fieldName) {
-        dto."$fieldName"(params.findAll { !dto.hasProperty(it.key) })
     }
 
     private static String getPath(EditFlowDto editFlowDto) {
@@ -103,7 +99,21 @@ class FlowConversionUtil implements BaseRequests {
         return null
     }
 
-    private static Map<String, String> populateParams(EditFlowDto editFlowDto) {
+    private static Map<String, String> getConfirmationFlowDtoParams(ConfirmationFlowDto confirmationFlowDto) {
+        def resultParams = confirmationFlowDto.getClass()
+                .declaredFields
+                .findAll { !it.synthetic }
+                .findAll { it.name != "redirectParams" }
+                .findAll { it.name != 'menuTextBinding' }
+                .collectEntries { field ->
+                    [field.name, confirmationFlowDto."$field.name".toString()]
+                } as Map<String, String>
+        resultParams << redirectParams(confirmationFlowDto.redirectParams)
+        resultParams << messageBindingParams(confirmationFlowDto.menuTextBinding)
+        resultParams
+    }
+
+    static Map<String, String> getEditFLowDtoParams(EditFlowDto editFlowDto) {
         def resultParams = (editFlowDto.getClass().declaredFields + editFlowDto.getClass().getSuperclass().declaredFields)
                 .findAll { !it.synthetic }
                 .findAll { it.name != "entityToEdit" }
@@ -113,40 +123,56 @@ class FlowConversionUtil implements BaseRequests {
                 .collectEntries { field ->
                     [field.name, editFlowDto."$field.name".toString()]
                 } as Map<String, String>
-        resultParams << getMappedRedirectParams(editFlowDto.redirectParams)
-        resultParams << editFlowDto.enterTextBinding
+        resultParams << redirectParams(editFlowDto.redirectParams)
+        resultParams << messageBindingParams(editFlowDto.enterTextBinding)
         switch (editFlowDto.class) {
-            case (EditFieldFlowDto): populateEditEntryFlowDtoParams(resultParams, editFlowDto as EditFieldFlowDto); break
-            case (EditEntryFlowDto): populateEditEntryFlowDtoParams(resultParams, editFlowDto as EditEntryFlowDto); break
-            case (EditEntriesFlowDto): populateEditEntriesFlowDtoParams(resultParams, editFlowDto as EditEntriesFlowDto); break
+            case (EditFieldFlowDto): populateEntityData(resultParams, editFlowDto as EditFieldFlowDto); break
+            case (EditEntryFlowDto): populateEntityData(resultParams, editFlowDto as EditEntryFlowDto); break
+            case (EditEntriesFlowDto): populateEntryClass(resultParams, editFlowDto as EditEntriesFlowDto); break
         }
         resultParams
     }
 
-    static void populateEditEntryFlowDtoParams(Map<String, String> resultParams, EditFieldFlowDto dto) {
-        resultParams.put(ENTITY_CLASS_NAME, dto.entityToEdit.class.name)
-        resultParams.put(ENTITY_ID, dto.entityToEdit.id.toString())
-    }
-
-    static void populateEditEntryFlowDtoParams(Map<String, String> resultParams, EditEntryFlowDto dto) {
-        resultParams.put(ENTITY_CLASS_NAME, (dto.entityClass ?: dto.entityToEdit.class).name)
+    static Map<String, String> populateEntityData(Map<String, String> resultParams, EditFlowDto dto) {
+        resultParams.put(ENTITY_CLASS_NAME, getEditFlowDtoEntityClass(dto).name)
         resultParams.put(ENTITY_ID, dto.entityId ? dto.entityId.toString() : dto.entityToEdit.id.toString())
+        resultParams
     }
 
-    static void populateEditEntriesFlowDtoParams(Map<String, String> resultParams, EditEntriesFlowDto dto) {
+    static Map<String, String> populateEntryClass(Map<String, String> resultParams, EditEntriesFlowDto dto) {
         resultParams.put(ENTITY_CLASS_NAME, (dto.entityClass.name))
+        resultParams
     }
 
-    private static Map<String, String> getMappedRedirectParams(Map<String, String> params) {
-        params.collectEntries { [(REDIRECT_PARAMS_PREFIX.concat(it.key)): it.value] } as Map<String, String>
+    static Map<String, String> redirectParams(Map<String, String> params) {
+        getPrefixMappedParams(params, REDIRECT_PARAMS_PREFIX)
     }
 
-    private static Map<String, String> getRedirectParams(Map<String, String> allParams) {
-        allParams.findAll { it.key.startsWith(REDIRECT_PARAMS_PREFIX) }
-                .collectEntries { [(it.key.substring(REDIRECT_PARAMS_PREFIX.length())): it.value] }
+    static Map<String, String> messageBindingParams(Map<String, String> params) {
+        getPrefixMappedParams(params, MESSAGE_BINDING_PARAMS_PREFIX)
+    }
+
+    static Map<String, String> getPrefixMappedParams(Map<String, String> params, String prefix) {
+        params.collectEntries { [(prefix.concat(it.key)): it.value] } as Map<String, String>
+    }
+
+    private static Map<String, String> getPrefixUnmappedParams(Map<String, String> allParams, String prefix) {
+        allParams.findAll { it.key.startsWith(prefix) }
+                .collectEntries { [(it.key.substring(prefix.length())): it.value] }
     }
 
     private static String getNullableValue(String value) {
         value == 'null' ? null : value
+    }
+
+    private static String getFieldDefaultMessage(EditFieldFlowDto dto) {
+        getEditFlowDtoEntityClass(dto)
+                ?.getDeclaredField(dto.fieldName)
+                ?.getAnnotation(Editable.class)
+                ?.fieldButtonMessage()
+    }
+
+    private static Class getEditFlowDtoEntityClass(EditFlowDto dto) {
+        dto.entityClass ?: dto.entityToEdit.class
     }
 }
