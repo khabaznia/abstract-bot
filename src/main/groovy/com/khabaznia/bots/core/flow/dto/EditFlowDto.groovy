@@ -10,6 +10,8 @@ import groovy.transform.builder.SimpleStrategy
 @ToString
 abstract class EditFlowDto {
 
+    Class entityClass
+
     String enterText
     Map<String, String> enterTextBinding = [:]
 

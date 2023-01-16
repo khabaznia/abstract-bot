@@ -12,9 +12,12 @@ import org.springframework.stereotype.Component
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
 @ToString(includeSuper = true)
-class EditFieldFlowDto extends EditFlowDto{
+class EditFieldFlowDto extends EditFlowDto {
 
     Object entityToEdit
+    // OR set class and id
+    Long entityId
+
     String fieldName
     String successText
 }

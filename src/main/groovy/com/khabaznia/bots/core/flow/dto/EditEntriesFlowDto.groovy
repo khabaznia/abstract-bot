@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component
 @ToString(includeSuper = true)
 class EditEntriesFlowDto extends EditFlowDto {
 
-    Class entityClass
     Boolean canCreate = false
     Boolean canDelete = false
 }

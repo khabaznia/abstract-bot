@@ -1,5 +1,6 @@
 package com.khabaznia.bots.core.service
 
+import com.khabaznia.bots.core.flow.dto.EditEntryFlowDto
 import com.khabaznia.bots.core.meta.Emoji
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
@@ -16,6 +17,7 @@ import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER
 import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI
 import static com.khabaznia.bots.core.flow.service.EditFlowService.enterMessage
 import static com.khabaznia.bots.core.flow.service.EditFlowService.isValueClearingEnabled
+import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.*
 import static com.khabaznia.bots.core.routing.Constants.AVAILABLE_LOCALES
 import static com.khabaznia.bots.core.util.SessionUtil.currentUser
 import static org.apache.groovy.parser.antlr4.util.StringUtils.isEmpty
@@ -29,6 +31,8 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
     private static final Map<String, String> BOOLEAN_VALUES_MAPPING = [(Boolean.TRUE.toString()): Emoji.CHECKED_MARK, (Boolean.FALSE.toString()): Emoji.CROSS_MARK]
     @Autowired
     private DefaultRequestContainer requests
+    @Autowired
+    private MessageService messageService
 
     BaseRequest sendExceptionMessage(String message, Map<String, String> binding) {
         sendMessage.text(message).binding(binding)
@@ -88,9 +92,12 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
                 .delete()
     }
 
-    void editFlowEntityFieldsSelectMessage(Map<String, String> fields, Map<String, String> params, String backPath) {
-        requests << sendMessage.text('text.edit.flow.select.field.to.edit')
-                .keyboard(setEditableFieldsButtons(inlineKeyboard, fields, params, backPath))
+    void editFlowEntityFieldsSelectMessage(Map<String, String> fields, EditEntryFlowDto editEntryFlowDto) {
+        InlineKeyboard keyboard = mapEditEntryFieldsToKeyboardButtons(fields, editEntryFlowDto)
+        keyboard.row().button('button.back', Emoji.LEFT_ARROW, editEntryFlowDto.backPath)
+        requests << sendMessage.text(editEntryFlowDto.enterText ?: 'text.edit.flow.select.field.to.edit')
+                .binding(editEntryFlowDto.enterTextBinding)
+                .keyboard(keyboard)
                 .delete()
     }
 
@@ -106,14 +113,17 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
         inlineKeyboard
     }
 
-    private InlineKeyboard setEditableFieldsButtons(InlineKeyboard inlineKeyboard, Map<String, String> fields, Map<String, String> params, String backPath) {
+    private InlineKeyboard mapEditEntryFieldsToKeyboardButtons(Map<String, String> fields, EditEntryFlowDto editEntryFlowDto) {
+        def keyboard = inlineKeyboard
         fields.each {
-            inlineKeyboard.button(it.value, editFieldFlowDto
-                    .successPath(EDIT_ENTITY_ENTER)
-                    .redirectParams(params)
-                    .fieldName(it.key))
+            keyboard.button(it.value, editFieldFlowDto
+                    .fieldName(it.key)
+                    .entityId(editEntryFlowDto.entityId)
+                    .entityClass(editEntryFlowDto.entityClass)
+                    .redirectParams(getPrefixMappedParams(getEditFLowDtoParams(editEntryFlowDto), FLOW_PARAM_PREFIX))
+                    .successPath(EDIT_ENTITY_ENTER))
         }
-        inlineKeyboard.row().button('button.back', Emoji.LEFT_ARROW, backPath)
+        keyboard
     }
 
     private static String getEditFlowCurrentValueText(String currentValue) {

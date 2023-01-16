@@ -2,7 +2,6 @@ package com.khabaznia.bots.core.meta.keyboard.impl
 
 import com.khabaznia.bots.core.enums.ButtonType
 import com.khabaznia.bots.core.flow.dto.ConfirmationFlowDto
-import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
 import com.khabaznia.bots.core.flow.dto.EditFlowDto
 import com.khabaznia.bots.core.meta.keyboard.Keyboard
 import groovy.transform.TupleConstructor
@@ -175,6 +174,7 @@ class InlineKeyboard extends Keyboard<InlineButton> {
         this
     }
 
+    // Set text null if you want to use default field name. Only for EditFieldFlowDto
     InlineKeyboard button(String text, String emoji = null, EditFlowDto editFlowDto) {
         currentRow.add fillEditFlowButton(button, text, editFlowDto, emoji)
         this
