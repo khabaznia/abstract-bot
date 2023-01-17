@@ -21,7 +21,7 @@ import static com.khabaznia.bots.core.flow.service.EditFlowService.*
 import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.*
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.AVAILABLE_LOCALES
-import static com.khabaznia.bots.core.util.SessionUtil.currentUser
+import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 import static org.apache.groovy.parser.antlr4.util.StringUtils.isEmpty
 
 @Slf4j
@@ -45,7 +45,7 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
         def message = sendMessage.text(text ?: enterMessage ?: getDefaultEditFlowEnterMessage())
                 .binding(binding)
                 .delete() as SendMessage
-        if (isValueClearingEnabled() && !isEmpty(currentUser.editFlow.oldValue?.strip())) {
+        if (isValueClearingEnabled() && !isEmpty(currentChat.editFlow.oldValue?.strip())) {
             message.keyboard(inlineKeyboard.button('button.edit.flow.clear.value', EDIT_FIELD_CLEAR_VALUE))
         }
         requests << message
@@ -55,13 +55,13 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
         if (isNew) return
         requests << sendMessage.text(getEditFlowCurrentValueText(currentValue))
                 .binding([value: getEditFlowMappedBooleanValue(isBooleanValue, currentValue)])
-                .label(currentUser.code.concat(EDIT_FLOW_CURRENT_VALUE_MESSAGE))
+                .label(currentChat.code.concat(EDIT_FLOW_CURRENT_VALUE_MESSAGE))
     }
 
     void updateEditFlowCurrentValueMessage(String currentValue, boolean isBooleanValue = false) {
-        if (currentUser.editFlow.oldValue != currentValue) requests << editMessage.text(getEditFlowCurrentValueText(currentValue))
+        if (currentChat.editFlow.oldValue != currentValue) requests << editMessage.text(getEditFlowCurrentValueText(currentValue))
                 .binding([value: getEditFlowMappedBooleanValue(isBooleanValue, currentValue)])
-                .label(currentUser.code.concat(EDIT_FLOW_CURRENT_VALUE_MESSAGE))
+                .label(currentChat.code.concat(EDIT_FLOW_CURRENT_VALUE_MESSAGE))
                 .delete()
     }
 
@@ -74,13 +74,13 @@ class BotMessagesService implements BaseRequests, Loggable, Configurable {
     void updateEditFlowChooseLangMenu(String lang) {
         requests << sendMessage.text('text.edit.flow.chosen.lang')
                 .binding([lang: LANG_EMOJI[lang]])
-                .label(currentUser.code.concat(EDIT_FLOW_UPDATE_MESSAGE))
+                .label(currentChat.code.concat(EDIT_FLOW_UPDATE_MESSAGE))
                 .delete()
     }
 
     void deleteEditFlowChooseLangMessage(String isLocalizedField) {
         if (isLocalizedField)
-            requests << deleteMessage.label(currentUser.code.concat(EDIT_FLOW_UPDATE_MESSAGE))
+            requests << deleteMessage.label(currentChat.code.concat(EDIT_FLOW_UPDATE_MESSAGE))
     }
 
     void editBooleanFieldMenu() {

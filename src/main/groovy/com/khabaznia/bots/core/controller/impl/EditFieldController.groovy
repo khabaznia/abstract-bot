@@ -25,7 +25,7 @@ import static com.khabaznia.bots.core.flow.service.EditFlowService.isBooleanFiel
 import static com.khabaznia.bots.core.flow.service.EditFlowService.isLocalizedField
 import static com.khabaznia.bots.core.flow.service.EditFlowService.getEntityEditableIdFieldName
 import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.*
-import static com.khabaznia.bots.core.util.SessionUtil.currentUser
+import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
 
 @Slf4j
@@ -123,13 +123,13 @@ class EditFieldController extends AbstractBotController {
     private void editLocalizedFieldInternal(String lang) {
         messages.updateEditFlowChooseLangMenu(lang)
         editFlowService.setFieldLang(lang)
-        def editFlow = currentUser.editFlow
+        def editFlow = currentChat.editFlow
         messages.editFlowEnterMessage(editFlow.enterText, editFlow.enterTextBinding)
     }
 
     private String editFieldInternal(String input = null) {
         try {
-            def editFlow = currentUser.editFlow
+            def editFlow = currentChat.editFlow
             editFlowService.updateEntityWithInput(input)
             messages.editFlowSuccessMessage(editFlow.successMessage, input == null)
             messages.deleteEditFlowChooseLangMessage(editFlow.lang)

@@ -3,6 +3,7 @@ package com.khabaznia.bots.core.flow.service
 import com.khabaznia.bots.core.flow.annotation.Editable
 import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
 import com.khabaznia.bots.core.flow.validation.InputNumberValidator
+import com.khabaznia.bots.core.model.Chat
 import com.khabaznia.bots.core.model.EditFlow
 import com.khabaznia.bots.core.model.User
 import com.khabaznia.bots.core.repository.EditFlowRepository
@@ -18,7 +19,7 @@ import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
 import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI
-import static com.khabaznia.bots.core.util.SessionUtil.currentUser
+import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 import static java.lang.System.lineSeparator
 import static javax.validation.Validation.buildDefaultValidatorFactory
 
@@ -39,7 +40,7 @@ class EditFlowService {
 
     void saveEditFlowModel(EditFieldFlowDto editFieldFlowDto) {
         deleteOldFlow()
-        def user = currentUser
+        def chat = currentChat
         def newEditFlowModel = new EditFlow(entityClassName: editFieldFlowDto.entityClass.name,
                 entityId: editFieldFlowDto.entityId,
                 fieldName: editFieldFlowDto.fieldName,
@@ -48,35 +49,35 @@ class EditFlowService {
                 successMessage: editFieldFlowDto.successText,
                 successPath: editFieldFlowDto.successPath,
                 params: editFieldFlowDto.redirectParams)
-        saveOldValue(editFieldFlowDto, newEditFlowModel, user)
-        userService.updateUser(user)
+        saveOldValue(editFieldFlowDto, newEditFlowModel, chat)
+        userService.updateChat(chat)
     }
 
     void updateEntityWithInput(String input) {
-        validateInput(input, currentUser.editFlow.fieldName)
+        validateInput(input, currentChat.editFlow.fieldName)
         def entity = getFilledEntity(input)
         entityManager.persist(entity)
         entityManager.flush()
     }
 
     void setFieldLang(String lang) {
-        def editFlow = currentUser.editFlow
+        def editFlow = currentChat.editFlow
         editFlow.setLang(lang)
         editFlowRepository.save(editFlow)
     }
 
     void deleteOldFlow() {
-        def user = currentUser
-        def oldDraft = user.editFlow
+        def chat = currentChat
+        def oldDraft = chat.editFlow
         if (oldDraft) {
-            user.editFlow = null
-            userService.updateUser(user)
+            chat.editFlow = null
+            userService.updateChat(chat)
             editFlowRepository.delete(oldDraft)
         }
     }
 
     String getCurrentValue(boolean localized = false, EditFlow editFlow = null) {
-        editFlow = editFlow ?: currentUser.editFlow
+        editFlow = editFlow ?: currentChat.editFlow
         isLocalized(editFlow) || localized
                 ? getLocalizedCurrentValue(editFlow)
                 : getCurrentValueInternal(editFlow)?.toString()
@@ -93,18 +94,18 @@ class EditFlowService {
     }
 
     static boolean isBooleanField() {
-        def editFlow = currentUser.editFlow
+        def editFlow = currentChat.editFlow
         Class.forName(editFlow.entityClassName).getDeclaredField(editFlow.fieldName)
                 .type.isAssignableFrom(Boolean.class)
     }
 
     static String getEnterMessage() {
-        getEntityClass().getDeclaredField(currentUser.editFlow.fieldName)
+        getEntityClass().getDeclaredField(currentChat.editFlow.fieldName)
                 .getAnnotation(Editable.class).enterMessage()
     }
 
     static boolean isValueClearingEnabled() {
-        getEntityClass().getDeclaredField(currentUser.editFlow.fieldName)
+        getEntityClass().getDeclaredField(currentChat.editFlow.fieldName)
                 .getAnnotation(Editable.class).enableClear()
     }
 
@@ -126,10 +127,10 @@ class EditFlowService {
                 .getAnnotation(Editable.class).fieldButtonMessage()
     }
 
-    private void saveOldValue(EditFieldFlowDto editFieldFlowDto, EditFlow editFlowModel, User user) {
+    private void saveOldValue(EditFieldFlowDto editFieldFlowDto, EditFlow editFlowModel, Chat chat) {
         def oldValue = getCurrentValue(isLocalizedField(editFieldFlowDto.fieldName, editFieldFlowDto.entityClass), editFlowModel)
         editFlowModel.oldValue = oldValue
-        user.editFlow = editFlowModel
+        chat.editFlow = editFlowModel
     }
 
     private static validateInput(String input, String fieldName) {
@@ -140,7 +141,7 @@ class EditFlowService {
     }
 
     private Object getFilledEntity(String input) {
-        def editFlow = currentUser.editFlow
+        def editFlow = currentChat.editFlow
         def entityClass = getEntityClass(editFlow)
         def entity = editFlow.entityId
                 ? entityManager.find(entityClass, editFlow.entityId)
@@ -203,6 +204,6 @@ class EditFlowService {
     }
 
     private static Class<?> getEntityClass(EditFlow editFlow = null) {
-        Class.forName((editFlow ?: currentUser.editFlow).entityClassName)
+        Class.forName((editFlow ?: currentChat.editFlow).entityClassName)
     }
 }
