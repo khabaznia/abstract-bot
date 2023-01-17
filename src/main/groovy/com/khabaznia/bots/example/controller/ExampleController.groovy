@@ -2,6 +2,7 @@ package com.khabaznia.bots.example.controller
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.enums.MessageFeature
+import com.khabaznia.bots.core.flow.dto.EditEntitiesFlowKeyboardDto
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Localized
@@ -9,6 +10,7 @@ import com.khabaznia.bots.core.service.DeepLinkingPathService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.example.job.ExampleJob
 import com.khabaznia.bots.example.model.ExampleModel
+import com.khabaznia.bots.example.service.ExampleMessagesService
 import com.khabaznia.bots.example.service.ExampleModelService
 import com.khabaznia.bots.example.stub.StubService
 import groovy.util.logging.Slf4j
@@ -38,6 +40,8 @@ class ExampleController extends AbstractBotController {
     private DeepLinkingPathService deepLinkingPathService
     @Autowired
     private ExampleModelService exampleModelService
+    @Autowired
+    private ExampleMessagesService messages
 
     @Localized
     @BotRequest(path = EXAMPLE, enableDuplicateRequests = true)
@@ -46,7 +50,7 @@ class ExampleController extends AbstractBotController {
                 .text('Here is your reply keyboard')
                 .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
                                 [JOB_TEST, SEND_MEDIA],
-                                [EDIT_FLOW, TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
+                                [EDIT_FLOW, '/editEntriesOfExample', TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
     }
 
     @Localized
@@ -211,7 +215,7 @@ class ExampleController extends AbstractBotController {
                                 .fieldName('field1')
                                 .entityToEdit(model)
                                 .successPath(EXAMPLE))
-                        .button('Super -flag', editFieldFlowDto
+                        .button('Super-flag', editFieldFlowDto
                                 .entityToEdit(model)
                                 .fieldName('flag')
                                 .successText('Yeap! updated')
@@ -223,18 +227,33 @@ class ExampleController extends AbstractBotController {
                                 .entityClass(model.class)
                                 .successPath(EDIT_FLOW))
                         .row()
-                        .button('Edit entry ', editEntryFlowDto
+                        .button('Edit enitty ', editEntityFlowDto
                                 .entityToEdit(model)
-                                .enterTextBinding([entryName: model.name.find().value.toString()])
-                                .enterText('you are going to edit $entryName')
+                                .enterTextBinding([entityName: 'someName'])
+                                .enterText('you are going to edit $entityName')
                                 .successPath('/queryWithParam')
                                 .backPath(EDIT_FLOW)
                                 .redirectParams([someUniqueId: 'someUniqueId']))
                         .row()
-                        .button('Edit entries of class ExampleModel', editEntriesFlowDto
-                                .canCreate(true)
-                                .canDelete(true)
-                                .entityClass(ExampleModel.class)))
+                        .button('Edit entries of class ExampleModel', '/editEntriesOfExample'))
+    }
+
+    @BotRequest(path = '/editEntriesOfExample')
+    editEntries(String myCustomParam) {
+        if (myCustomParam) sendMessage.text myCustomParam
+        sendMessage.text('Choose action')
+                .keyboard(messages.editFlowEntriesSelectMessage(new EditEntitiesFlowKeyboardDto<ExampleModel>()
+                        .buttonNameRetrieverFunction({ it.field1 })
+                        .entityClass(ExampleModel.class)
+                        .entities(exampleModelService.getAll())
+                        .thisStepPath('/editEntriesOfExample')
+                        .backPath(EDIT_FLOW)
+                        .createNewEntitySuccessMessage('YEEEEEES, CREATED!')
+                        .deleteEntitySuccessMessage("DELETED")
+                        .redirectParams([myCustomParam: 'Some custom param'])
+                        .canCreateNewEntity(true)
+                        .canDeleteEntities(true))
+                )
     }
 
     @Localized

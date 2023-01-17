@@ -17,16 +17,15 @@ class ExampleModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @Editable(localized = true, enableClear = true, id = true,
+    @Editable(localized = true, enableClear = true,
             fieldButtonMessage = 'example.model.localized.name.button.name',
-            enterMessage = 'example.model.enter.message.name'
-    )
+            enterMessage = 'example.model.enter.message.name')
     @ElementCollection
     @CollectionTable(name = 'example_localized_name',
             joinColumns = [@JoinColumn(name = 'id', referencedColumnName = 'id')])
     @MapKeyColumn(name = 'lang')
     @Column(name = 'name', columnDefinition = "TEXT")
-    Map<String, String> name
+    Map<String, String> name = [:]
 
     @Editable(fieldButtonMessage = 'example.model.number.button.name')
     @Min(value = 2L, message = 'example.model.number.min.validation')
@@ -34,7 +33,7 @@ class ExampleModel {
     @Column(name = 'number')
     Integer number
 
-    @Editable(enableClear = true,
+    @Editable(enableClear = true, id = true,
             fieldButtonMessage = 'example.model.field1.button.name',
             enterMessage = 'example.model.enter.message.field1')
     @Pattern(regexp = /..+/, message = 'example.model.field1.pattern.validation')

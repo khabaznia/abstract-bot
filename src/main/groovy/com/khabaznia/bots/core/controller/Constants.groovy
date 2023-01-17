@@ -11,13 +11,14 @@ class Constants {
     }
 
     static final class EDIT_FIELD_CONTROLLER {
-        public static final String EDIT_ENTRIES_FOR_CLASS_ENTER = '/editEntriesForClassEnter'
         public static final String EDIT_FIELD_ENTER = '/editFieldEnter'
         public static final String EDIT_LOCALIZED_FIELD_MENU = '/editLocalizedFieldMenu'
         public static final String EDIT_BOOLEAN_FIELD = '/editBooleanFieldMenu'
         public static final String EDIT_ENTITY_ENTER = '/editEntityEnter'
         public static final String EDIT_FIELD_VALIDATION_FAILED = '/editFieldValidationFailed'
         public static final String EDIT_FIELD_CLEAR_VALUE = '/editFieldClearValue'
+        public static final String CREATE_NEW_ENTITY = '/createNewEntity'
+        public static final String DELETE_ENTITY = '/deleteEntity'
     }
 
     static final class LANG_CONTROLLER {

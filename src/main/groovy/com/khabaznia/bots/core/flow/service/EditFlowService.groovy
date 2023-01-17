@@ -40,17 +40,15 @@ class EditFlowService {
     void saveEditFlowModel(EditFieldFlowDto editFieldFlowDto) {
         deleteOldFlow()
         def user = currentUser
-        def newEditFlowModel = new EditFlow(
-                entityClassName: editFieldFlowDto.entityClass.name,
+        def newEditFlowModel = new EditFlow(entityClassName: editFieldFlowDto.entityClass.name,
                 entityId: editFieldFlowDto.entityId,
                 fieldName: editFieldFlowDto.fieldName,
                 enterText: editFieldFlowDto.enterText,
                 enterTextBinding: editFieldFlowDto.enterTextBinding,
                 successMessage: editFieldFlowDto.successText,
                 successPath: editFieldFlowDto.successPath,
-                params: editFieldFlowDto.redirectParams
-        )
-        updateOldValue(editFieldFlowDto, newEditFlowModel, user)
+                params: editFieldFlowDto.redirectParams)
+        saveOldValue(editFieldFlowDto, newEditFlowModel, user)
         userService.updateUser(user)
     }
 
@@ -77,6 +75,18 @@ class EditFlowService {
         }
     }
 
+    String getCurrentValue(boolean localized = false, EditFlow editFlow = null) {
+        editFlow = editFlow ?: currentUser.editFlow
+        isLocalized(editFlow) || localized
+                ? getLocalizedCurrentValue(editFlow)
+                : getCurrentValueInternal(editFlow)?.toString()
+    }
+
+    void deleteEntity(Class entityClass, Long entityId) {
+        def entity = entityManager.find(entityClass, entityId)
+        entityManager.remove(entity)
+    }
+
     static boolean isLocalizedField(String fieldName, Class entityClass) {
         entityClass.getDeclaredField(fieldName)
                 .getAnnotation(Editable.class).localized()
@@ -98,36 +108,43 @@ class EditFlowService {
                 .getAnnotation(Editable.class).enableClear()
     }
 
-    String getCurrentValue(boolean localized = false, EditFlow editFlow = null) {
-        editFlow = editFlow ?: currentUser.editFlow
-        isLocalized(editFlow) || localized
-                ? lineSeparator().concat(getLocalizedCurrentValues(editFlow))
-                : getCurrentValueInternal(editFlow)?.toString()
-    }
-
     static Map<String, String> getEditableFields(Class entityClass) {
         entityClass.getDeclaredFields()
                 .findAll { it.getAnnotation(Editable.class) != null }
                 .collectEntries { [(it.name): (it.getAnnotation(Editable.class).fieldButtonMessage() ?: it.name)] }
     }
 
-    private void updateOldValue(EditFieldFlowDto editFieldFlowDto, EditFlow newEditFlowModel, User user) {
-        def oldValue = getCurrentValue(isLocalizedField(editFieldFlowDto.fieldName, editFieldFlowDto.entityClass), newEditFlowModel)
-        newEditFlowModel.oldValue = oldValue
-        user.editFlow = newEditFlowModel
+    static String getEntityEditableIdFieldName(Class entityClass) {
+        entityClass.getDeclaredFields()
+                .find { it.getAnnotation(Editable.class)?.id() }
+                .name
+    }
+
+    static String getDefaultMessageOfIdField(Class entityClass) {
+        entityClass.getDeclaredFields()
+                .find { it.getAnnotation(Editable.class)?.id() }
+                .getAnnotation(Editable.class).fieldButtonMessage()
+    }
+
+    private void saveOldValue(EditFieldFlowDto editFieldFlowDto, EditFlow editFlowModel, User user) {
+        def oldValue = getCurrentValue(isLocalizedField(editFieldFlowDto.fieldName, editFieldFlowDto.entityClass), editFlowModel)
+        editFlowModel.oldValue = oldValue
+        user.editFlow = editFlowModel
     }
 
     private static validateInput(String input, String fieldName) {
         validateNumberField(fieldName, input)
         def constraintViolations =
                 buildDefaultValidatorFactory().getValidator().validateValue(getEntityClass(), fieldName, getClassSpecificValue(input, fieldName))
-        if (!constraintViolations.findAll().isEmpty())
-            throw new ConstraintViolationException('Validation of input failed', constraintViolations)
+        if (!constraintViolations.findAll().isEmpty()) throw new ConstraintViolationException('Validation of input failed', constraintViolations)
     }
 
     private Object getFilledEntity(String input) {
         def editFlow = currentUser.editFlow
-        def entity = entityManager.find(getEntityClass(editFlow), editFlow.entityId)
+        def entityClass = getEntityClass(editFlow)
+        def entity = editFlow.entityId
+                ? entityManager.find(entityClass, editFlow.entityId)
+                : entityClass.getDeclaredConstructor().newInstance()
         fillEntity(input, entity, editFlow)
         entity
     }
@@ -141,17 +158,11 @@ class EditFlowService {
     }
 
     private static Object getClassSpecificValue(String input, String fieldName) {
-        if (isNumber(fieldName))
-            return getNumberValue(fieldName, input)
-        else if (isBoolean(fieldName))
-            return Boolean.valueOf(input)
-        else
-            return input
+        if (isNumber(fieldName)) return getNumberValue(fieldName, input) else if (isBoolean(fieldName)) return Boolean.valueOf(input) else return input
     }
 
     private static void validateNumberField(String fieldName, String input) {
-        if (isNumber(fieldName))
-            InputNumberValidator.validate(input, getFieldClass(fieldName))
+        if (isNumber(fieldName)) InputNumberValidator.validate(input, getFieldClass(fieldName))
     }
 
     private static getNumberValue(String fieldName, String value) {
@@ -177,14 +188,17 @@ class EditFlowService {
         getEntityClass().getDeclaredField(fieldName).type
     }
 
-    private String getLocalizedCurrentValues(EditFlow editFlow) {
-        (getCurrentValueInternal(editFlow) as Map<String, String>)
+    private String getLocalizedCurrentValue(EditFlow editFlow) {
+        def stringValue = getCurrentValueInternal(editFlow)
+        if (!stringValue) return null
+        lineSeparator().concat((stringValue as Map<String, String>)
                 .collectEntries { [(LANG_EMOJI.get(it.key)): it.value] }
                 .collect { "$it.key  $it.value" }
-                .join(lineSeparator())
+                .join(lineSeparator()))
     }
 
     private Object getCurrentValueInternal(EditFlow editFlow) {
+        if (!editFlow.entityId) return null
         entityManager.find(getEntityClass(editFlow), editFlow.entityId)?."${editFlow.fieldName}"
     }
 

@@ -21,8 +21,7 @@ class TestController extends AbstractBotController {
 
     private void doTest() {
         //write your test here
-        sendMessage.text 'try to save'
-        repository.saveAndFlush(new ExampleModel(field2: 'not editable field'))
+
     }
 
     @Secured(roles = Role.ADMIN)
