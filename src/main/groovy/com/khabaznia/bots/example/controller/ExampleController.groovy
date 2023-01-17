@@ -48,9 +48,9 @@ class ExampleController extends AbstractBotController {
     getReply() {
         sendMessage
                 .text('Here is your reply keyboard')
-                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
+                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDIT_FLOW, INTEGRATION_TESTS_KEYBOARD],
                                 [JOB_TEST, SEND_MEDIA],
-                                [EDIT_FLOW, '/editEntriesOfExample', TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
+                                [TEST_COMMANDS, EDITING_MESSAGES], [TO_MAIN.addEmoji(LEFT_ARROW)]])
     }
 
     @Localized
@@ -209,33 +209,36 @@ class ExampleController extends AbstractBotController {
     @BotRequest(path = EDIT_FLOW)
     editFlowExample() {
         def model = exampleModelService.getAll().find()
+        def keyboard = inlineKeyboard
+        if (model)
+            keyboard
+                    .button(null, CHECK, editFieldFlowDto
+                            .fieldName('field1')
+                            .entityToEdit(model)
+                            .successPath(EXAMPLE))
+                    .button('Super-flag', editFieldFlowDto
+                            .entityToEdit(model)
+                            .fieldName('flag')
+                            .successText('Yeap! updated')
+                            .successPath('/queryWithParam')
+                            .redirectParams([someUniqueId: 'someUniqueId']))
+                    .button('localized', FEEDBACK, editFieldFlowDto
+                            .entityId(model.id)
+                            .fieldName('name')
+                            .entityClass(model.class)
+                            .successPath(EDIT_FLOW))
+                    .row()
+                    .button('Edit enitty ', editEntityFlowDto
+                            .entityToEdit(model)
+                            .enterTextBinding([entityName: 'someName'])
+                            .enterText('you are going to edit $entityName')
+                            .successPath('/queryWithParam')
+                            .backPath(EDIT_FLOW)
+                            .redirectParams([someUniqueId: 'someUniqueId']))
+                    .row()
+        keyboard.button('Edit entries of class ExampleModel', '/editEntriesOfExample')
         sendMessage.text('Add new or edit existing')
-                .keyboard(inlineKeyboard
-                        .button(null, CHECK, editFieldFlowDto
-                                .fieldName('field1')
-                                .entityToEdit(model)
-                                .successPath(EXAMPLE))
-                        .button('Super-flag', editFieldFlowDto
-                                .entityToEdit(model)
-                                .fieldName('flag')
-                                .successText('Yeap! updated')
-                                .successPath('/queryWithParam')
-                                .redirectParams([someUniqueId: 'someUniqueId']))
-                        .button('localized', FEEDBACK, editFieldFlowDto
-                                .entityId(model.id)
-                                .fieldName('name')
-                                .entityClass(model.class)
-                                .successPath(EDIT_FLOW))
-                        .row()
-                        .button('Edit enitty ', editEntityFlowDto
-                                .entityToEdit(model)
-                                .enterTextBinding([entityName: 'someName'])
-                                .enterText('you are going to edit $entityName')
-                                .successPath('/queryWithParam')
-                                .backPath(EDIT_FLOW)
-                                .redirectParams([someUniqueId: 'someUniqueId']))
-                        .row()
-                        .button('Edit entries of class ExampleModel', '/editEntriesOfExample'))
+                .keyboard(keyboard)
     }
 
     @BotRequest(path = '/editEntriesOfExample')

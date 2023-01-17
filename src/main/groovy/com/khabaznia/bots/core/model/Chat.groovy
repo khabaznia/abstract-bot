@@ -61,4 +61,9 @@ class Chat {
     @MapKeyColumn(name = "key")
     @Column(name = "value")
     Map<String, String> additionalParams
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = 'edit_flow')
+    EditFlow editFlow
 }

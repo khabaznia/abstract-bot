@@ -35,9 +35,4 @@ class User {
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = 'subscription_id')
     Subscription subscription
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.JOIN)
-    @JoinColumn(name = 'edit_flow')
-    EditFlow editFlow
 }
