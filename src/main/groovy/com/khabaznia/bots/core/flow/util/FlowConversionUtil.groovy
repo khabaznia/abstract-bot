@@ -18,7 +18,7 @@ class FlowConversionUtil implements BaseRequests {
 
     public static final String ENTITY_CLASS_NAME = 'entityClass'
     public static final String ENTITY_ID = 'entityId'
-    private static final String REDIRECT_PARAMS_PREFIX = 'FLOW_REDIRECT_PARAM__'
+    public static final String REDIRECT_PARAMS_PREFIX = 'FLOW_REDIRECT_PARAM__'
     public static final String MESSAGE_BINDING_PARAMS_PREFIX = 'MESSAGE_BINDING_PARAM__'
     public static final String FLOW_PARAM_PREFIX = 'flow_param__'
 
@@ -93,8 +93,9 @@ class FlowConversionUtil implements BaseRequests {
     private static String getPath(EditFlowDto editFlowDto) {
         switch (editFlowDto.class) {
             case (EditFieldFlowDto.class): return EDIT_FIELD_ENTER
-            case (EditEntryFlowDto.class): return EDIT_ENTITY_ENTER
-            case (EditEntriesFlowDto.class): return EDIT_ENTRIES_FOR_CLASS_ENTER
+            case (EditEntityFlowDto.class): return EDIT_ENTITY_ENTER
+            case (DeleteEntityFlowDto.class): return DELETE_ENTITY
+            case (CreateNewEntityFlowDto.class): return CREATE_NEW_ENTITY
         }
         return null
     }
@@ -125,23 +126,14 @@ class FlowConversionUtil implements BaseRequests {
                 } as Map<String, String>
         resultParams << redirectParams(editFlowDto.redirectParams)
         resultParams << messageBindingParams(editFlowDto.enterTextBinding)
-        switch (editFlowDto.class) {
-            case (EditFieldFlowDto): populateEntityData(resultParams, editFlowDto as EditFieldFlowDto); break
-            case (EditEntryFlowDto): populateEntityData(resultParams, editFlowDto as EditEntryFlowDto); break
-            case (EditEntriesFlowDto): populateEntryClass(resultParams, editFlowDto as EditEntriesFlowDto); break
-        }
+        populateEntityData(resultParams, editFlowDto)
         resultParams
     }
 
-    static Map<String, String> populateEntityData(Map<String, String> resultParams, EditFlowDto dto) {
+    static void populateEntityData(Map<String, String> resultParams, EditFlowDto dto) {
         resultParams.put(ENTITY_CLASS_NAME, getEditFlowDtoEntityClass(dto).name)
-        resultParams.put(ENTITY_ID, dto.entityId ? dto.entityId.toString() : dto.entityToEdit.id.toString())
-        resultParams
-    }
-
-    static Map<String, String> populateEntryClass(Map<String, String> resultParams, EditEntriesFlowDto dto) {
-        resultParams.put(ENTITY_CLASS_NAME, (dto.entityClass.name))
-        resultParams
+        if (dto.hasProperty('entityId'))
+            resultParams.put(ENTITY_ID, dto.entityId ? dto.entityId.toString() : dto.entityToEdit.id.toString())
     }
 
     static Map<String, String> redirectParams(Map<String, String> params) {
@@ -156,7 +148,7 @@ class FlowConversionUtil implements BaseRequests {
         params.collectEntries { [(prefix.concat(it.key)): it.value] } as Map<String, String>
     }
 
-    private static Map<String, String> getPrefixUnmappedParams(Map<String, String> allParams, String prefix) {
+    static Map<String, String> getPrefixUnmappedParams(Map<String, String> allParams, String prefix) {
         allParams.findAll { it.key.startsWith(prefix) }
                 .collectEntries { [(it.key.substring(prefix.length())): it.value] }
     }

@@ -7,12 +7,12 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@Component(value = 'editEntryFlowDto')
+@Component(value = 'editEntityFlowDto')
 @Scope("prototype")
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
 @ToString(includeSuper = true)
-class EditEntryFlowDto extends EditFlowDto {
+class EditEntityFlowDto extends EditFlowDto {
 
     Object entityToEdit
     // OR set class and

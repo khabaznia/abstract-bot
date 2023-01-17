@@ -7,13 +7,16 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@Component(value = 'editEntriesFlowDto')
+@Component(value = 'deleteEntityFlowDto')
 @Scope("prototype")
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
 @TupleConstructor(includeSuperFields = true)
 @ToString(includeSuper = true)
-class EditEntriesFlowDto extends EditFlowDto {
+class DeleteEntityFlowDto extends EditFlowDto {
 
-    Boolean canCreate = false
-    Boolean canDelete = false
+    Object entityToEdit
+    // OR set class and id
+    Long entityId
+
+    String successText
 }
