@@ -1,6 +1,9 @@
 package com.khabaznia.bots.core.model
 
+import com.khabaznia.bots.core.flow.enums.FieldType
 import groovy.transform.ToString
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 
 import javax.persistence.*
 
@@ -32,6 +35,10 @@ class EditFlow {
     @Column
     String oldValue
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    FieldType type
+
     @ElementCollection
     @CollectionTable(name = 'edit_flow_enter_text_binding',
             joinColumns = [@JoinColumn(name = 'id', referencedColumnName = 'id')])
@@ -45,4 +52,9 @@ class EditFlow {
     @MapKeyColumn(name = 'key')
     @Column(name = 'value', columnDefinition = "TEXT")
     Map<String, String> params
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = 'child_edit_flow')
+    EditFlow childFlow
 }

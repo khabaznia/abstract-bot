@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.controller.impl
+package com.khabaznia.bots.core.flow.controller
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.flow.dto.CreateNewEntityFlowDto
@@ -6,6 +6,7 @@ import com.khabaznia.bots.core.flow.dto.DeleteEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
 import com.khabaznia.bots.core.flow.service.EditFlowService
+import com.khabaznia.bots.core.flow.util.EditFlowMessages
 import com.khabaznia.bots.core.flow.util.FlowConversionUtil
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
@@ -20,12 +21,8 @@ import javax.validation.ConstraintViolationException
 
 import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.*
-
-import static com.khabaznia.bots.core.flow.service.EditFlowService.isBooleanField
-import static com.khabaznia.bots.core.flow.service.EditFlowService.isLocalizedField
-import static com.khabaznia.bots.core.flow.service.EditFlowService.getEntityEditableIdFieldName
-import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.*
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
+import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.FLOW_PARAM_PREFIX
 import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
 
 @Slf4j
@@ -38,8 +35,7 @@ class EditFieldController extends AbstractBotController {
     @Autowired
     private EditFlowService editFlowService
     @Autowired
-    @Qualifier('botMessagesService')
-    private BotMessagesService messages
+    private EditFlowMessages messages
 
     @BotRequest(path = DELETE_ENTITY, rawParams = true)
     String deleteEntity(Map<String, String> params) {
@@ -55,14 +51,13 @@ class EditFieldController extends AbstractBotController {
         def createNewEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(CreateNewEntityFlowDto.class, params)
         params.put(FLOW_PARAM_PREFIX.concat('fieldName'), getEntityEditableIdFieldName(createNewEntityFlowDto.entityClass))
         params.newEntity = 'true'
-        setRedirectParams(getPrefixUnmappedParams(params, REDIRECT_PARAMS_PREFIX))
         editFieldEnter(params)
     }
 
     @BotRequest(path = EDIT_ENTITY_ENTER, rawParams = true)
     editEntity(Map<String, String> params) {
         def editEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(EditEntityFlowDto.class, params)
-        def fields = editFlowService.getEditableFields(editEntityFlowDto.entityClass)
+        def fields = getEditableFields(editEntityFlowDto.entityClass)
         messages.editFlowEntityFieldsSelectMessage(fields, editEntityFlowDto)
     }
 
@@ -71,17 +66,7 @@ class EditFieldController extends AbstractBotController {
         def isNew = Boolean.valueOf(params.newEntity)
         def editFieldFlowDto = flowConversionUtil.getEditFieldFlowDto(EditFieldFlowDto.class, params)
         editFlowService.saveEditFlowModel(editFieldFlowDto)
-        // send enter message (with back path, (POST MVP): options to check, print previous value)
-        if (isLocalizedField(editFieldFlowDto.fieldName, editFieldFlowDto.entityClass)) {
-            messages.editFlowCurrentValueMessage(editFlowService.getCurrentValue(true), isNew)
-            messages.editFlowChooseLangMessage()
-        } else if (isBooleanField()) {
-            messages.editFlowCurrentValueMessage(editFlowService.currentValue, isNew,true)
-            messages.editBooleanFieldMenu()
-        } else {
-            messages.editFlowCurrentValueMessage(editFlowService.currentValue, isNew)
-            messages.editFlowEnterMessage(editFieldFlowDto.enterText, editFieldFlowDto.enterTextBinding)
-        }
+        editFlowService.sendEnterMessage(isNew)
     }
 
     @BotRequest(path = EDIT_LOCALIZED_FIELD_MENU, after = EDIT_FIELD_ENTER)
@@ -123,19 +108,17 @@ class EditFieldController extends AbstractBotController {
     private void editLocalizedFieldInternal(String lang) {
         messages.updateEditFlowChooseLangMenu(lang)
         editFlowService.setFieldLang(lang)
-        def editFlow = currentChat.editFlow
+        def editFlow = currentEditFlow
         messages.editFlowEnterMessage(editFlow.enterText, editFlow.enterTextBinding)
     }
 
     private String editFieldInternal(String input = null) {
         try {
-            def editFlow = currentChat.editFlow
+            def editFlow = currentEditFlow
             editFlowService.updateEntityWithInput(input)
-            messages.editFlowSuccessMessage(editFlow.successMessage, input == null)
-            messages.deleteEditFlowChooseLangMessage(editFlow.lang)
-            messages.updateEditFlowCurrentValueMessage(editFlowService.currentValue, isBooleanField())
+            editFlowService.sendSuccessMessages(currentEditFlow, input == null)
             setRedirectParams([:] + editFlow.params)
-            editFlowService.deleteOldFlow()
+            editFlowService.cleanUp()
             return editFlow.successPath ?: TO_MAIN
         } catch (ConstraintViolationException ex) {
             ex.constraintViolations*.messageTemplate.each { sendMessage.text(it) }

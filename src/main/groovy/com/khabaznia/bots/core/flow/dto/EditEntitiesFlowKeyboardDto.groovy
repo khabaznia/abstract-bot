@@ -21,16 +21,17 @@ class EditEntitiesFlowKeyboardDto<T> {
      */
     Class<T> entityClass
     List<T> entities
-    Function<T, String> buttonNameRetrieverFunction
     String thisStepPath
 
     /**
      * Optional fields
      */
+    Function<T, String> entityNameRetriever
     String backPath
     String createNewEntitySuccessMessage
     String deleteEntitySuccessMessage
-    Map<String, String> redirectParams = [:]
     boolean canDeleteEntities = true
     boolean canCreateNewEntity = true
+    boolean canEditEntities = true
+    Map<String, String> redirectParams = [:]
 }

@@ -8,6 +8,8 @@ import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.Pattern
 
+import static com.khabaznia.bots.core.flow.enums.FieldType.*
+
 @ToString
 @Entity(name = "example_model")
 class ExampleModel {
@@ -17,7 +19,7 @@ class ExampleModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @Editable(localized = true, enableClear = true,
+    @Editable(enableClear = true, type = LOCALIZED,
             fieldButtonMessage = 'example.model.localized.name.button.name',
             enterMessage = 'example.model.enter.message.name')
     @ElementCollection
@@ -27,7 +29,7 @@ class ExampleModel {
     @Column(name = 'name', columnDefinition = "TEXT")
     Map<String, String> name = [:]
 
-    @Editable(fieldButtonMessage = 'example.model.number.button.name')
+    @Editable(fieldButtonMessage = 'example.model.number.button.name', type = NUMBER)
     @Min(value = 2L, message = 'example.model.number.min.validation')
     @Max(value = 10L, message = 'example.model.number.max.validation')
     @Column(name = 'number')
@@ -40,7 +42,7 @@ class ExampleModel {
     @Column(name = 'field1')
     String field1
 
-    @Editable(enterMessage = 'example.model.enter.message.flag')
+    @Editable(enterMessage = 'example.model.enter.message.flag', type = BOOLEAN)
     @Column(name = 'flag')
     Boolean flag
 
@@ -49,4 +51,8 @@ class ExampleModel {
 
     @Column(name = 'service_flag')
     String serviceFlag
+
+    @OneToMany(mappedBy = "parent", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @Column(name = "entries")
+    Set<ExampleModelEntry> entries
 }
