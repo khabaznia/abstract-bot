@@ -3,6 +3,7 @@ package com.khabaznia.bots.example.controller
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.enums.MessageFeature
 import com.khabaznia.bots.core.flow.dto.EditEntitiesFlowKeyboardDto
+import com.khabaznia.bots.core.flow.service.EditFlowKeyboardService
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Localized
@@ -10,7 +11,6 @@ import com.khabaznia.bots.core.service.DeepLinkingPathService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.example.job.ExampleJob
 import com.khabaznia.bots.example.model.ExampleModel
-import com.khabaznia.bots.example.service.ExampleMessagesService
 import com.khabaznia.bots.example.service.ExampleModelService
 import com.khabaznia.bots.example.stub.StubService
 import groovy.util.logging.Slf4j
@@ -41,7 +41,7 @@ class ExampleController extends AbstractBotController {
     @Autowired
     private ExampleModelService exampleModelService
     @Autowired
-    private ExampleMessagesService messages
+    private EditFlowKeyboardService editFlowKeyboardService
 
     @Localized
     @BotRequest(path = EXAMPLE, enableDuplicateRequests = true)
@@ -245,17 +245,19 @@ class ExampleController extends AbstractBotController {
     editEntries(String myCustomParam) {
         if (myCustomParam) sendMessage.text myCustomParam
         sendMessage.text('Choose action')
-                .keyboard(messages.editFlowEntriesSelectMessage(new EditEntitiesFlowKeyboardDto<ExampleModel>()
-                        .buttonNameRetrieverFunction({ it.field1 })
-                        .entityClass(ExampleModel.class)
-                        .entities(exampleModelService.getAll())
-                        .thisStepPath('/editEntriesOfExample')
-                        .backPath(EDIT_FLOW)
-                        .createNewEntitySuccessMessage('YEEEEEES, CREATED!')
-                        .deleteEntitySuccessMessage("DELETED")
-                        .redirectParams([myCustomParam: 'Some custom param'])
-                        .canCreateNewEntity(true)
-                        .canDeleteEntities(true))
+                .keyboard(editFlowKeyboardService.getKeyboard(
+                        new EditEntitiesFlowKeyboardDto<ExampleModel>()
+                                .entityNameRetriever({ ExampleModel it -> it.field1 })
+                                .entityClass(ExampleModel.class)
+                                .entities(exampleModelService.getAll())
+                                .thisStepPath('/editEntriesOfExample')
+                                .backPath(EDIT_FLOW)
+                                .createNewEntitySuccessMessage('YEEEEEES, CREATED!')
+                                .deleteEntitySuccessMessage("DELETED")
+                                .redirectParams([myCustomParam: 'Some custom param'])
+                                .canEditEntities(true)
+                                .canCreateNewEntity(true)
+                                .canDeleteEntities(true))
                 )
     }
 

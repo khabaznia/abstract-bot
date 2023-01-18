@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.controller.impl
+package com.khabaznia.bots.core.flow.controller
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.flow.util.FlowConversionUtil
