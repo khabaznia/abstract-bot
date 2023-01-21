@@ -66,13 +66,18 @@ class EditableParsingUtil {
     }
 
     static String getDefaultMessageOfIdField(Class entityClass) {
-        getEntityIdField(entityClass).fieldButtonMessage()
+        getEntityIdField(entityClass).getAnnotation(Editable.class).fieldButtonMessage()
     }
 
     static Editable getEntityIdFieldAnnotation(Class entityClass) {
         entityClass.getDeclaredFields()
                 .find { it.getAnnotation(Editable.class)?.id() }
                 .getAnnotation(Editable.class)
+    }
+
+    static String getEntityFactory(Class entityClass) {
+        ((Editable) entityClass.getAnnotation(Editable.class))?.entityFactory() ?:
+                Editable.class.getDeclaredMethod('entityFactory').getDefaultValue() as String
     }
 
     private static Field getEntityIdField(Class entityClass) {

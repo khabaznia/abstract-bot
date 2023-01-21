@@ -24,28 +24,12 @@ class EditFlow {
     String fieldName
     @Column
     String lang
-
     @Column
     String successPath
     @Column
     String successMessage
-
     @Column
     String enterText
-    @Column
-    String oldValue
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    FieldType type
-
-    @ElementCollection
-    @Column(name = "selected_ids")
-    List<Long> selectedIds = []
-
-    @ElementCollection
-    @Column(name = "initialIds")
-    List<Long> initialIds = []
 
     @ElementCollection
     @CollectionTable(name = 'edit_flow_enter_text_binding',
@@ -60,6 +44,21 @@ class EditFlow {
     @MapKeyColumn(name = 'key')
     @Column(name = 'value', columnDefinition = "TEXT")
     Map<String, String> params
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    FieldType type
+
+    @Column
+    String oldValue
+    @ElementCollection
+    @Column(name = "selected_ids")
+    List<Long> selectedIds = []
+    @ElementCollection
+    @Column(name = "initialIds")
+    List<Long> initialIds = []
+    @Column
+    String entityFactory
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)

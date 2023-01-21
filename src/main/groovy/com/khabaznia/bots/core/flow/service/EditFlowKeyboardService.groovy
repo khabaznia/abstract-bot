@@ -38,6 +38,7 @@ class EditFlowKeyboardService implements BaseRequests {
                 .successText(dto.createNewEntitySuccessMessage ?: 'text.create.new.entity.success.message')
                 .entityClass(dto.entityClass)
                 .redirectParams(dto.redirectParams)
+                .entityFactory(dto.entityFactory)
                 .successPath(dto.thisStepPath))
         keyboard.row()
     }
