@@ -1,6 +1,7 @@
-package com.khabaznia.bots.core.flow.strategy
+package com.khabaznia.bots.core.flow.strategy.impl
 
-import com.khabaznia.bots.core.model.EditFlow
+import com.khabaznia.bots.core.flow.model.EditFlow
+import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -15,8 +16,8 @@ class BooleanFieldProcessingStrategy extends FieldProcessingStrategy {
 
     @Override
     void sendEnterMessages(EditFlow editFlow, boolean isNew) {
-        if (!isNew) messages.editFlowCurrentValueMessage(currentValueAsString(editFlow))
-        messages.editBooleanFieldMenu()
+        if (!isNew) messages.editFlowCurrentValueMessage(allIncludedValuesAsString(editFlow))
+        messages.editBooleanFieldMenu(editFlow.enterText, editFlow.enterTextBinding)
     }
 
     @Override
@@ -25,8 +26,8 @@ class BooleanFieldProcessingStrategy extends FieldProcessingStrategy {
     }
 
     @Override
-    String currentValueAsString(EditFlow editFlow) {
-        BOOLEAN_VALUES_MAPPING.get(covertToType(getCurrentValueInternal(editFlow)))
+    String allIncludedValuesAsString(EditFlow editFlow) {
+        BOOLEAN_VALUES_MAPPING.get(covertToType(getPersistedValue(editFlow)))
     }
 
     @Override

@@ -19,6 +19,9 @@ class Constants {
         public static final String EDIT_FIELD_CLEAR_VALUE = '/editFieldClearValue'
         public static final String CREATE_NEW_ENTITY = '/createNewEntity'
         public static final String DELETE_ENTITY = '/deleteEntity'
+        public static final String SELECT_ENTITY_COLLECTION_FIELD = '/selectEntity'
+        public static final String SELECT_ENTITIES_CONFIRM = '/selectEntitiesConfirm'
+        public static final String EDIT_SELECTABLE_FIELD_AFTER_CREATE = '/editSelectableFieldAfterCreateChild'
     }
 
     static final class LANG_CONTROLLER {

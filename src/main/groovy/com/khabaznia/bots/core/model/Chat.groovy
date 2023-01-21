@@ -2,6 +2,7 @@ package com.khabaznia.bots.core.model
 
 import com.khabaznia.bots.core.enums.ChatRole
 import com.khabaznia.bots.core.enums.ChatType
+import com.khabaznia.bots.core.flow.model.EditFlow
 import groovy.transform.ToString
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode

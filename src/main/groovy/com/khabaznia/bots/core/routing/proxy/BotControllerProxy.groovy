@@ -23,7 +23,7 @@ class BotControllerProxy {
         log.info 'Executing method from class {} ----------> {}', metaData.bean.class.simpleName, metaData.controllerPath
         metaData.beforeExecuteMethod.invoke(metaData.bean, update)
         def params = updateService.getParametersFromUpdate(update)
-        log.debug 'redirect -> {}', redirectParams 
+        log.debug 'redirect -> {}', redirectParams
         if (redirectParams) params.putAll(redirectParams)
         log.debug 'Params from update: {}. Params in controller: {}', params, metaData.params
         def result = metaData.hasParameters && !metaData.rawParams

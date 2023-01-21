@@ -1,5 +1,6 @@
-package com.khabaznia.bots.core.flow.strategy
+package com.khabaznia.bots.core.flow.strategy.impl
 
+import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 

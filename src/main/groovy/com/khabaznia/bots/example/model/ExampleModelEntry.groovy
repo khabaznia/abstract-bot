@@ -35,4 +35,7 @@ class ExampleModelEntry {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = 'parent')
     ExampleModel parent
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = 'manyEntries')
+    List<ExampleModel> manyExamples
 }

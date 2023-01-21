@@ -160,7 +160,7 @@ trait BotControllerBaseRequests {
         context.getBean 'editFieldFlowDto'
     }
 
-    EditEntityFlowDto getEditEntityFlowDto(){
+    EditEntityFlowDto getEditEntityFlowDto() {
         context.getBean 'editEntityFlowDto'
     }
 

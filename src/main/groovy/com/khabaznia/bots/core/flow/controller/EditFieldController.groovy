@@ -5,16 +5,15 @@ import com.khabaznia.bots.core.flow.dto.CreateNewEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.DeleteEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
+import com.khabaznia.bots.core.flow.service.EditFlowEntityService
 import com.khabaznia.bots.core.flow.service.EditFlowService
 import com.khabaznia.bots.core.flow.util.EditFlowMessages
 import com.khabaznia.bots.core.flow.util.FlowConversionUtil
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Input
-import com.khabaznia.bots.core.service.BotMessagesService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 import javax.validation.ConstraintViolationException
@@ -35,19 +34,12 @@ class EditFieldController extends AbstractBotController {
     @Autowired
     private EditFlowService editFlowService
     @Autowired
+    private EditFlowEntityService entityService
+    @Autowired
     private EditFlowMessages messages
 
-    @BotRequest(path = DELETE_ENTITY, rawParams = true)
-    String deleteEntity(Map<String, String> params) {
-        def deleteEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(DeleteEntityFlowDto.class, params)
-        editFlowService.deleteEntity(deleteEntityFlowDto.entityClass, deleteEntityFlowDto.entityId)
-        setRedirectParams(params)
-        messages.deleteEntitySuccessMessage(deleteEntityFlowDto.successText)
-        deleteEntityFlowDto.successPath
-    }
-
     @BotRequest(path = CREATE_NEW_ENTITY, rawParams = true)
-    createNewEntity(Map<String, String> params) {
+    String createNewEntity(Map<String, String> params) {
         def createNewEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(CreateNewEntityFlowDto.class, params)
         params.put(FLOW_PARAM_PREFIX.concat('fieldName'), getEntityEditableIdFieldName(createNewEntityFlowDto.entityClass))
         params.newEntity = 'true'
@@ -61,12 +53,29 @@ class EditFieldController extends AbstractBotController {
         messages.editFlowEntityFieldsSelectMessage(fields, editEntityFlowDto)
     }
 
+    @BotRequest(path = DELETE_ENTITY, rawParams = true)
+    String deleteEntity(Map<String, String> params) {
+        def deleteEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(DeleteEntityFlowDto.class, params)
+        entityService.deleteEntity(deleteEntityFlowDto.entityClass, deleteEntityFlowDto.entityId)
+        setRedirectParams(params)
+        messages.deleteEntitySuccessMessage(deleteEntityFlowDto.successText)
+        deleteEntityFlowDto.successPath
+    }
+
     @BotRequest(path = EDIT_FIELD_ENTER, rawParams = true)
     editFieldEnter(Map<String, String> params) {
-        def isNew = Boolean.valueOf(params.newEntity)
-        def editFieldFlowDto = flowConversionUtil.getEditFieldFlowDto(EditFieldFlowDto.class, params)
-        editFlowService.saveEditFlowModel(editFieldFlowDto)
+        def isNew = Boolean.valueOf(params?.newEntity)
+        if (params.any { it.key.startsWith(FLOW_PARAM_PREFIX) }) {
+            def editFieldFlowDto = flowConversionUtil.getEditFieldFlowDto(EditFieldFlowDto.class, params)
+            editFlowService.saveEditFlowModel(editFieldFlowDto)
+        }
         editFlowService.sendEnterMessage(isNew)
+    }
+
+    @BotRequest(path = EDIT_SELECTABLE_FIELD_AFTER_CREATE)
+    String editSelectableFieldEnter(String entityId) {
+        editFlowService.selectEntityWithId(entityId)
+        EDIT_FIELD_ENTER
     }
 
     @BotRequest(path = EDIT_LOCALIZED_FIELD_MENU, after = EDIT_FIELD_ENTER)
@@ -105,6 +114,37 @@ class EditFieldController extends AbstractBotController {
     @BotRequest(path = EDIT_FIELD_CLEAR_VALUE, after = EDIT_FIELD_ENTER)
     String clearValue() { editFieldInternal() }
 
+    @BotRequest(path = SELECT_ENTITIES_CONFIRM, after = EDIT_FIELD_ENTER)
+    String selectEntitiesConfirm(String editFlowId) { selectFieldActionInternal(editFlowId, this::editFieldInternal) }
+
+    @BotRequest(path = SELECT_ENTITIES_CONFIRM, after = SELECT_ENTITY_COLLECTION_FIELD)
+    String selectEntitiesConfirmAfterSelect(String editFlowId) {
+        selectFieldActionInternal(editFlowId, this::editFieldInternal)
+    }
+
+    @BotRequest(path = SELECT_ENTITY_COLLECTION_FIELD, after = SELECT_ENTITY_COLLECTION_FIELD)
+    selectEntityCollectionFieldAfterSelect(String entityId, String editFlowId) {
+        selectFieldActionInternal(editFlowId, { selectEntityInternal(entityId) })
+    }
+
+    @BotRequest(path = SELECT_ENTITY_COLLECTION_FIELD, after = EDIT_FIELD_ENTER)
+    selectEntityCollectionField(String entityId, String editFlowId) {
+        selectFieldActionInternal(editFlowId, { selectEntityInternal(entityId) })
+    }
+
+    private String editFieldInternal(String input = null) {
+        try {
+            def editFlow = currentEditFlow
+            def entityId = editFlowService.updateEntityWithInput(input)
+            editFlowService.sendSuccessMessages(editFlow, input == null)
+            editFlowService.postProcess(editFlow, entityId)
+            return editFlow.successPath ?: TO_MAIN
+        } catch (ConstraintViolationException ex) {
+            ex.constraintViolations*.messageTemplate.each { sendMessage.text(it) }
+            return EDIT_FIELD_VALIDATION_FAILED
+        }
+    }
+
     private void editLocalizedFieldInternal(String lang) {
         messages.updateEditFlowChooseLangMenu(lang)
         editFlowService.setFieldLang(lang)
@@ -112,17 +152,17 @@ class EditFieldController extends AbstractBotController {
         messages.editFlowEnterMessage(editFlow.enterText, editFlow.enterTextBinding)
     }
 
-    private String editFieldInternal(String input = null) {
-        try {
-            def editFlow = currentEditFlow
-            editFlowService.updateEntityWithInput(input)
-            editFlowService.sendSuccessMessages(currentEditFlow, input == null)
-            setRedirectParams([:] + editFlow.params)
-            editFlowService.cleanUp()
-            return editFlow.successPath ?: TO_MAIN
-        } catch (ConstraintViolationException ex) {
-            ex.constraintViolations*.messageTemplate.each { sendMessage.text(it) }
-            return EDIT_FIELD_VALIDATION_FAILED
+    private void selectEntityInternal(String entityId) {
+        editFlowService.selectEntityWithId(entityId)
+        messages.updateSelectEntitiesMenu(entityService.getEntitiesToSelect())
+    }
+
+    private selectFieldActionInternal(String editFlowId, Closure successFunction) {
+        if (currentEditFlow.id.toString() != editFlowId) {
+            messages.editFlowErrorMessage()
+            messages.deleteSelectEntitiesFieldMenu()
+            return TO_MAIN
         }
+        successFunction.call()
     }
 }

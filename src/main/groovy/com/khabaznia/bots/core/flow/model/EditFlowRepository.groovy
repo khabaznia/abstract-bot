@@ -1,6 +1,5 @@
-package com.khabaznia.bots.core.repository
+package com.khabaznia.bots.core.flow.model
 
-import com.khabaznia.bots.core.model.EditFlow
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

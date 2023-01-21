@@ -1,11 +1,13 @@
-package com.khabaznia.bots.core.flow.strategy
+package com.khabaznia.bots.core.flow.strategy.impl
 
+import com.khabaznia.bots.core.flow.model.EditFlow
+import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
 import com.khabaznia.bots.core.flow.validation.InputNumberValidator
-import com.khabaznia.bots.core.model.EditFlow
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getClass
+import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getFieldClass
 
 @Slf4j
 @Component('numberFieldProcessingStrategy')
