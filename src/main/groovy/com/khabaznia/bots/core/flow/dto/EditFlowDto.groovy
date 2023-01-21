@@ -11,6 +11,7 @@ import groovy.transform.builder.SimpleStrategy
 abstract class EditFlowDto {
 
     Class entityClass
+    String entityFactory
 
     String enterText
     Map<String, String> enterTextBinding = [:]

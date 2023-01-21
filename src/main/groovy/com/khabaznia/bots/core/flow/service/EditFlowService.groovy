@@ -43,7 +43,8 @@ class EditFlowService {
                 enterTextBinding: editFieldFlowDto.enterTextBinding,
                 successMessage: editFieldFlowDto.successText,
                 successPath: editFieldFlowDto.successPath,
-                params: editFieldFlowDto.redirectParams)
+                params: editFieldFlowDto.redirectParams,
+                entityFactory: editFieldFlowDto.entityFactory)
         fieldProcessingStrategiesMap[getFieldType(getClass(editFlow), editFlow.fieldName)].prepare(editFlow)
         saveEditFlowInternal(editFlow)
     }

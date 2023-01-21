@@ -8,6 +8,7 @@ import javax.persistence.*
 import javax.validation.constraints.Pattern
 
 @ToString
+@Editable(entityFactory = 'exampleModelEntryFactory')
 @Entity(name = "example_model_entry")
 class ExampleModelEntry {
 
@@ -38,4 +39,7 @@ class ExampleModelEntry {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = 'manyEntries')
     List<ExampleModel> manyExamples
+
+    @Column
+    String userCode
 }

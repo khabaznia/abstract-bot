@@ -1,6 +1,9 @@
 package com.khabaznia.bots.core.flow.service
 
+import com.khabaznia.bots.core.flow.factory.EntityFactory
+import com.khabaznia.bots.core.flow.model.EditFlow
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
 import javax.persistence.EntityManager
@@ -14,6 +17,8 @@ class EditFlowEntityService {
 
     @Autowired
     private EntityManager entityManager
+    @Autowired
+    private ApplicationContext context
 
     Map<Object, Boolean> getEntitiesToSelect() {
         def query = "SELECT e FROM $selectableFieldHTableName e"
@@ -29,7 +34,13 @@ class EditFlowEntityService {
         def entityClass = getClass(editFlow)
         editFlow.entityId
                 ? entityManager.find(entityClass, editFlow.entityId)
-                : entityClass.getDeclaredConstructor().newInstance()
+                : getNewEntity(editFlow, entityClass)
+    }
+
+    private Object getNewEntity(EditFlow editFlow, Class<?> entityClass) {
+        def factoryBean = editFlow.entityFactory ?: getEntityFactory(entityClass)
+        context.getBean(factoryBean, EntityFactory.class)
+                .createEntity()
     }
 
     void saveEntity(Object entity) {

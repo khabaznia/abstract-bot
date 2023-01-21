@@ -258,7 +258,8 @@ class ExampleController extends AbstractBotController {
                                 .redirectParams([myCustomParam: 'Some custom param'])
                                 .canEditEntities(true)
                                 .canCreateNewEntity(true)
-                                .canDeleteEntities(true))
+                                .canDeleteEntities(true)
+                                .entityFactory('exampleModelFactory'))
                 )
     }
 
