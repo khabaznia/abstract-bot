@@ -242,8 +242,9 @@ class ExampleController extends AbstractBotController {
     }
 
     @BotRequest(path = '/editEntriesOfExample')
-    editEntries(String myCustomParam) {
+    editEntries(String myCustomParam, String entityId) {
         if (myCustomParam) sendMessage.text myCustomParam
+        if (entityId) sendMessage.text "Entity was updated/created -> $entityId"
         sendMessage.text('Choose action')
                 .keyboard(editFlowKeyboardService.getKeyboard(
                         new EditEntitiesFlowKeyboardDto<ExampleModel>()

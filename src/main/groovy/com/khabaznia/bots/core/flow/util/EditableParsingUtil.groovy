@@ -2,7 +2,11 @@ package com.khabaznia.bots.core.flow.util
 
 import com.khabaznia.bots.core.flow.annotation.Editable
 import com.khabaznia.bots.core.flow.enums.FieldType
-import com.khabaznia.bots.core.model.EditFlow
+import com.khabaznia.bots.core.flow.model.EditFlow
+
+import javax.persistence.Entity
+import javax.persistence.ManyToMany
+import java.lang.reflect.Field
 
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
 
@@ -10,7 +14,7 @@ class EditableParsingUtil {
 
     static getCurrentEditFlow() {
         def flow = currentChat.editFlow
-        flow.type != FieldType.COLLECTION ? flow : flow.childFlow
+        flow.childFlow ?: flow
     }
 
     static Class<?> getClass(EditFlow editFlow) {
@@ -32,8 +36,23 @@ class EditableParsingUtil {
     }
 
     static Editable getCurrentFieldAnnotation() {
-        getClass(currentEditFlow).getDeclaredField(currentEditFlow.fieldName)
-                .getAnnotation(Editable.class)
+        editFlowField.getAnnotation(Editable.class)
+    }
+
+    static Class getSelectableFieldEntityClass() {
+        editFlowField.getGenericType().actualTypeArguments[0] as Class<?>
+    }
+
+    static String getSelectableFieldHTableName() {
+        selectableFieldEntityClass.getAnnotation(Entity).name()
+    }
+
+    static Boolean getSelectableFieldHIsManyToManyRelation() {
+        editFlowField.getAnnotation(ManyToMany.class) != null
+    }
+
+    static Class getFieldClass(Class entityClass, String fieldName) {
+        entityClass.getDeclaredField(fieldName).type
     }
 
     static Map<String, String> getEditableFields(Class entityClass) {
@@ -43,14 +62,25 @@ class EditableParsingUtil {
     }
 
     static String getEntityEditableIdFieldName(Class entityClass) {
-        entityClass.getDeclaredFields()
-                .find { it.getAnnotation(Editable.class)?.id() }
-                .name
+        getEntityIdField(entityClass).name
     }
 
     static String getDefaultMessageOfIdField(Class entityClass) {
+        getEntityIdField(entityClass).fieldButtonMessage()
+    }
+
+    static Editable getEntityIdFieldAnnotation(Class entityClass) {
         entityClass.getDeclaredFields()
                 .find { it.getAnnotation(Editable.class)?.id() }
-                .getAnnotation(Editable.class).fieldButtonMessage()
+                .getAnnotation(Editable.class)
+    }
+
+    private static Field getEntityIdField(Class entityClass) {
+        entityClass.getDeclaredFields()
+                .find { it.getAnnotation(Editable.class)?.id() }
+    }
+
+    private static Field getEditFlowField() {
+        getClass(currentEditFlow).getDeclaredField(currentEditFlow.fieldName)
     }
 }

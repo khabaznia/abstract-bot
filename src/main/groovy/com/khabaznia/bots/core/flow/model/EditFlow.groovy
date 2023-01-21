@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.model
+package com.khabaznia.bots.core.flow.model
 
 import com.khabaznia.bots.core.flow.enums.FieldType
 import groovy.transform.ToString
@@ -38,6 +38,14 @@ class EditFlow {
     @Column
     @Enumerated(EnumType.STRING)
     FieldType type
+
+    @ElementCollection
+    @Column(name = "selected_ids")
+    List<Long> selectedIds = []
+
+    @ElementCollection
+    @Column(name = "initialIds")
+    List<Long> initialIds = []
 
     @ElementCollection
     @CollectionTable(name = 'edit_flow_enter_text_binding',

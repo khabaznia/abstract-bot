@@ -52,7 +52,18 @@ class ExampleModel {
     @Column(name = 'service_flag')
     String serviceFlag
 
-    @OneToMany(mappedBy = "parent", cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @Editable(type = COLLECTION, mappedBy = 'parent')
+    @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @Column(name = "entries")
     Set<ExampleModelEntry> entries
+
+    @Editable(type = COLLECTION, mappedBy = 'manyExamples',
+            enterMessage = 'Select <b>MANY TO MANY</b> entries',
+            fieldButtonMessage = 'OTHER_ENTRIES')
+    @ManyToMany(cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], fetch = FetchType.LAZY)
+    @JoinTable(
+            name = 'many_entries',
+            joinColumns = @JoinColumn(name = 'example_id', referencedColumnName = 'id'),
+            inverseJoinColumns = @JoinColumn(name = "example_entry_id", referencedColumnName = 'id'))
+    List<ExampleModelEntry> manyEntries
 }

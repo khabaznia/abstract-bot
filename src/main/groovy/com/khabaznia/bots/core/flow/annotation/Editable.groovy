@@ -15,15 +15,19 @@ import java.lang.annotation.Target
 @interface Editable {
 
     boolean id() default false
+
     boolean enableClear() default false
+
     FieldType type() default FieldType.STRING
 
     String enterMessage() default ''
+
     String fieldButtonMessage() default ''
 
     /**
      * COLLECTION field params
      */
-    String query() default ''
     boolean canCreateEntity() default true
+
+    String mappedBy() default ''
 }
