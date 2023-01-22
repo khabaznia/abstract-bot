@@ -6,6 +6,7 @@ import com.khabaznia.bots.core.flow.service.EditFlowKeyboardService
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
+import com.khabaznia.bots.core.meta.request.impl.AbstractMediaRequest
 import com.khabaznia.bots.core.meta.request.impl.SendMessage
 import com.khabaznia.bots.core.service.ChatService
 import com.khabaznia.bots.core.service.MessageService
@@ -39,9 +40,10 @@ class EditFlowMessages implements BaseRequests, Configurable {
     @Autowired
     private ChatService chatService
 
-    void editFlowEnterMessage(String text, Map<String, String> binding) {
-        def oldValueCanBeDeleted = isValueClearingEnabled() && !isEmpty(currentEditFlow.oldValue?.strip())
-        def message = sendMessage.text(text ?: enterMessage ?: getDefaultEditFlowEnterMessage(oldValueCanBeDeleted))
+    void editFlowEnterMessage(String text, Map<String, String> binding,
+                              Closure<String> defaultMessageRetriever = { defaultEditFlowEnterMessage }) {
+        def oldValueCanBeDeleted = isCurrentValueRemovable()
+        def message = sendMessage.text(text ?: enterMessage ?: defaultMessageRetriever.call())
                 .binding(binding)
                 .delete() as SendMessage
         if (oldValueCanBeDeleted) {
@@ -61,7 +63,6 @@ class EditFlowMessages implements BaseRequests, Configurable {
             requests << editMessage.text(getEditFlowCurrentValueText(currentValue))
                     .binding([value: currentValue])
                     .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
-                    .delete()
     }
 
     void editFlowChooseLangMessage(String text, Map<String, String> binding) {
@@ -113,16 +114,41 @@ class EditFlowMessages implements BaseRequests, Configurable {
                 .text('text.edit.flow.error.try.again'))
     }
 
-    void selectedEntitiesSavedMessage() {
-        requests << withCurrentReplyKeyboard(sendMessage
-                .text('text.edit.flow.selected.values.persisted'))
-    }
-
     void editFlowSuccessMessage(String text, boolean clear = false) {
         requests << withCurrentReplyKeyboard(sendMessage
                 .text(text ?: (clear
                         ? 'text.edit.flow.cleared.message'
                         : 'text.edit.flow.success.message')))
+    }
+
+    void editFlowCurrentMediaMessage(String currentFileId, String beanName) {
+        requests << (!isEmpty(currentFileId?.strip())
+                ? (context.getBean(beanName) as AbstractMediaRequest)
+                    .fileIdentifier(currentFileId)
+                    .messageLabel(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+                    .text('text.edit.flow.media.field.current.value')
+                    .delete()
+                : sendMessage.text('text.edit.flow.no.media.is.assigned')
+                    .label(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+                    .delete())
+    }
+
+    void mediaUpdatedSuccessMessage(String text, boolean clear = false) {
+        requests << withCurrentReplyKeyboard(sendMessage
+                .text(text ?: (clear
+                        ? 'text.edit.flow.file.was.removed'
+                        : 'text.edit.flow.file.was.updated')))
+    }
+
+    void updateEditFlowCurrentMediaMessage(String newFileId, String oldFileId) {
+        if (newFileId != oldFileId)
+            requests << deleteMessage
+                    .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+    }
+
+    void selectedEntitiesSavedMessage() {
+        requests << withCurrentReplyKeyboard(sendMessage
+                .text('text.edit.flow.selected.values.persisted'))
     }
 
     void deleteEntitySuccessMessage(String text) {
@@ -137,6 +163,10 @@ class EditFlowMessages implements BaseRequests, Configurable {
                 .binding(editEntityFlowDto.enterTextBinding)
                 .keyboard(keyboard)
                 .delete()
+    }
+
+    static String getDefaultEditFlowMediaEnterMessage() {
+        isCurrentValueRemovable() ? 'text.edit.flow.send.me.new.media.or.clear' : 'text.edit.flow.send.me.new.media'
     }
 
     private InlineKeyboard setLocaleButtons(InlineKeyboard inlineKeyboard) {
@@ -177,7 +207,15 @@ class EditFlowMessages implements BaseRequests, Configurable {
         !isEmpty(currentValue?.strip()) ? 'text.edit.flow.current.value' : 'text.edit.flow.no.current.value'
     }
 
-    private static String getDefaultEditFlowEnterMessage(boolean isValueCanBeDeleted) {
-        isValueCanBeDeleted ? 'text.edit.flow.enter.new.value.or.clear' : 'text.edit.flow.enter.new.value'
+    private static String getEditFlowCurrentMediaText(String currentValue) {
+        !isEmpty(currentValue?.strip()) ? 'text.edit.flow.media.field.current.value' : 'text.edit.flow.no.media.is.assigned'
+    }
+
+    private static String getDefaultEditFlowEnterMessage() {
+        isCurrentValueRemovable() ? 'text.edit.flow.enter.new.value.or.clear' : 'text.edit.flow.enter.new.value'
+    }
+
+    private static boolean isCurrentValueRemovable() {
+        isValueClearingEnabled() && !isEmpty(currentEditFlow.oldValue?.strip())
     }
 }

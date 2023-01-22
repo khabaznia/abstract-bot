@@ -7,6 +7,9 @@ import groovy.transform.ToString
 import javax.persistence.*
 import javax.validation.constraints.Pattern
 
+import static com.khabaznia.bots.core.flow.enums.FieldType.MEDIA
+import static com.khabaznia.bots.core.flow.enums.MediaType.AUDIO
+
 @ToString
 @Editable(entityFactory = 'exampleModelEntryFactory')
 @Entity(name = "example_model_entry")
@@ -42,4 +45,8 @@ class ExampleModelEntry {
 
     @Column
     String userCode
+
+    @Editable(type = MEDIA, enableClear = true, mediaType = AUDIO)
+    @Column
+    String someMedia
 }

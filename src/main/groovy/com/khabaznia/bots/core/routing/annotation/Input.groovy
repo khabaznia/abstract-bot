@@ -16,4 +16,6 @@ import java.lang.annotation.Target
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 @interface Input {
+
+    boolean media() default false
 }

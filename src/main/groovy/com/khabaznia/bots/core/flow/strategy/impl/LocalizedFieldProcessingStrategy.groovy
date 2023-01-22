@@ -37,9 +37,9 @@ class LocalizedFieldProcessingStrategy extends FieldProcessingStrategy implement
 
     @Override
     String allIncludedValuesAsString(EditFlow editFlow) {
-        def stringValue = getPersistedValue(editFlow)
-        if (!stringValue) return null
-        lineSeparator().concat((stringValue as Map<String, String>)
+        def localizedValues = getPersistedValue(editFlow)
+        if (!localizedValues) return null
+        lineSeparator().concat((localizedValues as Map<String, String>)
                 .collectEntries { [(Constants.LANG_CONTROLLER.LANG_EMOJI.get(it.key)): it.value] }
                 .collect { "$it.key  $it.value" }
                 .join(lineSeparator()))

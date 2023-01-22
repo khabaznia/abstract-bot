@@ -46,6 +46,10 @@ class ExampleModel {
     @Column(name = 'flag')
     Boolean flag
 
+    @Editable(type = MEDIA, enableClear = true)
+    @Column
+    String someMedia
+
     @Column(name = 'service_field')
     String field2
 

@@ -1,6 +1,7 @@
 package com.khabaznia.bots.core.flow.annotation
 
 import com.khabaznia.bots.core.flow.enums.FieldType
+import com.khabaznia.bots.core.flow.enums.MediaType
 
 import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
@@ -31,4 +32,10 @@ import java.lang.annotation.Target
     String mappedBy() default ''
 
     String selectionStrategy() default 'defaultFieldSelectionStrategy'
+
+    /**
+     * MEDIA field params
+     */
+
+    MediaType mediaType() default MediaType.IMAGE
 }

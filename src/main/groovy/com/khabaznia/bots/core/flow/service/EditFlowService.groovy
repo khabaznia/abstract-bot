@@ -3,6 +3,7 @@ package com.khabaznia.bots.core.flow.service
 import com.khabaznia.bots.core.exception.BotServiceException
 import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
 import com.khabaznia.bots.core.flow.enums.FieldType
+import com.khabaznia.bots.core.flow.enums.MediaType
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.model.EditFlowRepository
 import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
@@ -77,6 +78,12 @@ class EditFlowService {
     void setFieldLang(String lang) {
         def editFlow = currentEditFlow
         editFlow.setLang(lang)
+        editFlowRepository.saveAndFlush(editFlow)
+    }
+
+    void setInputMediaType(MediaType mediaType) {
+        def editFlow = currentEditFlow
+        editFlow.setInputMediaType(mediaType)
         editFlowRepository.saveAndFlush(editFlow)
     }
 
