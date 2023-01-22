@@ -11,6 +11,7 @@ import com.khabaznia.bots.core.service.DeepLinkingPathService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.example.job.ExampleJob
 import com.khabaznia.bots.example.model.ExampleModel
+import com.khabaznia.bots.example.model.ExampleModelEntry
 import com.khabaznia.bots.example.service.ExampleModelService
 import com.khabaznia.bots.example.stub.StubService
 import groovy.util.logging.Slf4j
@@ -236,13 +237,14 @@ class ExampleController extends AbstractBotController {
                             .backPath(EDIT_FLOW)
                             .redirectParams([someUniqueId: 'someUniqueId']))
                     .row()
-        keyboard.button('Edit entries of class ExampleModel', '/editEntriesOfExample')
+        keyboard.button('Edit all ExampleModels', '/editExampleModels').row()
+        keyboard.button('Edit all ExampleModelEntries', '/editExampleModelEntries')
         sendMessage.text('Add new or edit existing')
                 .keyboard(keyboard)
     }
 
-    @BotRequest(path = '/editEntriesOfExample')
-    editEntries(String myCustomParam, String entityId) {
+    @BotRequest(path = '/editExampleModels')
+    editExampleModels(String myCustomParam, String entityId) {
         if (myCustomParam) sendMessage.text myCustomParam
         if (entityId) sendMessage.text "Entity was updated/created -> $entityId"
         sendMessage.text('Choose action')
@@ -251,7 +253,7 @@ class ExampleController extends AbstractBotController {
                                 .entityNameRetriever({ ExampleModel it -> it.field1 })
                                 .entityClass(ExampleModel.class)
                                 .entities(exampleModelService.getAll())
-                                .thisStepPath('/editEntriesOfExample')
+                                .thisStepPath('/editExampleModels')
                                 .backPath(EDIT_FLOW)
                                 .createNewEntitySuccessMessage('YEEEEEES, CREATED!')
                                 .deleteEntitySuccessMessage("DELETED")
@@ -260,6 +262,20 @@ class ExampleController extends AbstractBotController {
                                 .canCreateNewEntity(true)
                                 .canDeleteEntities(true)
                                 .entityFactory('exampleModelFactory'))
+                )
+    }
+
+    @BotRequest(path = '/editExampleModelEntries')
+    editExampleModelEntries() {
+        sendMessage.text('Choose action')
+                .keyboard(editFlowKeyboardService.getKeyboard(
+                        new EditEntitiesFlowKeyboardDto<ExampleModelEntry>()
+                                .entityNameRetriever({ it.abbreviation })
+                                .entityClass(ExampleModelEntry.class)
+                                .entities(exampleModelService.getAllEntries())
+                                .thisStepPath('/editExampleModelEntries')
+                                .backPath(EDIT_FLOW)
+                                .canDeleteEntities(false))
                 )
     }
 

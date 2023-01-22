@@ -37,10 +37,11 @@ class EditFlowMessages implements BaseRequests, Configurable {
     private EditFlowKeyboardService editFlowKeyboardService
 
     void editFlowEnterMessage(String text, Map<String, String> binding) {
-        def message = sendMessage.text(text ?: enterMessage ?: defaultEditFlowEnterMessage)
+        def oldValueCanBeDeleted = isValueClearingEnabled() && !isEmpty(currentEditFlow.oldValue?.strip())
+        def message = sendMessage.text(text ?: enterMessage ?: getDefaultEditFlowEnterMessage(oldValueCanBeDeleted))
                 .binding(binding)
                 .delete() as SendMessage
-        if (isValueClearingEnabled() && !isEmpty(currentEditFlow.oldValue?.strip())) {
+        if (oldValueCanBeDeleted) {
             message.keyboard(inlineKeyboard.button('button.edit.flow.clear.value', EDIT_FIELD_CLEAR_VALUE))
         }
         requests << message
@@ -166,7 +167,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
         !isEmpty(currentValue?.strip()) ? 'text.edit.flow.current.value' : 'text.edit.flow.no.current.value'
     }
 
-    private static String getDefaultEditFlowEnterMessage() {
-        isValueClearingEnabled() ? 'text.edit.flow.enter.new.value.or.clear' : 'text.edit.flow.enter.new.value'
+    private static String getDefaultEditFlowEnterMessage(boolean isValueCanBeDeleted) {
+        isValueCanBeDeleted ? 'text.edit.flow.enter.new.value.or.clear' : 'text.edit.flow.enter.new.value'
     }
 }

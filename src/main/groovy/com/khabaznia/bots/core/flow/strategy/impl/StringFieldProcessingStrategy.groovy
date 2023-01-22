@@ -10,6 +10,6 @@ class StringFieldProcessingStrategy extends FieldProcessingStrategy {
 
     @Override
     String covertToType(Object value, Class specificClass) {
-        value.toString()
+        value ?: value as String
     }
 }

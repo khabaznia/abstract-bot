@@ -52,13 +52,18 @@ class ExampleModel {
     @Column(name = 'service_flag')
     String serviceFlag
 
-    @Editable(type = COLLECTION, mappedBy = 'parent')
+    @Column
+    String userCode
+
+    @Editable(type = COLLECTION, mappedBy = 'parent', selectionStrategy = 'exampleModelEntryUserSelectionStrategy',
+            enterMessage = '')
     @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @Column(name = "entries")
     Set<ExampleModelEntry> entries
 
     @Editable(type = COLLECTION, mappedBy = 'manyExamples',
-            enterMessage = 'Select <b>MANY TO MANY</b> entries',
+            selectionStrategy = 'exampleModelEntryAbbreviationSelectionStrategy',
+            enterMessage = 'Here is only entries with abreviation. Select some. \nWhen unselect, abbreviation is deleted',
             fieldButtonMessage = 'OTHER_ENTRIES')
     @ManyToMany(cascade = [CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH], fetch = FetchType.LAZY)
     @JoinTable(

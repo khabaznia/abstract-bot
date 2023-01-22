@@ -3,8 +3,10 @@ package com.khabaznia.bots.core.flow.strategy.impl
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.service.EditFlowEntityService
 import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
+import com.khabaznia.bots.core.flow.strategy.FieldSelectionStrategy
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
@@ -15,6 +17,8 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
 
     @Autowired
     private EditFlowEntityService entityService
+    @Autowired
+    private ApplicationContext context
 
     @Override
     void fillOldValue(EditFlow editFlow) {
@@ -25,7 +29,7 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
     @Override
     void sendEnterMessages(EditFlow editFlow, boolean isNew) {
         messages.editFlowSelectEntitiesMenu(editFlow.enterText, editFlow.enterTextBinding,
-                entityService.getEntitiesToSelect())
+                entityService.entitiesToSelect)
     }
 
     @Override
@@ -35,28 +39,12 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
 
     @Override
     void updateEntity(Object entity, String value, EditFlow editFlow) {
+        def strategy = fieldSelectionStrategy
         def entitiesToSave = editFlow.selectedIds - editFlow.initialIds
         def entitiesToRemove = editFlow.initialIds - editFlow.selectedIds
-        updateReferencesInChildEntities(entitiesToSave.unique(), entity, false)
-        updateReferencesInChildEntities(entitiesToRemove.unique(), entity, true)
-        entity."$editFlow.fieldName" = getSelectedEntities(editFlow.selectedIds)
-    }
-
-    private void updateReferencesInChildEntities(List<Long> ids, Object entity, boolean isRemove) {
-        def entitiesToRemove = getSelectedEntities(ids)
-        entitiesToRemove?.each {
-            def fieldName = currentFieldAnnotation.mappedBy()
-            selectableFieldHIsManyToManyRelation
-                    ? (isRemove ? (it."$fieldName"?.remove(it)) : (it."$fieldName"?.add(entity)))
-                    : (isRemove ? (it."$fieldName" = null) : (it."$fieldName" = entity))
-        }
-    }
-
-    private List<?> getSelectedEntities(List<Long> ids) {
-        entityManager
-                .createQuery("SELECT e FROM $selectableFieldHTableName e WHERE e.id IN :idsList", selectableFieldEntityClass)
-                .setParameter('idsList', ids)
-                .resultList
+        def selectedEntities = strategy.selectEntities(entity, entitiesToSave)
+        strategy.removeEntities(entity, entitiesToRemove)
+        entity."$editFlow.fieldName" = getEntities(editFlow.initialIds + entitiesToSave - entitiesToRemove)
     }
 
     @Override
@@ -68,5 +56,16 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
     @Override
     Object covertToType(Object value, Class specificClass) {
         throw new UnsupportedOperationException('Localized field can\'t be converted')
+    }
+
+    private FieldSelectionStrategy getFieldSelectionStrategy() {
+        context.getBean(fieldSelectionStrategyName, FieldSelectionStrategy.class)
+    }
+
+    protected List<?> getEntities(List<Long> ids) {
+        entityManager.createQuery("SELECT e FROM $selectableFieldHTableName e WHERE e.id IN :idsList",
+                selectableFieldEntityClass)
+                .setParameter('idsList', ids)
+                .resultList
     }
 }

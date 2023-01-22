@@ -75,9 +75,13 @@ class EditableParsingUtil {
                 .getAnnotation(Editable.class)
     }
 
-    static String getEntityFactory(Class entityClass) {
+    static String getEntityFactoryName(Class entityClass) {
         ((Editable) entityClass.getAnnotation(Editable.class))?.entityFactory() ?:
                 Editable.class.getDeclaredMethod('entityFactory').getDefaultValue() as String
+    }
+
+    static String getFieldSelectionStrategyName() {
+        currentEditFlow.fieldSelectionStrategy ?: currentFieldAnnotation.selectionStrategy()
     }
 
     private static Field getEntityIdField(Class entityClass) {

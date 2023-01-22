@@ -5,18 +5,13 @@ import com.khabaznia.bots.core.enums.Role
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Secured
-import com.khabaznia.bots.example.repository.ExampleModelRepository
 import groovy.util.logging.Slf4j
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Slf4j
 @Component
 @BotController
 class TestController extends AbstractBotController {
-
-    @Autowired
-    private ExampleModelRepository repository
 
     private void doTest() {
         //write your test here

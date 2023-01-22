@@ -59,6 +59,8 @@ class EditFlow {
     List<Long> initialIds = []
     @Column
     String entityFactory
+    @Column
+    String fieldSelectionStrategy
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)

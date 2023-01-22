@@ -8,6 +8,7 @@ import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.strategy.FieldResolvingStrategy
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
+import com.khabaznia.bots.core.service.I18nService
 import com.khabaznia.bots.core.trait.BaseRequests
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +24,8 @@ class EditFlowKeyboardService implements BaseRequests {
 
     @Autowired
     private Map<FieldType, FieldResolvingStrategy> fieldResolvingStrategyMap
+    @Autowired
+    private I18nService i18nService
 
     InlineKeyboard getKeyboard(EditEntitiesFlowKeyboardDto dto) {
         def keyboard = inlineKeyboard
@@ -73,12 +76,12 @@ class EditFlowKeyboardService implements BaseRequests {
                     .redirectParams([parentEditFlowId: flow.id.toString()])
                     .successPath(EDIT_SELECTABLE_FIELD_AFTER_CREATE))
                     .row()
-        entities.collect { collectSelectEntityButton(flow, it) }
-                .collate(3)
-                .each { row ->
-                    row.each { keyboard.addButton(it) }
-                    keyboard.row()
-                }
+        entities.entrySet().collate(3).eachWithIndex { fieldsRow, rowIndex ->
+            fieldsRow.each {
+                keyboard.addButton(collectSelectEntityButton(flow, it, rowIndex, entities.size()))
+            }
+            keyboard.row()
+        }
         keyboard.row()
         keyboard.button('button.edit.flow.confirm.selected',
                 LEFT_ARROW,
@@ -86,11 +89,25 @@ class EditFlowKeyboardService implements BaseRequests {
                 [editFlowId: flow.id.toString()])
     }
 
-    private InlineButton collectSelectEntityButton(EditFlow flow, Map.Entry<Object, Boolean> entity) {
-        inlineButton.text(getIdFieldValue(entity.key.id) ?: getDefaultMessageOfIdField(selectableFieldEntityClass))
+    private InlineButton collectSelectEntityButton(EditFlow flow, Map.Entry<Object, Boolean> entity,
+                                                   Integer rowIndex, Integer entitiesListSize) {
+        inlineButton.text(getSelectButtonText(entity.key, rowIndex, entitiesListSize))
                 .callbackData(SELECT_ENTITY_COLLECTION_FIELD)
                 .params([entityId: entity.key.id.toString(), editFlowId: flow.id.toString()])
                 .emoji(entity.value ? CHECKED_MARK : '') as InlineButton
+    }
+
+    private String getSelectButtonText(Object entity, Integer rowIndex, Integer entitiesListSize) {
+        def thresholdOfSymbolsForCurrentRow = 10 // default 10 sybmols for each button
+        switch (((rowIndex + 1) * 3) - entitiesListSize) {
+            case (1): thresholdOfSymbolsForCurrentRow = 14; break // 2 buttons in last row
+            case (2): thresholdOfSymbolsForCurrentRow = 20; break // 1 button in last row
+        }
+        def textTemplate = getIdFieldValue(entity.id) ?: getDefaultMessageOfIdField(selectableFieldEntityClass)
+        i18nService.getFilledTemplate(textTemplate)
+        textTemplate.length() > thresholdOfSymbolsForCurrentRow
+                ? textTemplate.substring(0, thresholdOfSymbolsForCurrentRow - 3).concat('...')
+                : textTemplate
     }
 
     private String getIdFieldValue(Long entityId) {

@@ -44,7 +44,8 @@ class EditFlowService {
                 successMessage: editFieldFlowDto.successText,
                 successPath: editFieldFlowDto.successPath,
                 params: editFieldFlowDto.redirectParams,
-                entityFactory: editFieldFlowDto.entityFactory)
+                entityFactory: editFieldFlowDto.entityFactory,
+                fieldSelectionStrategy: editFieldFlowDto.fieldSelectionStrategy)
         fieldProcessingStrategiesMap[getFieldType(getClass(editFlow), editFlow.fieldName)].prepare(editFlow)
         saveEditFlowInternal(editFlow)
     }
