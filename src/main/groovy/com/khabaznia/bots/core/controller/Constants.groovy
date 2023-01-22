@@ -64,6 +64,10 @@ class Constants {
         public static final String REDIRECT_PARAMETERS = 'redirectParameters'
     }
 
+    static final class CHAT_PARAMS {
+        public static final String CURRENT_REPLY_KEYBOARD_ID = 'currentReplyKeyboardId'
+    }
+
     static final class GROUP_CHATS_ACTIONS_CONTROLLER {
         public static final String BOT_CHAT_MEMBER_STATUS_UPDATED = '/bot_chat_member_status_updated'
         public static final String USER_CHAT_MEMBER_STATUS_UPDATED = '/user_chat_member_status_updated'

@@ -5,7 +5,9 @@ import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
 import com.khabaznia.bots.core.flow.service.EditFlowKeyboardService
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
+import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bots.core.meta.request.impl.SendMessage
+import com.khabaznia.bots.core.service.ChatService
 import com.khabaznia.bots.core.service.MessageService
 import com.khabaznia.bots.core.trait.BaseRequests
 import com.khabaznia.bots.core.trait.Configurable
@@ -18,15 +20,14 @@ import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
 import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.*
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.AVAILABLE_LOCALES
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
 import static org.apache.groovy.parser.antlr4.util.StringUtils.isEmpty
 
 @Slf4j
 @Component
 class EditFlowMessages implements BaseRequests, Configurable {
 
-    private static final String EDIT_FLOW_UPDATE_MESSAGE = 'editFlowChooseLangMessage'
-    private static final String EDIT_FLOW_CURRENT_VALUE_MESSAGE = 'editFlowCurrentValueMessage'
+    private static final String EDIT_FLOW_LANG_MENU_MESSAGE_LABEL = 'editFlowChooseLangMessage'
+    private static final String EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL = 'editFlowCurrentValueMessage'
     private static final String EDIT_FLOW_SELECT_ENTITIES_MESSAGE = 'selectEntitiesKeyboardMessage'
 
     @Autowired
@@ -35,6 +36,8 @@ class EditFlowMessages implements BaseRequests, Configurable {
     private MessageService messageService
     @Autowired
     private EditFlowKeyboardService editFlowKeyboardService
+    @Autowired
+    private ChatService chatService
 
     void editFlowEnterMessage(String text, Map<String, String> binding) {
         def oldValueCanBeDeleted = isValueClearingEnabled() && !isEmpty(currentEditFlow.oldValue?.strip())
@@ -50,14 +53,14 @@ class EditFlowMessages implements BaseRequests, Configurable {
     void editFlowCurrentValueMessage(String currentValue) {
         requests << sendMessage.text(getEditFlowCurrentValueText(currentValue))
                 .binding([value: currentValue])
-                .label(currentChat.code.concat(EDIT_FLOW_CURRENT_VALUE_MESSAGE))
+                .label(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
     }
 
     void updateEditFlowCurrentValueMessage(String currentValue, String oldValue) {
         if (oldValue != currentValue)
             requests << editMessage.text(getEditFlowCurrentValueText(currentValue))
                     .binding([value: currentValue])
-                    .label(currentChat.code.concat(EDIT_FLOW_CURRENT_VALUE_MESSAGE))
+                    .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
                     .delete()
     }
 
@@ -71,12 +74,12 @@ class EditFlowMessages implements BaseRequests, Configurable {
     void updateEditFlowChooseLangMenu(String lang) {
         requests << sendMessage.text('text.edit.flow.chosen.lang')
                 .binding([lang: Constants.LANG_CONTROLLER.LANG_EMOJI[lang]])
-                .label(currentChat.code.concat(EDIT_FLOW_UPDATE_MESSAGE))
+                .label(chatService.setChatParam(EDIT_FLOW_LANG_MENU_MESSAGE_LABEL))
                 .delete()
     }
 
     void deleteEditFlowChooseLangMessage() {
-        requests << deleteMessage.label(currentChat.code.concat(EDIT_FLOW_UPDATE_MESSAGE))
+        requests << deleteMessage.label(chatService.getChatParam(EDIT_FLOW_LANG_MENU_MESSAGE_LABEL))
     }
 
     void editBooleanFieldMenu(String text, Map<String, String> binding) {
@@ -91,35 +94,35 @@ class EditFlowMessages implements BaseRequests, Configurable {
     void editFlowSelectEntitiesMenu(String text, Map<String, String> binding, Map<Object, Boolean> entities) {
         requests << sendMessage.text(text ?: enterMessage ?: 'text.edit.flow.select.entities')
                 .binding(binding)
-                .label(currentChat.code.concat(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
+                .label(chatService.setChatParam(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
                 .keyboard(editFlowKeyboardService.getSelectedEntitiesKeyboard(entities))
     }
 
     void updateSelectEntitiesMenu(Map<Object, Boolean> entities) {
         requests << editMessage
-                .label(currentChat.code.concat(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
+                .label(chatService.getChatParam(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
                 .keyboard(editFlowKeyboardService.getSelectedEntitiesKeyboard(entities))
     }
 
     void deleteSelectEntitiesFieldMenu() {
-        requests << deleteMessage.label(currentChat.code.concat(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
+        requests << deleteMessage.label(chatService.getChatParam(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
     }
 
     void editFlowErrorMessage() {
-        requests << sendMessage.text('text.edit.flow.error.try.again')
-                .delete()
+        requests << withCurrentReplyKeyboard(sendMessage
+                .text('text.edit.flow.error.try.again'))
     }
 
     void selectedEntitiesSavedMessage() {
-        requests << sendMessage.text('text.edit.flow.selected.values.persisted')
+        requests << withCurrentReplyKeyboard(sendMessage
+                .text('text.edit.flow.selected.values.persisted'))
     }
 
     void editFlowSuccessMessage(String text, boolean clear = false) {
-        requests << sendMessage
+        requests << withCurrentReplyKeyboard(sendMessage
                 .text(text ?: (clear
                         ? 'text.edit.flow.cleared.message'
-                        : 'text.edit.flow.success.message'))
-                .delete()
+                        : 'text.edit.flow.success.message')))
     }
 
     void deleteEntitySuccessMessage(String text) {
@@ -161,6 +164,13 @@ class EditFlowMessages implements BaseRequests, Configurable {
             keyboard.row()
         }
         keyboard
+    }
+
+    private AbstractKeyboardMessage withCurrentReplyKeyboard(AbstractKeyboardMessage message) {
+        def currentReplyKeyboard = chatService.currentReplyKeyboard
+        currentReplyKeyboard
+                ? message.keyboard(currentReplyKeyboard)
+                : message
     }
 
     private static String getEditFlowCurrentValueText(String currentValue) {

@@ -57,7 +57,7 @@ class Chat {
     Permissions permissions
 
     @ElementCollection
-    @CollectionTable(name = "additional_params_mapping",
+    @CollectionTable(name = "chat_additional_params_mapping",
             joinColumns = [@JoinColumn(name = "id", referencedColumnName = "chat_id")])
     @MapKeyColumn(name = "key")
     @Column(name = "value")

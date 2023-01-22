@@ -3,6 +3,7 @@ package com.khabaznia.bots.core.listener
 import com.khabaznia.bots.core.enums.ButtonType
 import com.khabaznia.bots.core.enums.MessageFeature
 import com.khabaznia.bots.core.event.UpdateKeyboardEvent
+import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bots.core.meta.request.impl.EditMessage
 import com.khabaznia.bots.core.model.Message
 import com.khabaznia.bots.core.service.BotRequestService
@@ -14,7 +15,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.meta.mapper.KeyboardMapper.fromKeyboardModel
+import static com.khabaznia.bots.core.meta.mapper.KeyboardMapper.keyboardFromModel
 
 @Slf4j
 @Component
@@ -49,7 +50,8 @@ class UpdateKeyboardEventListener {
     private EditMessage toEditKeyboardRequest(Message messageWithKeyboard) {
         def editMessageRequest = context.getBean('editMessage')
         editMessageRequest.messageId(messageWithKeyboard.messageId)
-        editMessageRequest.setKeyboard(fromKeyboardModel(messageService.getKeyboard(messageWithKeyboard.keyboard.id)))
+        editMessageRequest.setKeyboard(
+                keyboardFromModel(messageService.getKeyboard(messageWithKeyboard.keyboard.id), InlineKeyboard.class))
         editMessageRequest
     }
 }

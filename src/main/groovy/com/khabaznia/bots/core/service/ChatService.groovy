@@ -3,10 +3,12 @@ package com.khabaznia.bots.core.service
 import com.khabaznia.bots.core.enums.ChatRole
 import com.khabaznia.bots.core.enums.UserStatusInGroupChat
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
+import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboard
 import com.khabaznia.bots.core.meta.response.impl.ChatResponse
 import com.khabaznia.bots.core.model.Chat
 import com.khabaznia.bots.core.model.Permissions
 import com.khabaznia.bots.core.repository.ChatRepository
+import com.khabaznia.bots.core.repository.KeyboardRepository
 import com.khabaznia.bots.core.trait.BaseRequests
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator
 
+import static com.khabaznia.bots.core.controller.Constants.CHAT_PARAMS.CURRENT_REPLY_KEYBOARD_ID
+import static com.khabaznia.bots.core.meta.mapper.KeyboardMapper.keyboardFromModel
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
 
 @Slf4j
@@ -24,6 +28,8 @@ class ChatService implements BaseRequests {
     private ChatRepository chatRepository
     @Autowired
     private BotRequestService apiMethodService
+    @Autowired
+    private KeyboardRepository keyboardRepository
 
     Chat getChatByCode(String code) {
         chatRepository.getByCode(code)
@@ -94,6 +100,13 @@ class ChatService implements BaseRequests {
         def newChatMember = chatMemberUpdated.newChatMember as ChatMemberAdministrator
         chat.permissions = populatePermissions(newChatMember)
         chatRepository.save(chat)
+    }
+
+    ReplyKeyboard getCurrentReplyKeyboard(Chat chat = currentChat) {
+        def keyboardId = getChatParam(CURRENT_REPLY_KEYBOARD_ID, chat.code)
+        if (!keyboardId) return null
+        def keyboardModel = keyboardRepository.getById(Long.valueOf(keyboardId))
+        keyboardFromModel(keyboardModel, ReplyKeyboard.class)
     }
 
     private String getInviteLinkForChat(String chatCode) {

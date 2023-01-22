@@ -2,10 +2,7 @@ package com.khabaznia.bots.core.meta.mapper
 
 import com.khabaznia.bots.core.enums.KeyboardType
 import com.khabaznia.bots.core.meta.keyboard.Button
-import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
-import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
-import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboard
-import com.khabaznia.bots.core.meta.keyboard.impl.ReplyKeyboardRemove
+import com.khabaznia.bots.core.meta.keyboard.impl.*
 import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bots.core.model.Keyboard
 import com.khabaznia.bots.core.service.ChatService
@@ -93,7 +90,7 @@ class KeyboardMapper {
 
     static Keyboard toKeyboardModel(com.khabaznia.bots.core.meta.keyboard.Keyboard keyboard) {
         def rowPosition = 0
-        !keyboard ? null :
+        !keyboard || keyboard instanceof ReplyKeyboardRemove ? null :
                 new Keyboard(buttons: keyboard.get().collect {
                     def buttonPosition = 0
                     def rowButtons = it.each {
@@ -108,17 +105,20 @@ class KeyboardMapper {
                         type: keyboard instanceof InlineKeyboard ? KeyboardType.INLINE : KeyboardType.REPLY)
     }
 
-    static InlineKeyboard fromKeyboardModel(Keyboard keyboard) {
+    static <T extends com.khabaznia.bots.core.meta.keyboard.Keyboard> T keyboardFromModel(Keyboard keyboard, Class<T> keyboardClass) {
         def result = !keyboard.buttons.isEmpty()
-                ? new InlineKeyboard().setRows(
+                ? keyboardClass.getDeclaredConstructor().newInstance().setRows(
                 keyboard.buttons
                         .groupBy { it.rowPosition }
                         .sort { it.key }
                         .collect {
-                            it.value
-                                    .sort { it.position }
-                                    .collect { convertButton(it) }
-                        }) as InlineKeyboard
+                            it.value.sort { it.position }
+                                    .collect {
+                                        InlineKeyboard.isAssignableFrom(keyboardClass)
+                                                ? convertInlineButton(it)
+                                                : convertReplyButton(it)
+                                    }
+                        }) as T
                 : null
         result
     }
@@ -137,7 +137,7 @@ class KeyboardMapper {
                 rowPosition: rowPosition)
     }
 
-    static InlineButton convertButton(com.khabaznia.bots.core.model.Button source) {
+    static InlineButton convertInlineButton(com.khabaznia.bots.core.model.Button source) {
         new InlineButton(
                 params: source.params,
                 callbackData: source.callbackData,
@@ -146,6 +146,15 @@ class KeyboardMapper {
                 binding: source.binding,
                 type: source.type,
                 url: source.url,
+                id: source.id)
+    }
+
+    static ReplyButton convertReplyButton(com.khabaznia.bots.core.model.Button source) {
+        new ReplyButton(
+                text: source.key,
+                emoji: source.emoji,
+                binding: source.binding,
+                type: source.type,
                 id: source.id)
     }
 }
