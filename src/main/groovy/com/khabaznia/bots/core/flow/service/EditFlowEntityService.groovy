@@ -2,6 +2,7 @@ package com.khabaznia.bots.core.flow.service
 
 import com.khabaznia.bots.core.flow.factory.EntityFactory
 import com.khabaznia.bots.core.flow.model.EditFlow
+import com.khabaznia.bots.core.flow.strategy.FieldSelectionStrategy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
@@ -21,10 +22,12 @@ class EditFlowEntityService {
     private ApplicationContext context
 
     Map<Object, Boolean> getEntitiesToSelect() {
-        def query = "SELECT e FROM $selectableFieldHTableName e"
-        def resultMap = entityManager.createQuery(query, selectableFieldEntityClass).resultList
-                .collectEntries { [(it): currentEditFlow.selectedIds.contains(it.id).toBoolean()] }
-        resultMap.putAll((currentEditFlow.selectedIds - resultMap.keySet()*.id)
+        def selectedEntities = context.getBean(fieldSelectionStrategyName, FieldSelectionStrategy.class)
+                .entitiesToShow
+        def selectedIds = currentEditFlow.selectedIds
+        def resultMap = selectedEntities
+                .collectEntries { [(it): selectedIds.contains(it.id).toBoolean()] }
+        resultMap.putAll((selectedIds - resultMap.keySet()*.id)
                 .collectEntries { [(entityManager.find(selectableFieldEntityClass, it)): Boolean.TRUE] })
         resultMap as Map<String, Boolean>
     }
@@ -38,8 +41,8 @@ class EditFlowEntityService {
     }
 
     private Object getNewEntity(EditFlow editFlow, Class<?> entityClass) {
-        def factoryBean = editFlow.entityFactory ?: getEntityFactory(entityClass)
-        context.getBean(factoryBean, EntityFactory.class)
+        def factoryBeanName = editFlow.entityFactory ?: getEntityFactoryName(entityClass)
+        context.getBean(factoryBeanName, EntityFactory.class)
                 .createEntity()
     }
 

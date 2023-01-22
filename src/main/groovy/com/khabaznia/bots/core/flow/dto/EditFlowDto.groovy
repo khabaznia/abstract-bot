@@ -12,12 +12,11 @@ abstract class EditFlowDto {
 
     Class entityClass
     String entityFactory
+    String fieldSelectionStrategy
 
     String enterText
     Map<String, String> enterTextBinding = [:]
-
     String successPath
     Map<String, String> redirectParams = [:]
-
     String backPath
 }

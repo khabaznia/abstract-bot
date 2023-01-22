@@ -29,4 +29,6 @@ import java.lang.annotation.Target
     boolean canCreateEntity() default true
 
     String mappedBy() default ''
+
+    String selectionStrategy() default 'defaultFieldSelectionStrategy'
 }

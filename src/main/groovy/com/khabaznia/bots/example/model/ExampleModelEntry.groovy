@@ -17,7 +17,7 @@ class ExampleModelEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @Editable(enableClear = true, id = true, type = FieldType.LOCALIZED,
+    @Editable(enableClear = true, type = FieldType.LOCALIZED,
             fieldButtonMessage = 'example.model.localized.name.button.name',
             enterMessage = 'example.model.enter.message.name')
     @ElementCollection
@@ -27,11 +27,11 @@ class ExampleModelEntry {
     @Column(name = 'name', columnDefinition = "TEXT")
     Map<String, String> name = [:]
 
-    @Editable(enableClear = true,
+    @Editable(enableClear = true, id = true,
             fieldButtonMessage = 'example.model.model.entry.button.name')
     @Pattern(regexp = /^[A-Z]+$/, message = 'example.model.model.entry.pattern.validation')
     @Column(name = 'field1')
-    String abreviation
+    String abbreviation
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = 'parent')
