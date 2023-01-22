@@ -1,6 +1,7 @@
 package com.khabaznia.bots.core.flow.model
 
 import com.khabaznia.bots.core.flow.enums.FieldType
+import com.khabaznia.bots.core.flow.enums.MediaType
 import groovy.transform.ToString
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -48,6 +49,9 @@ class EditFlow {
     @Column
     @Enumerated(EnumType.STRING)
     FieldType type
+    @Column
+    @Enumerated(EnumType.STRING)
+    MediaType inputMediaType
 
     @Column
     String oldValue

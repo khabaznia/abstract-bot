@@ -58,6 +58,7 @@ class ControllerMetaDataConverter {
         controllerMetaData.params = getParams(method)
         controllerMetaData.enableDuplicateRequests = getEnableDuplicateRequests(method)
         controllerMetaData.inputParameterName = getInputParameterName(method)
+        controllerMetaData.isMediaInput = getIsMediaInputParam(method)
         controllerMetaData
     }
 
@@ -153,5 +154,16 @@ class ControllerMetaDataConverter {
             position++
         }
         null
+    }
+
+    private static boolean getIsMediaInputParam(Method method) {
+        Integer position = 0
+        for (Annotation[] row : method.getParameterAnnotations()) {
+            for (Annotation ann : row)
+                if (Input.class.isInstance(ann))
+                    return ((Input) ann).media()
+            position++
+        }
+        false
     }
 }

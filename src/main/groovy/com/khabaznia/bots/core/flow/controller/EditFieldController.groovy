@@ -5,6 +5,7 @@ import com.khabaznia.bots.core.flow.dto.CreateNewEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.DeleteEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
 import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
+import com.khabaznia.bots.core.flow.enums.MediaType
 import com.khabaznia.bots.core.flow.service.EditFlowEntityService
 import com.khabaznia.bots.core.flow.service.EditFlowService
 import com.khabaznia.bots.core.flow.util.EditFlowMessages
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component
 
 import javax.validation.ConstraintViolationException
 
-import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
+import static com.khabaznia.bots.core.controller.Constants.COMMON.*
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.*
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
 import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.FLOW_PARAM_PREFIX
@@ -78,6 +79,40 @@ class EditFieldController extends AbstractBotController {
         EDIT_FIELD_ENTER
     }
 
+    private String editFieldInternal(String input = null) {
+        try {
+            def editFlow = currentEditFlow
+            def entityId = editFlowService.updateEntityWithInput(input)
+            editFlowService.sendSuccessMessages(editFlow, input == null)
+            editFlowService.postProcess(editFlow, entityId)
+            return editFlow.successPath ?: TO_MAIN
+        } catch (ConstraintViolationException ex) {
+            ex.constraintViolations*.messageTemplate.each { sendMessage.text(it) }
+            return EDIT_FIELD_VALIDATION_FAILED
+        }
+    }
+
+    private void editLocalizedFieldInternal(String lang) {
+        messages.updateEditFlowChooseLangMenu(lang)
+        editFlowService.setFieldLang(lang)
+        def editFlow = currentEditFlow
+        messages.editFlowEnterMessage(editFlow.enterText, editFlow.enterTextBinding,)
+    }
+
+    private void selectEntityInternal(String entityId) {
+        editFlowService.selectEntityWithId(entityId)
+        messages.updateSelectEntitiesMenu(entityService.getEntitiesToSelect())
+    }
+
+    private selectFieldActionInternal(String editFlowId, Closure successFunction) {
+        if (currentEditFlow.id.toString() != editFlowId) {
+            messages.editFlowErrorMessage()
+            messages.deleteSelectEntitiesFieldMenu()
+            return TO_MAIN
+        }
+        successFunction.call()
+    }
+
     @BotRequest(path = EDIT_LOCALIZED_FIELD_MENU, after = EDIT_FIELD_ENTER)
     editLocalizedField(String lang) { editLocalizedFieldInternal(lang) }
 
@@ -132,37 +167,63 @@ class EditFieldController extends AbstractBotController {
         selectFieldActionInternal(editFlowId, { selectEntityInternal(entityId) })
     }
 
-    private String editFieldInternal(String input = null) {
-        try {
-            def editFlow = currentEditFlow
-            def entityId = editFlowService.updateEntityWithInput(input)
-            editFlowService.sendSuccessMessages(editFlow, input == null)
-            editFlowService.postProcess(editFlow, entityId)
-            return editFlow.successPath ?: TO_MAIN
-        } catch (ConstraintViolationException ex) {
-            ex.constraintViolations*.messageTemplate.each { sendMessage.text(it) }
-            return EDIT_FIELD_VALIDATION_FAILED
-        }
+    @BotRequest(path = IMAGE_CONTROLLER, after = EDIT_FIELD_ENTER)
+    String editImageField(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.IMAGE)
+        editFieldInternal(inputMedia)
     }
 
-    private void editLocalizedFieldInternal(String lang) {
-        messages.updateEditFlowChooseLangMenu(lang)
-        editFlowService.setFieldLang(lang)
-        def editFlow = currentEditFlow
-        messages.editFlowEnterMessage(editFlow.enterText, editFlow.enterTextBinding)
+    @BotRequest(path = AUDIO_CONTROLLER, after = EDIT_FIELD_ENTER)
+    String editAudioField(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.AUDIO)
+        editFieldInternal(inputMedia)
     }
 
-    private void selectEntityInternal(String entityId) {
-        editFlowService.selectEntityWithId(entityId)
-        messages.updateSelectEntitiesMenu(entityService.getEntitiesToSelect())
+    @BotRequest(path = VIDEO_CONTROLLER, after = EDIT_FIELD_ENTER)
+    String editVideoField(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.VIDEO)
+        editFieldInternal(inputMedia)
     }
 
-    private selectFieldActionInternal(String editFlowId, Closure successFunction) {
-        if (currentEditFlow.id.toString() != editFlowId) {
-            messages.editFlowErrorMessage()
-            messages.deleteSelectEntitiesFieldMenu()
-            return TO_MAIN
-        }
-        successFunction.call()
+    @BotRequest(path = ANIMATION_CONTROLLER, after = EDIT_FIELD_ENTER)
+    String editAnimationField(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.ANIMATION)
+        editFieldInternal(inputMedia)
+    }
+
+    @BotRequest(path = DOCUMENT_CONTROLLER, after = EDIT_FIELD_ENTER)
+    String editDocumentField(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.DOCUMENT)
+        editFieldInternal(inputMedia)
+    }
+
+    @BotRequest(path = IMAGE_CONTROLLER, after = EDIT_FIELD_VALIDATION_FAILED)
+    String editImageFieldAfterValidation(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.IMAGE)
+        editFieldInternal(inputMedia)
+    }
+
+    @BotRequest(path = AUDIO_CONTROLLER, after = EDIT_FIELD_VALIDATION_FAILED)
+    String editAudioFieldAfterValidation(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.AUDIO)
+        editFieldInternal(inputMedia)
+    }
+
+    @BotRequest(path = VIDEO_CONTROLLER, after = EDIT_FIELD_VALIDATION_FAILED)
+    String editVideoFieldAfterValidation(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.VIDEO)
+        editFieldInternal(inputMedia)
+    }
+
+    @BotRequest(path = ANIMATION_CONTROLLER, after = EDIT_FIELD_VALIDATION_FAILED)
+    String editAnimationFieldAfterValidation(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.ANIMATION)
+        editFieldInternal(inputMedia)
+    }
+
+    @BotRequest(path = DOCUMENT_CONTROLLER, after = EDIT_FIELD_VALIDATION_FAILED)
+    String editDocumentFieldAfterValidation(@Input(media = true) String inputMedia) {
+        editFlowService.setInputMediaType(MediaType.DOCUMENT)
+        editFieldInternal(inputMedia)
     }
 }

@@ -24,6 +24,7 @@ class StrategiesConfig {
         map.put(FieldType.NUMBER, context.getBean('numberFieldProcessingStrategy') as FieldProcessingStrategy)
         map.put(FieldType.BOOLEAN, context.getBean('booleanFieldProcessingStrategy') as FieldProcessingStrategy)
         map.put(FieldType.COLLECTION, context.getBean('collectionFieldProcessingStrategy') as FieldProcessingStrategy)
+        map.put(FieldType.MEDIA, context.getBean('mediaFieldProcessingStrategy') as FieldProcessingStrategy)
         map
     }
 

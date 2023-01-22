@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 
+import static com.khabaznia.bots.core.service.UpdateService.getFileId
+
 @Slf4j
 @Component
 @Scope(value = 'prototype')
@@ -27,7 +29,7 @@ class BotControllerProxy {
         if (redirectParams) params.putAll(redirectParams)
         log.debug 'Params from update: {}. Params in controller: {}', params, metaData.params
         def result = metaData.hasParameters && !metaData.rawParams
-                ? callWithBindedParams(params, metaData.inputParameterName, update)
+                ? callWithBoundParams(params, metaData.inputParameterName, update, metaData.isMediaInput)
                 : metaData.rawParams
                     ? metaData.executeMethod.invoke(metaData.bean, params)
                     : metaData.executeMethod.invoke(metaData.bean)
@@ -35,9 +37,17 @@ class BotControllerProxy {
         metaData.returnString && result ? result as String : null
     }
 
-    private Object callWithBindedParams(Map<String, String> params, String inputParamName, Update update) {
+    private Object callWithBoundParams(Map<String, String> params, String inputParamName,
+                                       Update update, boolean isMediaInput) {
         metaData.executeMethod.invoke(metaData.bean, metaData.params*.value.collect {
-            (inputParamName && it == inputParamName) ? updateService.getMappedMessageText(update) : params.get(it)
+            populateParamValue(inputParamName, it, isMediaInput, update, params)
         } as Object[])
+    }
+
+    private String populateParamValue(inputParamName, paramName, isMediaInput,
+                                      update, params) {
+        (inputParamName && paramName == inputParamName)
+                ? isMediaInput ? getFileId(update) : updateService.getMappedMessageText(update)
+                : params.get(paramName)
     }
 }
