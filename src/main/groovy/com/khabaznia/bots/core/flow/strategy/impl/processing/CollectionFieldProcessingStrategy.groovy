@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.flow.strategy.impl
+package com.khabaznia.bots.core.flow.strategy.impl.processing
 
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.service.EditFlowEntityService
@@ -42,7 +42,7 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
         def strategy = fieldSelectionStrategy
         def entitiesToSave = editFlow.selectedIds - editFlow.initialIds
         def entitiesToRemove = editFlow.initialIds - editFlow.selectedIds
-        def selectedEntities = strategy.selectEntities(entity, entitiesToSave)
+        strategy.selectEntities(entity, entitiesToSave)
         strategy.removeEntities(entity, entitiesToRemove)
         entity."$editFlow.fieldName" = getEntities(editFlow.initialIds + entitiesToSave - entitiesToRemove)
     }

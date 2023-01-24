@@ -61,6 +61,12 @@ final class Emoji {
     public static final String CHATTING = "💬"
     public static final String PLUS = "➕"
     public static final String EDIT = "📝"
+    public static final String PHOTO = '🌁'
+    public static final String VIDEO = '🎬'
+    public static final String ANIMATION = '🏙'
+    public static final String AUDIO = '🎧'
+    public static final String DOCUMENT = '📄'
+    public static final String NONE = "➖"
 
     public static final String TEST_EMOJI_SET = "🛀🏿 🧘🏼 🛌🏿"
     public static final String AVOCADO = " 🥑"

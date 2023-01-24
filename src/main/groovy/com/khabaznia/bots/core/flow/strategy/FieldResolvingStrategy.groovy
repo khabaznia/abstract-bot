@@ -11,6 +11,8 @@ abstract class FieldResolvingStrategy {
 
     abstract Object getValue(Class entityClass, Long entityId, String fieldName)
 
+    abstract String getStringView(Object entity, String fieldName)
+
     protected Object getPersistedValue(Class entityClass, Long entityId, String fieldName) {
         entityManager.find(entityClass, entityId)?."${fieldName}"
     }

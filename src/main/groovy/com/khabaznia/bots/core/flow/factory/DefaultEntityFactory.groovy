@@ -8,12 +8,17 @@ import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getCurrentEd
 
 @Slf4j
 @Component('defaultEntityFactory')
-class DefaultEntityFactory implements EntityFactory {
+class DefaultEntityFactory extends EntityFactory<Object> {
 
     @Override
     Object createEntity() {
-        Class entityClass = getClass(currentEditFlow)
-        log.debug 'Default creation of new entity for class {}', entityClass.simpleName
-        return entityClass.getDeclaredConstructor().newInstance()
+        super.createEntity()
+    }
+
+    @Override
+    String getView(Object entity) {
+        fieldViewService.getEntityViewHeader(entity.class, entity.id)
+                .concat('\n\n')
+                .concat(getAllFieldsView(entity))
     }
 }

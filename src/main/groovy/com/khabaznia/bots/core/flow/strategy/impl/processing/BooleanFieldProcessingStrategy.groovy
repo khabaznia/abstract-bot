@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.flow.strategy.impl
+package com.khabaznia.bots.core.flow.strategy.impl.processing
 
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
@@ -12,7 +12,7 @@ import static com.khabaznia.bots.core.meta.Emoji.CROSS_MARK
 @Component('booleanFieldProcessingStrategy')
 class BooleanFieldProcessingStrategy extends FieldProcessingStrategy {
 
-    private static final Map<Boolean, String> BOOLEAN_VALUES_MAPPING = [(Boolean.TRUE): CHECKED_MARK, (Boolean.FALSE): CROSS_MARK]
+    public static final Map<Boolean, String> BOOLEAN_VALUES_MAPPING = [(Boolean.TRUE): CHECKED_MARK, (Boolean.FALSE): CROSS_MARK]
 
     @Override
     void sendEnterMessages(EditFlow editFlow, boolean isNew) {

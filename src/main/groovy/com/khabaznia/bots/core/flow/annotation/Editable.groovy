@@ -24,6 +24,8 @@ import java.lang.annotation.Target
 
     String entityFactory() default 'defaultEntityFactory'
 
+    String entityViewHeader() default 'text.entity.view.header'
+
     /**
      * COLLECTION field params
      */
@@ -38,4 +40,6 @@ import java.lang.annotation.Target
      */
 
     MediaType mediaType() default MediaType.IMAGE
+
+    boolean viewOnly() default false
 }

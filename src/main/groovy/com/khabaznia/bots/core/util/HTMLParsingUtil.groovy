@@ -59,13 +59,13 @@ class HTMLParsingUtil {
 
     static String mapHTMLParsableSymbols(String input) {
         def mappingsSymbols =
-                ["<"  : '',
-                 ">"  : '',
-                 "&"  : '&amp;',
-                 "\'" : '&quot;',
-                 '\\$': '',
+                ["<"   : '',
+                 ">"   : '',
+                 "&"   : '&amp;',
+                 "\'"  : '&quot;',
+                 '\\$' : '',
                  '\\\\': '/',
-                 "\"" : '&quot;']
+                 "\""  : '&quot;']
         def result = input
         mappingsSymbols.each { result = result.replaceAll(it.key, it.value) }
         result

@@ -32,7 +32,6 @@ class EditEntitiesFlowKeyboardDto<T> {
     String deleteEntitySuccessMessage
     boolean canDeleteEntities = true
     boolean canCreateNewEntity = true
-    boolean canEditEntities = true
     Map<String, String> redirectParams = [:]
     String entityFactory
 }

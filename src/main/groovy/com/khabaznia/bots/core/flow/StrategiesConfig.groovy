@@ -31,10 +31,12 @@ class StrategiesConfig {
     @Bean(name = 'fieldResolvingStrategiesMap')
     Map<FieldType, FieldResolvingStrategy> fieldResolvingStrategyMap() {
         Map<FieldType, FieldResolvingStrategy> map = [:]
-        map.put(FieldType.STRING, context.getBean('defaultFieldResolvingStrategyMap') as FieldResolvingStrategy)
-        map.put(FieldType.NUMBER, context.getBean('defaultFieldResolvingStrategyMap') as FieldResolvingStrategy)
-        map.put(FieldType.BOOLEAN, context.getBean('defaultFieldResolvingStrategyMap') as FieldResolvingStrategy)
-        map.put(FieldType.LOCALIZED, context.getBean('localizedFieldResolvingStrategyMap') as FieldResolvingStrategy)
+        map.put(FieldType.STRING, context.getBean('defaultFieldResolvingStrategy') as FieldResolvingStrategy)
+        map.put(FieldType.NUMBER, context.getBean('defaultFieldResolvingStrategy') as FieldResolvingStrategy)
+        map.put(FieldType.BOOLEAN, context.getBean('booleanFieldResolvingStrategy') as FieldResolvingStrategy)
+        map.put(FieldType.LOCALIZED, context.getBean('localizedFieldResolvingStrategy') as FieldResolvingStrategy)
+        map.put(FieldType.COLLECTION, context.getBean('collectionFieldResolvingStrategy') as FieldResolvingStrategy)
+        map.put(FieldType.MEDIA, context.getBean('mediaFieldResolvingStrategy') as FieldResolvingStrategy)
         map
     }
 }
