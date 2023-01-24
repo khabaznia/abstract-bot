@@ -67,6 +67,7 @@ final class Emoji {
     public static final String AUDIO = '🎧'
     public static final String DOCUMENT = '📄'
     public static final String NONE = "➖"
+    public static final String VALIDATION_ERROR = "❕"
 
     public static final String TEST_EMOJI_SET = "🛀🏿 🧘🏼 🛌🏿"
     public static final String AVOCADO = " 🥑"
