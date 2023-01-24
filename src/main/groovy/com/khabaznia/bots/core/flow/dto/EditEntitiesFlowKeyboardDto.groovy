@@ -34,4 +34,6 @@ class EditEntitiesFlowKeyboardDto<T> {
     boolean canCreateNewEntity = true
     Map<String, String> redirectParams = [:]
     String entityFactory
+    Integer fieldsInRow
+    Integer entitiesInRow
 }

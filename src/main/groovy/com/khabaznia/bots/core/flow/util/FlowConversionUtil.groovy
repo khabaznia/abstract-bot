@@ -74,7 +74,7 @@ class FlowConversionUtil implements BaseRequests {
     }
 
     private static Object getValue(String fieldName, String value, Object dto) {
-        if (value == null) value
+        if (value == null) return value
         // Get class of property: it can be either in this class or in super class
         def targetFieldClass = dto.class.getDeclaredFields()*.name.contains(fieldName)
                 ? dto.class

@@ -2,6 +2,7 @@ package com.khabaznia.bots.core.meta.keyboard.impl
 
 import com.khabaznia.bots.core.enums.ButtonType
 import com.khabaznia.bots.core.flow.dto.ConfirmationFlowDto
+import com.khabaznia.bots.core.flow.dto.EditEntitiesFlowKeyboardDto
 import com.khabaznia.bots.core.flow.dto.EditFlowDto
 import com.khabaznia.bots.core.meta.keyboard.Keyboard
 import groovy.transform.TupleConstructor
