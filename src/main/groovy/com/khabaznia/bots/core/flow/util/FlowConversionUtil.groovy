@@ -5,6 +5,7 @@ import com.khabaznia.bots.core.flow.dto.*
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineButton
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bots.core.trait.BaseRequests
+import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.controller.Constants.CONFIRMATION_CONTROLLER.CONFIRMATION_ACTION
@@ -13,6 +14,7 @@ import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER
 import static com.khabaznia.bots.core.meta.Emoji.LEFT_ARROW
 import static com.khabaznia.bots.core.meta.Emoji.THUMB_UP
 
+@Slf4j
 @Component
 class FlowConversionUtil implements BaseRequests {
 
@@ -27,6 +29,8 @@ class FlowConversionUtil implements BaseRequests {
         def dto = fillDto(allParams, confirmationFlowDto)
         dto.redirectParams(getPrefixUnmappedParams(allParams, REDIRECT_PARAMS_PREFIX))
         dto.menuTextBinding(getPrefixUnmappedParams(allParams, MESSAGE_BINDING_PARAMS_PREFIX))
+        log.trace 'Result confirmationDto converted from params: {}', dto
+        dto
     }
 
     def <T extends EditFlowDto> T getEditFieldFlowDto(Class<T> editFlowDtoClass, Map<String, String> allParams) {
@@ -34,10 +38,12 @@ class FlowConversionUtil implements BaseRequests {
         def dto = fillDto(allParams, get(editFlowDtoClass))
         dto.redirectParams(getPrefixUnmappedParams(allParams, REDIRECT_PARAMS_PREFIX))
         dto.enterTextBinding(getPrefixUnmappedParams(allParams, MESSAGE_BINDING_PARAMS_PREFIX))
+        log.trace 'Result editFlowDto converted from params: {}', dto
         dto
     }
 
     static InlineButton fillEditFlowButton(InlineButton inlineButton, String text, EditFlowDto editFlowDto, String emoji = null) {
+        log.trace 'Try to convert to enter button from dto: {}', editFlowDto
         inlineButton.callbackData(getPath(editFlowDto))
                 .params(getPrefixMappedParams(getEditFLowDtoParams(editFlowDto), FLOW_PARAM_PREFIX))
                 .text(text ?: getFieldDefaultMessage(editFlowDto as EditFieldFlowDto))
@@ -46,6 +52,7 @@ class FlowConversionUtil implements BaseRequests {
     }
 
     static InlineButton fillConfirmationButton(InlineButton inlineButton, String text, ConfirmationFlowDto confirmationFlowDto, String emoji = null) {
+        log.trace 'Try to convert to enter button from dto: {}', confirmationFlowDto
         inlineButton.callbackData(CONFIRMATION_MENU)
                 .params(getPrefixMappedParams(getConfirmationFlowDtoParams(confirmationFlowDto), FLOW_PARAM_PREFIX))
                 .text(text)
@@ -130,20 +137,6 @@ class FlowConversionUtil implements BaseRequests {
         resultParams
     }
 
-    static void populateEntityData(Map<String, String> resultParams, EditFlowDto dto) {
-        resultParams.put(ENTITY_CLASS_NAME, getEditFlowDtoEntityClass(dto).name)
-        if (dto.hasProperty('entityId'))
-            resultParams.put(ENTITY_ID, dto.entityId ? dto.entityId.toString() : dto.entityToEdit.id.toString())
-    }
-
-    static Map<String, String> redirectParams(Map<String, String> params) {
-        getPrefixMappedParams(params, REDIRECT_PARAMS_PREFIX)
-    }
-
-    static Map<String, String> messageBindingParams(Map<String, String> params) {
-        getPrefixMappedParams(params, MESSAGE_BINDING_PARAMS_PREFIX)
-    }
-
     static Map<String, String> getPrefixMappedParams(Map<String, String> params, String prefix) {
         params.collectEntries { [(prefix.concat(it.key)): it.value] } as Map<String, String>
     }
@@ -151,6 +144,20 @@ class FlowConversionUtil implements BaseRequests {
     static Map<String, String> getPrefixUnmappedParams(Map<String, String> allParams, String prefix) {
         allParams.findAll { it.key.startsWith(prefix) }
                 .collectEntries { [(it.key.substring(prefix.length())): it.value] }
+    }
+
+    private static void populateEntityData(Map<String, String> resultParams, EditFlowDto dto) {
+        resultParams.put(ENTITY_CLASS_NAME, getEditFlowDtoEntityClass(dto).name)
+        if (dto.hasProperty('entityId'))
+            resultParams.put(ENTITY_ID, dto.entityId ? dto.entityId.toString() : dto.entityToEdit.id.toString())
+    }
+
+    private static Map<String, String> redirectParams(Map<String, String> params) {
+        getPrefixMappedParams(params, REDIRECT_PARAMS_PREFIX)
+    }
+
+    private static Map<String, String> messageBindingParams(Map<String, String> params) {
+        getPrefixMappedParams(params, MESSAGE_BINDING_PARAMS_PREFIX)
     }
 
     private static String getNullableValue(String value) {

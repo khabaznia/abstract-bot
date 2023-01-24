@@ -31,6 +31,7 @@ class EditFlowKeyboardService implements BaseRequests {
      */
     InlineKeyboard addButtons(InlineKeyboard keyboard, EditEntitiesFlowKeyboardDto dto) {
         validate(dto)
+        log.debug 'Generating keyboard for edit entities dto: {}', dto
         addCreateNewEntityButton(dto, keyboard)
         mapEditEntitiesToKeyboardButtons(dto, keyboard)
         if (dto.backPath) keyboard.row().button('button.back', LEFT_ARROW, dto.backPath)
@@ -74,8 +75,6 @@ class EditFlowKeyboardService implements BaseRequests {
 
     private static void validate(EditEntitiesFlowKeyboardDto dto) {
         def constraints = buildDefaultValidatorFactory().getValidator().validate(dto)
-        if (!constraints.isEmpty()) {
-            throw new ConstraintViolationException(constraints)
-        }
+        if (!constraints.isEmpty()) throw new ConstraintViolationException(constraints)
     }
 }

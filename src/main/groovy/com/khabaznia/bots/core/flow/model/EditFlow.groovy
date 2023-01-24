@@ -9,7 +9,7 @@ import org.hibernate.annotations.FetchMode
 import javax.persistence.*
 
 @Entity(name = 'edit_flow')
-@ToString
+@ToString(excludes = 'childFlow')
 class EditFlow {
 
     @Id

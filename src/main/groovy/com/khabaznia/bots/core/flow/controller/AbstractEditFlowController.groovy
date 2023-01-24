@@ -1,29 +1,18 @@
 package com.khabaznia.bots.core.flow.controller
 
 import com.khabaznia.bots.core.controller.AbstractBotController
-import com.khabaznia.bots.core.flow.dto.CreateNewEntityFlowDto
-import com.khabaznia.bots.core.flow.dto.DeleteEntityFlowDto
-import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
-import com.khabaznia.bots.core.flow.dto.EditFieldFlowDto
-import com.khabaznia.bots.core.flow.enums.MediaType
 import com.khabaznia.bots.core.flow.service.EditFlowEntityService
 import com.khabaznia.bots.core.flow.service.EditFlowService
 import com.khabaznia.bots.core.flow.util.EditFlowMessages
 import com.khabaznia.bots.core.flow.util.FlowConversionUtil
-import com.khabaznia.bots.core.routing.annotation.BotController
-import com.khabaznia.bots.core.routing.annotation.BotRequest
-import com.khabaznia.bots.core.routing.annotation.Input
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
 import javax.validation.ConstraintViolationException
 
-import static com.khabaznia.bots.core.controller.Constants.COMMON.*
-import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.*
-import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
-import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.FLOW_PARAM_PREFIX
-import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
+import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
+import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.EDIT_FIELD_VALIDATION_FAILED
+import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getCurrentEditFlow
 
 @Slf4j
 abstract class AbstractEditFlowController extends AbstractBotController {
@@ -40,12 +29,17 @@ abstract class AbstractEditFlowController extends AbstractBotController {
     protected String editFieldInternal(String input = null) {
         try {
             def editFlow = currentEditFlow
+            log.info 'Try to edit field {{}} for entity {{}} with input - {{}}', editFlow.fieldName, editFlow.id, input
             def entityId = editFlowService.updateEntityWithInput(input)
             editFlowService.sendSuccessMessages(editFlow, input == null)
             editFlowService.postProcess(editFlow, entityId)
+            log.trace 'Edit flow finished successfully. Redirecting to success path'
             return editFlow.successPath ?: TO_MAIN
         } catch (ConstraintViolationException ex) {
-            ex.constraintViolations*.messageTemplate.each { sendMessage.text(it) }
+            ex.constraintViolations*.messageTemplate.each {
+                sendMessage.text(it)
+                log.warn 'Constraint violation is occurred. Error: {}', it
+            }
             return EDIT_FIELD_VALIDATION_FAILED
         }
     }
