@@ -25,6 +25,7 @@ class EditFieldController extends AbstractEditFlowController {
     String createNewEntity(Map<String, String> params) {
         def createNewEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(CreateNewEntityFlowDto.class, params)
         params.put(FLOW_PARAM_PREFIX.concat('fieldName'), getEntityEditableIdFieldName(createNewEntityFlowDto.entityClass))
+        log.debug 'Try to create new entity for class {{}}', createNewEntityFlowDto.entityClass?.simpleName
         params.newEntity = 'true'
         editFieldEnter(params)
     }
@@ -32,6 +33,7 @@ class EditFieldController extends AbstractEditFlowController {
     @BotRequest(path = EDIT_ENTITY_ENTER, rawParams = true)
     editEntity(Map<String, String> params) {
         def editEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(EditEntityFlowDto.class, params)
+        log.debug 'Enter edit entity menu for class {{}}, entity id {{}}.', editEntityFlowDto.entityClass, editEntityFlowDto.entityId
         def fields = getEditableFields(editEntityFlowDto.entityClass)
         messages.entityViewMessage(entityService.getEntityView(editEntityFlowDto))
         messages.editFlowEntityFieldsSelectMessage(fields, editEntityFlowDto)
@@ -40,6 +42,7 @@ class EditFieldController extends AbstractEditFlowController {
     @BotRequest(path = DELETE_ENTITY, rawParams = true)
     String deleteEntity(Map<String, String> params) {
         def deleteEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(DeleteEntityFlowDto.class, params)
+        log.info 'Try to delete entity of class {{}} for id {{}}', deleteEntityFlowDto.entityClass?.simpleName, deleteEntityFlowDto.entityId?.toString()
         entityService.deleteEntity(deleteEntityFlowDto.entityClass, deleteEntityFlowDto.entityId)
         setRedirectParams(params)
         messages.deleteEntitySuccessMessage(deleteEntityFlowDto.successText)
@@ -48,6 +51,7 @@ class EditFieldController extends AbstractEditFlowController {
 
     @BotRequest(path = EDIT_FIELD_ENTER, rawParams = true)
     editFieldEnter(Map<String, String> params) {
+        log.trace 'Enter edit flow process'
         def isNew = Boolean.valueOf(params?.newEntity)
         if (params.any { it.key.startsWith(FLOW_PARAM_PREFIX) }) {
             def editFieldFlowDto = flowConversionUtil.getEditFieldFlowDto(EditFieldFlowDto.class, params)

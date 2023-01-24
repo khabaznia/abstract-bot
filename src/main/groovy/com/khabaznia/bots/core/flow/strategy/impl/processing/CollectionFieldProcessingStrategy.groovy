@@ -42,6 +42,9 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
         def strategy = fieldSelectionStrategy
         def entitiesToSave = editFlow.selectedIds - editFlow.initialIds
         def entitiesToRemove = editFlow.initialIds - editFlow.selectedIds
+        log.trace 'Entities to save -> {}', entitiesToSave
+        log.trace 'Entities to remove -> {}', entitiesToRemove
+        log.trace 'Resolved selection strategy: {}', fieldSelectionStrategy?.class?.simpleName
         strategy.selectEntities(entity, entitiesToSave)
         strategy.removeEntities(entity, entitiesToRemove)
         entity."$editFlow.fieldName" = getEntities(editFlow.initialIds + entitiesToSave - entitiesToRemove)

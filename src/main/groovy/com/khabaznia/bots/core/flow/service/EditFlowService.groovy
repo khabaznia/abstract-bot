@@ -52,10 +52,12 @@ class EditFlowService {
     }
 
     void sendEnterMessage(boolean isNew) {
+        log.trace 'Sending enter message'
         fieldProcessingStrategy.sendEnterMessages(currentEditFlow, isNew)
     }
 
     void sendSuccessMessages(EditFlow editFlow, boolean clear) {
+        log.trace 'Sending success message for flow {}', editFlow.id
         fieldProcessingStrategy.sendSuccessMessages(editFlow, clear)
     }
 
@@ -65,6 +67,7 @@ class EditFlowService {
         fieldProcessingStrategy.validate(editFlow, input)
         fieldProcessingStrategy.updateEntity(entity, input, editFlow)
         entityService.saveEntity(entity)
+        log.info 'Entity successfully updated'
         entity.id
     }
 
@@ -79,11 +82,13 @@ class EditFlowService {
         def editFlow = currentEditFlow
         editFlow.setLang(lang)
         editFlowRepository.saveAndFlush(editFlow)
+        log.debug 'Lang for edit flow {{}} is updated -> {}', editFlow.id, lang
     }
 
     void setInputMediaType(MediaType mediaType) {
         def editFlow = currentEditFlow
         editFlow.setInputMediaType(mediaType)
+        log.debug 'Media type for edit flow {{}} is updated -> {}', editFlow.id, mediaType.toString()
         editFlowRepository.saveAndFlush(editFlow)
     }
 
@@ -92,13 +97,16 @@ class EditFlowService {
         def currentFlow = currentEditFlow
         if (currentFlow.selectedIds.contains(longEntityId)) {
             currentFlow.selectedIds.remove(longEntityId)
+            log.debug 'Entity id {} was unselected', entityId
         } else {
+            log.debug 'Entity id {} was selected', entityId
             currentFlow.selectedIds.add(longEntityId)
         }
         editFlowRepository.saveAndFlush(currentEditFlow)
     }
 
     private void saveEditFlowInternal(EditFlow editFlow) {
+        log.debug 'Saving filled editFlow {}', editFlow
         def parentFlowId = editFlow.params?.get('parentEditFlowId')
         parentFlowId
                 ? createNewChildFlow(editFlow, parentFlowId)
@@ -110,6 +118,7 @@ class EditFlowService {
         deleteOldChatFlow(chat)
         editFlowRepository.saveAndFlush(editFlow)
         chat.editFlow = editFlow
+        log.trace 'Edit flow saved to chat {}', chat.code
         userService.updateChat(chat)
     }
 
@@ -118,6 +127,7 @@ class EditFlowService {
         if (parentFlow.id.toString() != parentFlowId)
             throw new BotServiceException('Provided parent editFlow is not same as current')
         parentFlow.setChildFlow(editFlow)
+        log.debug 'Edit flow saved as child flow for parent flow with id {}', parentFlowId
         editFlowRepository.saveAndFlush(parentFlow)
     }
 
@@ -126,6 +136,7 @@ class EditFlowService {
         currentChat.editFlow.childFlow = null
         editFlowRepository.saveAndFlush(currentChat.editFlow)
         editFlowRepository.delete(childFlow)
+        log.trace 'Old child flow was deleted'
     }
 
     private void deleteOldChatFlow(Chat chat) {
@@ -134,6 +145,7 @@ class EditFlowService {
             chat.editFlow = null
             userService.updateChat(chat)
             editFlowRepository.delete(oldFlow)
+            log.trace 'Old flow {{}} was deleted', oldFlow.id
         }
     }
 

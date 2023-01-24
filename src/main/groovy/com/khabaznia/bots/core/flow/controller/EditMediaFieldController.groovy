@@ -4,14 +4,12 @@ import com.khabaznia.bots.core.flow.enums.MediaType
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Input
-import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.controller.Constants.COMMON.*
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.EDIT_FIELD_ENTER
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.EDIT_FIELD_VALIDATION_FAILED
 
-@Slf4j
 @Component
 @BotController
 class EditMediaFieldController extends AbstractEditFlowController {

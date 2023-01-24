@@ -2,6 +2,7 @@ package com.khabaznia.bots.core.flow.strategy
 
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.util.EditFlowMessages
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 
 import javax.persistence.EntityManager
@@ -10,6 +11,7 @@ import javax.validation.ConstraintViolationException
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
 import static javax.validation.Validation.buildDefaultValidatorFactory
 
+@Slf4j
 abstract class FieldProcessingStrategy {
 
     @Autowired
@@ -39,6 +41,7 @@ abstract class FieldProcessingStrategy {
     }
 
     void updateEntity(Object entity, String value, EditFlow editFlow) {
+        log.trace 'Default updating entity with value {}', value
         entity?."${editFlow.fieldName}" = value
     }
 

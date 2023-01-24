@@ -43,6 +43,7 @@ class EditSelectFieldKeyboardService implements BaseRequests {
             }
             keyboard.row()
         }
+        log.trace 'Selectable keyboard is created for {{}} entities', entities?.size()
         keyboard.row()
         keyboard.button('button.edit.flow.confirm.selected',
                 LEFT_ARROW,
