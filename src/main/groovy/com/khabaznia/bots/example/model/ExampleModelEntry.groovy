@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern
 import static com.khabaznia.bots.core.flow.enums.FieldType.MEDIA
 import static com.khabaznia.bots.core.flow.enums.MediaType.AUDIO
 
-@ToString
+@ToString(excludes = ['parent', 'manyExamples'])
 @Editable(entityFactory = 'exampleModelEntryFactory')
 @Entity(name = "example_model_entry")
 class ExampleModelEntry {

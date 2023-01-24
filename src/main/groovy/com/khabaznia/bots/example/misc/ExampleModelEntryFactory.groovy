@@ -7,10 +7,15 @@ import org.springframework.stereotype.Component
 import static com.khabaznia.bots.core.util.SessionUtil.currentUser
 
 @Component('exampleModelEntryFactory')
-class ExampleModelEntryFactory implements EntityFactory<ExampleModelEntry> {
+class ExampleModelEntryFactory extends EntityFactory<ExampleModelEntry> {
 
     @Override
     ExampleModelEntry createEntity() {
         new ExampleModelEntry(userCode: currentUser.code)
+    }
+
+    @Override
+    String getView(ExampleModelEntry entity) {
+        getAllFieldsView(entity, ['abbreviation', 'someMedia'])
     }
 }

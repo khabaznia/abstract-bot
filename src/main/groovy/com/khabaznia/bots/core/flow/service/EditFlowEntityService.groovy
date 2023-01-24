@@ -1,5 +1,6 @@
 package com.khabaznia.bots.core.flow.service
 
+import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
 import com.khabaznia.bots.core.flow.factory.EntityFactory
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.strategy.FieldSelectionStrategy
@@ -20,6 +21,12 @@ class EditFlowEntityService {
     private EntityManager entityManager
     @Autowired
     private ApplicationContext context
+
+    String getEntityView(EditEntityFlowDto editEntityFlowDto) {
+        def factoryBeanName = editEntityFlowDto.entityFactory ?: getEntityFactoryName(editEntityFlowDto.entityClass)
+        def factory = context.getBean(factoryBeanName, EntityFactory.class)
+        factory.getView(entityManager.find(editEntityFlowDto.entityClass, editEntityFlowDto.entityId))
+    }
 
     Map<Object, Boolean> getEntitiesToSelect() {
         def selectedEntities = context.getBean(fieldSelectionStrategyName, FieldSelectionStrategy.class)

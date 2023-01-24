@@ -51,6 +51,7 @@ class EditFieldController extends AbstractBotController {
     editEntity(Map<String, String> params) {
         def editEntityFlowDto = flowConversionUtil.getEditFieldFlowDto(EditEntityFlowDto.class, params)
         def fields = getEditableFields(editEntityFlowDto.entityClass)
+        messages.entityViewMessage(entityService.getEntityView(editEntityFlowDto))
         messages.editFlowEntityFieldsSelectMessage(fields, editEntityFlowDto)
     }
 

@@ -43,6 +43,10 @@ class EditableParsingUtil {
         editFlowField.getGenericType().actualTypeArguments[0] as Class<?>
     }
 
+    static Class getSelectableFieldEntityClass(Class entityClass, String fieldName) {
+        entityClass.getDeclaredField(fieldName).getGenericType().actualTypeArguments[0] as Class<?>
+    }
+
     static String getSelectableFieldHTableName() {
         selectableFieldEntityClass.getAnnotation(Entity).name()
     }
@@ -58,7 +62,14 @@ class EditableParsingUtil {
     static Map<String, String> getEditableFields(Class entityClass) {
         entityClass.getDeclaredFields()
                 .findAll { it.getAnnotation(Editable.class) != null }
+                .findAll { !it.getAnnotation(Editable.class).viewOnly() }
                 .collectEntries { [(it.name): (it.getAnnotation(Editable.class).fieldButtonMessage() ?: it.name)] }
+    }
+
+    static List<String> getViewFields(Class entityClass) {
+        entityClass.getDeclaredFields()
+                .findAll { it.getAnnotation(Editable.class) != null }
+        .collect{it.name}
     }
 
     static String getEntityEditableIdFieldName(Class entityClass) {
@@ -76,17 +87,30 @@ class EditableParsingUtil {
     }
 
     static String getEntityFactoryName(Class entityClass) {
-        ((Editable) entityClass.getAnnotation(Editable.class))?.entityFactory() ?:
+        getEditableAnnotationForClass(entityClass)?.entityFactory() ?:
                 Editable.class.getDeclaredMethod('entityFactory').getDefaultValue() as String
+    }
+
+    static String getEntityViewHeader(Class entityClass) {
+        getEditableAnnotationForClass(entityClass)?.entityViewHeader() ?:
+                Editable.class.getDeclaredMethod('entityViewHeader').getDefaultValue() as String
+    }
+
+    static Editable getEditableAnnotationForField(Class entityClass, String fieldName) {
+        entityClass.getDeclaredField(fieldName).getAnnotation(Editable.class)
     }
 
     static String getFieldSelectionStrategyName() {
         currentEditFlow.fieldSelectionStrategy ?: currentFieldAnnotation.selectionStrategy()
     }
 
-    private static Field getEntityIdField(Class entityClass) {
+    static Field getEntityIdField(Class entityClass) {
         entityClass.getDeclaredFields()
                 .find { it.getAnnotation(Editable.class)?.id() }
+    }
+
+    private static Editable getEditableAnnotationForClass(Class entityClass) {
+        (Editable) entityClass.getAnnotation(Editable.class)
     }
 
     private static Field getEditFlowField() {

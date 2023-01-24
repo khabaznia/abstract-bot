@@ -10,7 +10,8 @@ import javax.validation.constraints.Pattern
 
 import static com.khabaznia.bots.core.flow.enums.FieldType.*
 
-@ToString
+@ToString(excludes = ['entries', 'manyEntries'])
+@Editable(entityViewHeader = 'example.model.entry.header')
 @Entity(name = "example_model")
 class ExampleModel {
 
@@ -29,7 +30,7 @@ class ExampleModel {
     @Column(name = 'name', columnDefinition = "TEXT")
     Map<String, String> name = [:]
 
-    @Editable(fieldButtonMessage = 'example.model.number.button.name', type = NUMBER)
+    @Editable(fieldButtonMessage = 'example.model.number.button.name', type = NUMBER, enableClear = true)
     @Min(value = 2L, message = 'example.model.number.min.validation')
     @Max(value = 10L, message = 'example.model.number.max.validation')
     @Column(name = 'number')
@@ -50,9 +51,11 @@ class ExampleModel {
     @Column
     String someMedia
 
+    @Editable(viewOnly = true, fieldButtonMessage = 'Some service field')
     @Column(name = 'service_field')
     String field2
 
+    @Editable(viewOnly = true, type = BOOLEAN)
     @Column(name = 'service_flag')
     String serviceFlag
 

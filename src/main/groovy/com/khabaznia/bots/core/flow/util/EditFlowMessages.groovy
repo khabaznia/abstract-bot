@@ -2,7 +2,7 @@ package com.khabaznia.bots.core.flow.util
 
 import com.khabaznia.bots.core.controller.Constants
 import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
-import com.khabaznia.bots.core.flow.service.EditFlowKeyboardService
+import com.khabaznia.bots.core.flow.service.EditSelectFieldKeyboardService
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
@@ -36,7 +36,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
     @Autowired
     private MessageService messageService
     @Autowired
-    private EditFlowKeyboardService editFlowKeyboardService
+    private EditSelectFieldKeyboardService keyboardService
     @Autowired
     private ChatService chatService
 
@@ -96,13 +96,13 @@ class EditFlowMessages implements BaseRequests, Configurable {
         requests << sendMessage.text(text ?: enterMessage ?: 'text.edit.flow.select.entities')
                 .binding(binding)
                 .label(chatService.setChatParam(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
-                .keyboard(editFlowKeyboardService.getSelectedEntitiesKeyboard(entities))
+                .keyboard(keyboardService.getSelectedEntitiesKeyboard(entities))
     }
 
     void updateSelectEntitiesMenu(Map<Object, Boolean> entities) {
         requests << editMessage
                 .label(chatService.getChatParam(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
-                .keyboard(editFlowKeyboardService.getSelectedEntitiesKeyboard(entities))
+                .keyboard(keyboardService.getSelectedEntitiesKeyboard(entities))
     }
 
     void deleteSelectEntitiesFieldMenu() {
@@ -154,6 +154,11 @@ class EditFlowMessages implements BaseRequests, Configurable {
     void deleteEntitySuccessMessage(String text) {
         requests << sendMessage.text(text ?: 'text.delete.entity.success.message')
                 .delete()
+    }
+
+    void entityViewMessage(String finalViewText) {
+        if (finalViewText)
+            requests << sendMessage.text(finalViewText).delete()
     }
 
     void editFlowEntityFieldsSelectMessage(Map<String, String> fields, EditEntityFlowDto editEntityFlowDto) {

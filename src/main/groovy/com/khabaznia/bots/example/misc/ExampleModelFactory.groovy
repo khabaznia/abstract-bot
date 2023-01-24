@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import static com.khabaznia.bots.core.util.SessionUtil.currentUser
 
 @Component('exampleModelFactory')
-class ExampleModelFactory implements EntityFactory<ExampleModel> {
+class ExampleModelFactory extends EntityFactory<ExampleModel> {
 
     @Override
     ExampleModel createEntity() {

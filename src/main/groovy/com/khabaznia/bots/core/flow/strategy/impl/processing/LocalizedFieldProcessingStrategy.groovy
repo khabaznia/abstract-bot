@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.flow.strategy.impl
+package com.khabaznia.bots.core.flow.strategy.impl.processing
 
 import com.khabaznia.bots.core.controller.Constants
 import com.khabaznia.bots.core.flow.model.EditFlow

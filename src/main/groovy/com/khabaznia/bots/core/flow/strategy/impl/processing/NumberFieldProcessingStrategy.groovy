@@ -1,4 +1,4 @@
-package com.khabaznia.bots.core.flow.strategy.impl
+package com.khabaznia.bots.core.flow.strategy.impl.processing
 
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
@@ -15,18 +15,19 @@ class NumberFieldProcessingStrategy extends FieldProcessingStrategy {
 
     @Override
     void validate(EditFlow editFlow, String value) {
-        InputNumberValidator.validate(value, getFieldClass(getClass(editFlow), editFlow.fieldName))
+        if (value)
+            InputNumberValidator.validate(value, getFieldClass(getClass(editFlow), editFlow.fieldName))
         super.validate(editFlow, value)
     }
 
     @Override
     void updateEntity(Object entity, String value, EditFlow editFlow) {
         def fieldClass = getFieldClass(getClass(editFlow), editFlow.fieldName)
-        entity?."${editFlow.fieldName}" = fieldClass.valueOf(value)
+        entity?."${editFlow.fieldName}" = covertToType(value, fieldClass)
     }
 
     @Override
     Number covertToType(Object value, Class specificClass) {
-        specificClass.valueOf(value)
+        value ? specificClass.valueOf(value) : null
     }
 }
