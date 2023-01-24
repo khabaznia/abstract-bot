@@ -6,6 +6,7 @@ import com.khabaznia.bots.core.flow.enums.FieldType
 import groovy.util.logging.Slf4j
 import org.reflections.Reflections
 
+import javax.persistence.Id
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
@@ -33,6 +34,7 @@ class EditableTypeValidator {
             throw new BotException("Class $classSimpleName should have only one id field")
         if (isActualCollectionType(getEntityIdField(editableClass)))
             throw new BotException("Id field in class $classSimpleName should not be collection.")
+        validateClassHasPersistenceIdField(editableClass)
     }
 
     private static void validateField(Field field) {
@@ -45,6 +47,7 @@ class EditableTypeValidator {
         if (isActualCollectionType(field) && fieldAnnotation.type() != FieldType.COLLECTION)
             throw new BotException("Collection ${fieldLog(field)} should be marked as FieldType.COLLECTION")
         if (fieldAnnotation.type() == FieldType.COLLECTION) validateSelectableField(field)
+        validateClassHasPersistenceIdField(field.declaringClass)
     }
 
     private static void validateSelectableField(Field field) {
@@ -52,9 +55,16 @@ class EditableTypeValidator {
         def selectableEntityClass = getSelectableFieldEntityClass(field.declaringClass as Class, field.name)
         if (fieldAnnotation.mappedBy().isEmpty())
             throw new BotException("Collection ${fieldLog(field)} should have mappedBy parameter in Editable annotation")
-        if (!isFieldExistsInField(selectableEntityClass, fieldAnnotation.mappedBy()))
+        if (!isFieldExistsInClass(selectableEntityClass, fieldAnnotation.mappedBy()))
             throw new BotException("Collection ${fieldLog(field)} should be mapped to existing field. Field with name ${fieldAnnotation.mappedBy()} doesn't exists")
         validateType(selectableEntityClass, true)
+    }
+
+    private static void validateClassHasPersistenceIdField(Class editableClass) {
+        if (!isFieldExistsInClass(editableClass, 'id')
+                || Long.class != editableClass.getDeclaredField('id')?.getType()
+                || !editableClass.getDeclaredField('id').isAnnotationPresent(Id.class))
+            throw new BotException("Class $editableClass.simpleName should have Long id field marked with javax @Id annotation")
     }
 
     private static boolean isOneIdField(Class editableClass) {
@@ -62,7 +72,7 @@ class EditableTypeValidator {
                 .count { it.getAnnotation(Editable.class)?.id() } == 1
     }
 
-    private static boolean isFieldExistsInField(Class clazz, String fieldName) {
+    private static boolean isFieldExistsInClass(Class clazz, String fieldName) {
         clazz.getDeclaredFields()*.name.any { it == fieldName }
     }
 
