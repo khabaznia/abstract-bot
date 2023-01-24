@@ -231,6 +231,7 @@ class ExampleController extends AbstractBotController {
                     .row()
                     .button('Edit enitty ', editEntityFlowDto
                             .entityToEdit(model)
+                            .fieldsInRow(1)
                             .enterTextBinding([entityName: 'someName'])
                             .enterText('you are going to edit $entityName')
                             .successPath('/queryWithParam')
@@ -248,7 +249,7 @@ class ExampleController extends AbstractBotController {
         if (myCustomParam) sendMessage.text myCustomParam
         if (entityId) sendMessage.text "Entity was updated/created -> $entityId"
         sendMessage.text('Choose action')
-                .keyboard(editFlowKeyboardService.getKeyboard(
+                .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
                         new EditEntitiesFlowKeyboardDto<ExampleModel>()
                                 .entityNameRetriever({ ExampleModel it -> it.field1 })
                                 .entityClass(ExampleModel.class)
@@ -266,15 +267,22 @@ class ExampleController extends AbstractBotController {
 
     @BotRequest(path = '/editExampleModelEntries')
     editExampleModelEntries() {
+        def keyboard = inlineKeyboard
+        keyboard.button('Sample button', DEFAULT)
+                .row()
         sendMessage.text('Choose action')
-                .keyboard(editFlowKeyboardService.getKeyboard(
+                .keyboard(editFlowKeyboardService.addButtons(keyboard,
                         new EditEntitiesFlowKeyboardDto<ExampleModelEntry>()
                                 .entityNameRetriever({ it.abbreviation })
                                 .entityClass(ExampleModelEntry.class)
                                 .entities(exampleModelService.getAllEntries())
                                 .thisStepPath('/editExampleModelEntries')
+                                .fieldsInRow(2)
+                                .entitiesInRow(5)
                                 .backPath(EDIT_FLOW)
                                 .canDeleteEntities(false))
+                        .row()
+                        .button('Another sample button', DEFAULT)
                 )
     }
 

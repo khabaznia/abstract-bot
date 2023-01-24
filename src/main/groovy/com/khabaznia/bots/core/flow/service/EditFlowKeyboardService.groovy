@@ -8,15 +8,15 @@ import com.khabaznia.bots.core.trait.BaseRequests
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
+import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getDefaultMessageOfIdField
+import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getEntityEditableIdFieldName
 import static com.khabaznia.bots.core.meta.Emoji.*
 
 @Slf4j
 @Component
 class EditFlowKeyboardService implements BaseRequests {
 
-    InlineKeyboard getKeyboard(EditEntitiesFlowKeyboardDto dto) {
-        def keyboard = inlineKeyboard
+    InlineKeyboard addButtons(InlineKeyboard keyboard, EditEntitiesFlowKeyboardDto dto) {
         addCreateNewEntityButton(dto, keyboard)
         mapEditEntitiesToKeyboardButtons(dto, keyboard)
         if (dto.backPath) keyboard.row().button('button.back', LEFT_ARROW, dto.backPath)
@@ -35,21 +35,25 @@ class EditFlowKeyboardService implements BaseRequests {
     }
 
     private void mapEditEntitiesToKeyboardButtons(EditEntitiesFlowKeyboardDto dto, InlineKeyboard keyboard) {
-        dto.entities.each {
-            if (dto.canDeleteEntities)
-                keyboard.button(CROSS_MARK, get(DeleteEntityFlowDto.class)
-                        .successText(dto.deleteEntitySuccessMessage)
-                        .entityToEdit(it)
+        def columnsNumber = dto.canDeleteEntities ? 1 : dto.entitiesInRow ?: 1
+        dto.entities.collate(columnsNumber).each { row ->
+            row.each { entity ->
+                if (dto.canDeleteEntities)
+                    keyboard.button(CROSS_MARK, get(DeleteEntityFlowDto.class)
+                            .successText(dto.deleteEntitySuccessMessage)
+                            .entityToEdit(entity)
+                            .redirectParams(dto.redirectParams)
+                            .successPath(dto.thisStepPath))
+                def buttonName = dto.entityNameRetriever.apply(entity)
+                        ?: getDefaultMessageOfIdField(dto.entityClass)
+                        ?: getEntityEditableIdFieldName(dto.entityClass)
+                keyboard.button(buttonName, editEntityFlowDto
+                        .entityId(entity.id)
+                        .fieldsInRow(dto.fieldsInRow)
+                        .entityClass(entity.class)
                         .redirectParams(dto.redirectParams)
-                        .successPath(dto.thisStepPath))
-            def buttonName = dto.entityNameRetriever.apply(it)
-                    ?: getDefaultMessageOfIdField(dto.entityClass)
-                    ?: getEntityEditableIdFieldName(dto.entityClass)
-            keyboard.button(buttonName, editEntityFlowDto
-                    .entityId(it.id)
-                    .entityClass(it.class)
-                    .redirectParams(dto.redirectParams)
-                    .backPath(dto.thisStepPath))
+                        .backPath(dto.thisStepPath))
+            }
             keyboard.row()
         }
     }

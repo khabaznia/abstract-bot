@@ -187,7 +187,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
 
     private InlineKeyboard mapEditEntityFieldsToKeyboardButtons(Map<String, String> fields, EditEntityFlowDto editEntityFlowDto) {
         def keyboard = inlineKeyboard
-        fields.entrySet().collate(3).each { fieldsRow ->
+        fields.entrySet().collate(editEntityFlowDto.fieldsInRow ?: 3).each { fieldsRow ->
             fieldsRow.each {
                 keyboard.button(it.value, editFieldFlowDto
                         .fieldName(it.key)
