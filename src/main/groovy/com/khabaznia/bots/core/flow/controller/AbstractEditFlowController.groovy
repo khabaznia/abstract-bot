@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException
 import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.EDIT_FIELD_VALIDATION_FAILED
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getCurrentEditFlow
+import static com.khabaznia.bots.core.meta.Emoji.VALIDATION_ERROR
 
 @Slf4j
 abstract class AbstractEditFlowController extends AbstractBotController {
@@ -37,7 +38,7 @@ abstract class AbstractEditFlowController extends AbstractBotController {
             return editFlow.successPath ?: TO_MAIN
         } catch (ConstraintViolationException ex) {
             ex.constraintViolations*.messageTemplate.each {
-                sendMessage.text(it)
+                sendMessage.text(it).emoji(VALIDATION_ERROR)
                 log.warn 'Constraint violation is occurred. Error: {}', it
             }
             return EDIT_FIELD_VALIDATION_FAILED
