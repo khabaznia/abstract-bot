@@ -6,18 +6,34 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
 
+/**
+ * Abstraction to override default edit flow login
+ * @param <T>
+ */
 @Slf4j
 abstract class EntityFactory<T> {
 
     @Autowired
     protected FieldViewService fieldViewService
 
+    /**
+     * Override it to specify additional logic when new entity of {@link T} class is created in edit flow
+     *
+     * @return should return new filled entity
+     */
     T createEntity() {
         Class entityClass = getClass(currentEditFlow)
         log.debug 'Default creation of new entity for class {}', entityClass.simpleName
         entityClass.getDeclaredConstructor().newInstance() as T
     }
 
+    /**
+     * Override it to generate custom view for {@link T} class
+     * Note! localization should be performed in this method. Use {@link EntityFactory#getAllFieldsView} for process fields
+     *
+     * @param entity to generate view for
+     * @return view as String.
+     */
     String getView(T entity) { null }
 
     protected String getAllFieldsView(Object entity,

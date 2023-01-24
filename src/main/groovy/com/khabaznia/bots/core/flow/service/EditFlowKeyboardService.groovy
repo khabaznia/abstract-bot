@@ -15,10 +15,20 @@ import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getEntityEdi
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static javax.validation.Validation.buildDefaultValidatorFactory
 
+/**
+ * Intended to generate keyboard buttons from {@link EditEntitiesFlowKeyboardDto}
+ */
 @Slf4j
 @Component
 class EditFlowKeyboardService implements BaseRequests {
 
+    /**
+     * Generates and adds buttons for operations on entities that defined in dto entity class
+     *
+     * @param keyboard that should be added buttons to
+     * @param dto {@link EditEntitiesFlowKeyboardDto} that contains all parameters to generation flow keybaord
+     * @return same keyboard with buttons
+     */
     InlineKeyboard addButtons(InlineKeyboard keyboard, EditEntitiesFlowKeyboardDto dto) {
         validate(dto)
         addCreateNewEntityButton(dto, keyboard)
