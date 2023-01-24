@@ -8,15 +8,19 @@ import com.khabaznia.bots.core.trait.BaseRequests
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
+import javax.validation.ConstraintViolationException
+
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getDefaultMessageOfIdField
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getEntityEditableIdFieldName
 import static com.khabaznia.bots.core.meta.Emoji.*
+import static javax.validation.Validation.buildDefaultValidatorFactory
 
 @Slf4j
 @Component
 class EditFlowKeyboardService implements BaseRequests {
 
     InlineKeyboard addButtons(InlineKeyboard keyboard, EditEntitiesFlowKeyboardDto dto) {
+        validate(dto)
         addCreateNewEntityButton(dto, keyboard)
         mapEditEntitiesToKeyboardButtons(dto, keyboard)
         if (dto.backPath) keyboard.row().button('button.back', LEFT_ARROW, dto.backPath)
@@ -55,6 +59,13 @@ class EditFlowKeyboardService implements BaseRequests {
                         .backPath(dto.thisStepPath))
             }
             keyboard.row()
+        }
+    }
+
+    private static void validate(EditEntitiesFlowKeyboardDto dto) {
+        def constraints = buildDefaultValidatorFactory().getValidator().validate(dto)
+        if (!constraints.isEmpty()) {
+            throw new ConstraintViolationException(constraints)
         }
     }
 }

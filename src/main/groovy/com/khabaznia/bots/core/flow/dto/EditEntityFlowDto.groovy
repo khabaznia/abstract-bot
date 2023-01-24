@@ -17,5 +17,6 @@ class EditEntityFlowDto extends EditFlowDto {
     Object entityToEdit
     // OR set class and
     Long entityId
+
     Integer fieldsInRow
 }
