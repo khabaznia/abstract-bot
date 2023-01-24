@@ -7,6 +7,9 @@ import groovy.transform.builder.SimpleStrategy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
+/**
+ * Dto intended to collect data for generation edit field flow
+ */
 @Component(value = 'editFieldFlowDto')
 @Scope("prototype")
 @Builder(builderStrategy = SimpleStrategy, prefix = '')
@@ -14,6 +17,10 @@ import org.springframework.stereotype.Component
 @ToString(includeSuper = true)
 class EditFieldFlowDto extends EditFlowDto {
 
+    /**
+     * Either {@link EditFieldFlowDto#entityToEdit}
+     * nor {@link EditFieldFlowDto#entityId} and {@link EditFieldFlowDto#entityClass} be specified
+     */
     Object entityToEdit
     // OR set class and id
     Long entityId
