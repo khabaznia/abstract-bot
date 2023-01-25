@@ -10,9 +10,9 @@ import com.khabaznia.bots.core.routing.annotation.Input
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.*
-import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getEditableFields
-import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.getEntityEditableIdFieldName
+import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
 import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.FLOW_PARAM_PREFIX
 import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
 
@@ -62,8 +62,17 @@ class EditFieldController extends AbstractEditFlowController {
 
     @BotRequest(path = EDIT_SELECTABLE_FIELD_AFTER_CREATE)
     String editSelectableFieldEnter(String entityId) {
-        editFlowService.selectEntityWithId(entityId)
+        if (entityId)
+            editFlowService.selectEntityWithId(entityId)
         EDIT_FIELD_ENTER
+    }
+
+    @BotRequest(path = EDIT_FIELD_CANCEL)
+    String cancelEditField() {
+        messages.editFieldCancelMessage()
+        def editFlow = currentEditFlow
+        editFlowService.postProcess(editFlow)
+        return editFlow.successPath ?: TO_MAIN
     }
 
     @BotRequest(path = EDIT_LOCALIZED_FIELD_MENU, after = EDIT_FIELD_ENTER)

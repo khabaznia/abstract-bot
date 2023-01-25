@@ -22,6 +22,7 @@ class Constants {
         public static final String SELECT_ENTITY_COLLECTION_FIELD = '/selectEntity'
         public static final String SELECT_ENTITIES_CONFIRM = '/selectEntitiesConfirm'
         public static final String EDIT_SELECTABLE_FIELD_AFTER_CREATE = '/editSelectableFieldAfterCreateChild'
+        public static final String EDIT_FIELD_CANCEL = '/editFlowCancel'
     }
 
     static final class LANG_CONTROLLER {

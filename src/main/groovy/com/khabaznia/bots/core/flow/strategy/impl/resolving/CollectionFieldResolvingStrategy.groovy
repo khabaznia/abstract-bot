@@ -29,7 +29,7 @@ class CollectionFieldResolvingStrategy extends FieldResolvingStrategy {
         def collection = entity."$fieldName" as Collection
         if (collection == null || collection.isEmpty()) return null
         collection.collect {
-            fieldViewService.getIdFieldValue(getSelectableFieldEntityClass(entity.class, fieldName), Long.valueOf(it.id))
+            fieldViewService.getIdFieldValue(getSelectableFieldEntityClass(entity.class, fieldName), (it instanceof Long? it : Long.valueOf(it.id)))
                     ?: i18nService.getFilledTemplate('text.entity.view.value.empty.name')
         }.join(', ')
     }

@@ -46,7 +46,7 @@ class EditableTypeValidator {
             throw new BotException("Boolean ${fieldLog(field)} should be marked as FieldType.BOOLEAN")
         if (isActualCollectionType(field) && fieldAnnotation.type() != FieldType.SELECTIVE)
             throw new BotException("Selective ${fieldLog(field)} should be marked as FieldType.SELECTIVE")
-        if (fieldAnnotation.type() == FieldType.SELECTIVE) validateSelectableField(field)
+//        if (fieldAnnotation.type() == FieldType.SELECTIVE) validateSelectableField(field)
         validateClassHasPersistenceIdField(field.declaringClass)
     }
 

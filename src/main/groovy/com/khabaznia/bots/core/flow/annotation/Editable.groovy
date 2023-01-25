@@ -68,6 +68,10 @@ import java.lang.annotation.Target
      *  Should extend {@link com.khabaznia.bots.core.flow.strategy.FieldSelectionStrategy}
      */
     String selectionStrategy() default 'defaultFieldSelectionStrategy'
+    /**
+     * Specifies class of entity, if collection of id's saved instead of relation
+     */
+    Class selectableEntityClass() default Object.class
 
     // MEDIA field params
     /**

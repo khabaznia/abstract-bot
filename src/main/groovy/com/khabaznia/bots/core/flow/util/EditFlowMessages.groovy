@@ -46,10 +46,12 @@ class EditFlowMessages implements BaseRequests, Configurable {
         def message = sendMessage.text(text ?: enterMessage ?: defaultMessageRetriever.call())
                 .binding(binding)
                 .delete() as SendMessage
-        if (oldValueCanBeDeleted) {
-            message.keyboard(inlineKeyboard.button('button.edit.flow.clear.value', EDIT_FIELD_CLEAR_VALUE))
-        }
-        requests << message
+        def keyboard = inlineKeyboard
+                .button('button.back', LEFT_ARROW, EDIT_FIELD_CANCEL, currentEditFlow.params)
+        if (oldValueCanBeDeleted)
+            keyboard.button('button.edit.flow.clear.value', EDIT_FIELD_CLEAR_VALUE)
+
+        requests << message.keyboard(keyboard)
     }
 
     void editFlowCurrentValueMessage(String currentValue) {
@@ -59,10 +61,9 @@ class EditFlowMessages implements BaseRequests, Configurable {
     }
 
     void updateEditFlowCurrentValueMessage(String currentValue, String oldValue) {
-        if (oldValue != currentValue)
-            requests << editMessage.text(getEditFlowCurrentValueText(currentValue))
-                    .binding([value: currentValue])
-                    .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+        if (oldValue != currentValue) requests << editMessage.text(getEditFlowCurrentValueText(currentValue))
+                .binding([value: currentValue])
+                .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
     }
 
     void editFlowChooseLangMessage(String text, Map<String, String> binding) {
@@ -121,6 +122,10 @@ class EditFlowMessages implements BaseRequests, Configurable {
                         : 'text.edit.flow.success.message')))
     }
 
+    void editFieldCancelMessage() {
+        requests << withCurrentReplyKeyboard(sendMessage.text('text.edit.field.cancel'))
+    }
+
     void editFlowCurrentMediaMessage(String currentFileId, String beanName) {
         requests << (!isEmpty(currentFileId?.strip())
                 ? (context.getBean(beanName) as AbstractMediaRequest)
@@ -135,15 +140,12 @@ class EditFlowMessages implements BaseRequests, Configurable {
 
     void mediaUpdatedSuccessMessage(String text, boolean clear = false) {
         requests << withCurrentReplyKeyboard(sendMessage
-                .text(text ?: (clear
-                        ? 'text.edit.flow.file.was.removed'
-                        : 'text.edit.flow.file.was.updated')))
+                .text(text ?: (clear ? 'text.edit.flow.file.was.removed' : 'text.edit.flow.file.was.updated')))
     }
 
     void updateEditFlowCurrentMediaMessage(String newFileId, String oldFileId) {
-        if (newFileId != oldFileId)
-            requests << deleteMessage
-                    .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+        if (newFileId != oldFileId) requests << deleteMessage
+                .label(chatService.getChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
     }
 
     void selectedEntitiesSavedMessage() {
@@ -157,8 +159,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
     }
 
     void entityViewMessage(String finalViewText) {
-        if (finalViewText)
-            requests << sendMessage.text(finalViewText).delete()
+        if (finalViewText) requests << sendMessage.text(finalViewText).delete()
     }
 
     void editFlowEntityFieldsSelectMessage(Map<String, String> fields, EditEntityFlowDto editEntityFlowDto) {
@@ -203,9 +204,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
 
     private AbstractKeyboardMessage withCurrentReplyKeyboard(AbstractKeyboardMessage message) {
         def currentReplyKeyboard = chatService.currentReplyKeyboard
-        currentReplyKeyboard
-                ? message.keyboard(currentReplyKeyboard)
-                : message
+        currentReplyKeyboard ? message.keyboard(currentReplyKeyboard) : message
     }
 
     private static String getEditFlowCurrentValueText(String currentValue) {
