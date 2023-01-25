@@ -62,8 +62,8 @@ class EditFieldController extends AbstractEditFlowController {
 
     @BotRequest(path = EDIT_SELECTABLE_FIELD_AFTER_CREATE)
     String editSelectableFieldEnter(String entityId) {
-        if (entityId)
-            editFlowService.selectEntityWithId(entityId)
+        if (entityId) editFlowService.selectEntityWithId(entityId)
+        messages.deleteSelectEntitiesFieldMenu()
         EDIT_FIELD_ENTER
     }
 

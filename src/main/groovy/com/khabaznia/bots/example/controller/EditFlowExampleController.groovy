@@ -31,8 +31,8 @@ class EditFlowExampleController extends AbstractBotController {
     @BotRequest(path = EDIT_FLOW)
     editFlowExample() {
         def keyboard = inlineKeyboard
-        keyboard.button('My meetings', MY_MEETINGS).row()
-        keyboard.button('All actual discuss points', EDIT_MY_DISCUSS_POINTS).row()
+        keyboard.button('Check my meetings', MY_MEETINGS).row()
+        keyboard.button('Edit discuss points', EDIT_MY_DISCUSS_POINTS).row()
         sendMessage.text('Example models to edit/create: <b>meeting</b> and <b>discuss points</b>.\n\nChoose model 👇')
                 .keyboard(keyboard)
     }
@@ -59,7 +59,7 @@ class EditFlowExampleController extends AbstractBotController {
                 .createQuery("SELECT m FROM discuss_point m WHERE m.userCode = :userCode")
                 .setParameter('userCode', currentUser.code)
                 .resultList
-        sendMessage.text('Choose action')
+        sendMessage.text('Choose discuss point to edit')
                 .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
                         new EditEntitiesFlowKeyboardDto<DiscussPoint>()
                                 .entityNameRetriever({ it -> it.title })

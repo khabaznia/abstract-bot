@@ -32,7 +32,7 @@ class FieldViewService {
                 .getStringView(entity, fieldName)
         if (ignoreEmpty && !value) return null
         def localizedFieldName = i18nService.getFilledTemplate(fieldAnnotation.fieldButtonMessage() ?: fieldName)
-        "$localizedFieldName:    <b>${value ?: Emoji.NONE}</b>\n"
+        "$localizedFieldName:    <b>${value ?: Emoji.NONE}</b>"
     }
 
     String getIdFieldValue(Class entityClass, Long entityId) {
