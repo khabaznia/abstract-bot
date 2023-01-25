@@ -23,7 +23,7 @@ class StrategiesConfig {
         map.put(FieldType.LOCALIZED, context.getBean('localizedFieldProcessingStrategy') as FieldProcessingStrategy)
         map.put(FieldType.NUMBER, context.getBean('numberFieldProcessingStrategy') as FieldProcessingStrategy)
         map.put(FieldType.BOOLEAN, context.getBean('booleanFieldProcessingStrategy') as FieldProcessingStrategy)
-        map.put(FieldType.COLLECTION, context.getBean('collectionFieldProcessingStrategy') as FieldProcessingStrategy)
+        map.put(FieldType.SELECTIVE, context.getBean('collectionFieldProcessingStrategy') as FieldProcessingStrategy)
         map.put(FieldType.MEDIA, context.getBean('mediaFieldProcessingStrategy') as FieldProcessingStrategy)
         map
     }
@@ -35,7 +35,7 @@ class StrategiesConfig {
         map.put(FieldType.NUMBER, context.getBean('defaultFieldResolvingStrategy') as FieldResolvingStrategy)
         map.put(FieldType.BOOLEAN, context.getBean('booleanFieldResolvingStrategy') as FieldResolvingStrategy)
         map.put(FieldType.LOCALIZED, context.getBean('localizedFieldResolvingStrategy') as FieldResolvingStrategy)
-        map.put(FieldType.COLLECTION, context.getBean('collectionFieldResolvingStrategy') as FieldResolvingStrategy)
+        map.put(FieldType.SELECTIVE, context.getBean('collectionFieldResolvingStrategy') as FieldResolvingStrategy)
         map.put(FieldType.MEDIA, context.getBean('mediaFieldResolvingStrategy') as FieldResolvingStrategy)
         map
     }

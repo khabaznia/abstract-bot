@@ -30,7 +30,7 @@ class EditFlowEntityService {
 
     Map<Object, Boolean> getEntitiesToSelect() {
         def selectedEntities = context.getBean(fieldSelectionStrategyName, FieldSelectionStrategy.class)
-                .entitiesToShow
+                .getEntitiesToShow(entity)
         def selectedIds = currentEditFlow.selectedIds
         def resultMap = selectedEntities
                 .collectEntries { [(it): selectedIds.contains(it.id).toBoolean()] }

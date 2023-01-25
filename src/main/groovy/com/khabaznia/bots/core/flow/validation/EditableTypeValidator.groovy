@@ -44,9 +44,9 @@ class EditableTypeValidator {
             throw new BotException("Number ${fieldLog(field)} should be marked as FieldType.NUMBER")
         if (Boolean.isAssignableFrom(field.type) && fieldAnnotation.type() != FieldType.BOOLEAN)
             throw new BotException("Boolean ${fieldLog(field)} should be marked as FieldType.BOOLEAN")
-        if (isActualCollectionType(field) && fieldAnnotation.type() != FieldType.COLLECTION)
-            throw new BotException("Collection ${fieldLog(field)} should be marked as FieldType.COLLECTION")
-        if (fieldAnnotation.type() == FieldType.COLLECTION) validateSelectableField(field)
+        if (isActualCollectionType(field) && fieldAnnotation.type() != FieldType.SELECTIVE)
+            throw new BotException("Selective ${fieldLog(field)} should be marked as FieldType.SELECTIVE")
+        if (fieldAnnotation.type() == FieldType.SELECTIVE) validateSelectableField(field)
         validateClassHasPersistenceIdField(field.declaringClass)
     }
 
@@ -54,9 +54,9 @@ class EditableTypeValidator {
         def fieldAnnotation = field.getAnnotation(Editable.class)
         def selectableEntityClass = getSelectableFieldEntityClass(field.declaringClass as Class, field.name)
         if (fieldAnnotation.mappedBy().isEmpty())
-            throw new BotException("Collection ${fieldLog(field)} should have mappedBy parameter in Editable annotation")
+            throw new BotException("Selective ${fieldLog(field)} should have mappedBy parameter in Editable annotation")
         if (!isFieldExistsInClass(selectableEntityClass, fieldAnnotation.mappedBy()))
-            throw new BotException("Collection ${fieldLog(field)} should be mapped to existing field. Field with name ${fieldAnnotation.mappedBy()} doesn't exists")
+            throw new BotException("Selective ${fieldLog(field)} should be mapped to existing field. Field with name ${fieldAnnotation.mappedBy()} doesn't exists")
         validateType(selectableEntityClass, true)
     }
 

@@ -28,11 +28,6 @@ class MediaFieldProcessingStrategy extends FieldProcessingStrategy {
     }
 
     @Override
-    String covertToType(Object value, Class specificClass) {
-        value ?: value as String
-    }
-
-    @Override
     void sendSuccessMessages(EditFlow editFlow, boolean clear) {
         messages.updateEditFlowCurrentMediaMessage(getPersistedValue(editFlow) as String, editFlow.oldValue)
         messages.mediaUpdatedSuccessMessage(editFlow.successMessage, clear)

@@ -8,8 +8,4 @@ import org.springframework.stereotype.Component
 @Component('stringFieldProcessingStrategy')
 class StringFieldProcessingStrategy extends FieldProcessingStrategy {
 
-    @Override
-    String covertToType(Object value, Class specificClass) {
-        value ?: value as String
-    }
 }

@@ -6,6 +6,7 @@ import com.khabaznia.bots.core.flow.dto.EditEntitiesFlowKeyboardDto
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
 import com.khabaznia.bots.core.trait.BaseRequests
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import javax.validation.ConstraintViolationException
@@ -21,6 +22,9 @@ import static javax.validation.Validation.buildDefaultValidatorFactory
 @Slf4j
 @Component
 class EditFlowKeyboardService implements BaseRequests {
+
+    @Autowired
+    private FieldViewService fieldViewService
 
     /**
      * Generates and adds buttons for operations on entities that defined in dto entity class
@@ -59,7 +63,8 @@ class EditFlowKeyboardService implements BaseRequests {
                             .entityToEdit(entity)
                             .redirectParams(dto.redirectParams)
                             .successPath(dto.thisStepPath))
-                def buttonName = dto.entityNameRetriever.apply(entity)
+                def buttonName = dto.entityNameRetriever?.apply(entity)
+                        ?: fieldViewService.getIdFieldValue(entity.class, entity.id)
                         ?: getDefaultMessageOfIdField(dto.entityClass)
                         ?: getEntityEditableIdFieldName(dto.entityClass)
                 keyboard.button(buttonName, editEntityFlowDto

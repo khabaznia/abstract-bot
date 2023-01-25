@@ -35,12 +35,12 @@ class EditableParsingUtil {
         getCurrentFieldAnnotation().enableClear()
     }
 
-    static Editable getCurrentFieldAnnotation() {
-        editFlowField.getAnnotation(Editable.class)
+    static Editable getCurrentFieldAnnotation(EditFlow editFlow = currentEditFlow) {
+        getEditFlowField(editFlow).getAnnotation(Editable.class)
     }
 
     static Class getSelectableFieldEntityClass() {
-        editFlowField.getGenericType().actualTypeArguments[0] as Class<?>
+        getEditFlowField().getGenericType().actualTypeArguments[0] as Class<?>
     }
 
     static Class getSelectableFieldEntityClass(Class entityClass, String fieldName) {
@@ -52,7 +52,7 @@ class EditableParsingUtil {
     }
 
     static Boolean getSelectableFieldHIsManyToManyRelation() {
-        editFlowField.getAnnotation(ManyToMany.class) != null
+        getEditFlowField().getAnnotation(ManyToMany.class) != null
     }
 
     static Class getFieldClass(Class entityClass, String fieldName) {
@@ -100,8 +100,8 @@ class EditableParsingUtil {
         entityClass.getDeclaredField(fieldName).getAnnotation(Editable.class)
     }
 
-    static String getFieldSelectionStrategyName() {
-        currentEditFlow.fieldSelectionStrategy ?: currentFieldAnnotation.selectionStrategy()
+    static String getFieldSelectionStrategyName(EditFlow editFlow = currentEditFlow) {
+        editFlow.fieldSelectionStrategy ?: getCurrentFieldAnnotation(editFlow).selectionStrategy()
     }
 
     static Field getEntityIdField(Class entityClass) {
@@ -113,7 +113,7 @@ class EditableParsingUtil {
         (Editable) entityClass.getAnnotation(Editable.class)
     }
 
-    private static Field getEditFlowField() {
-        getClass(currentEditFlow).getDeclaredField(currentEditFlow.fieldName)
+    private static Field getEditFlowField(EditFlow editFlow = currentEditFlow) {
+        getClass(editFlow).getDeclaredField(editFlow.fieldName)
     }
 }

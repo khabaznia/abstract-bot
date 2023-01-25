@@ -25,9 +25,4 @@ class NumberFieldProcessingStrategy extends FieldProcessingStrategy {
         def fieldClass = getFieldClass(getClass(editFlow), editFlow.fieldName)
         entity?."${editFlow.fieldName}" = covertToType(value, fieldClass)
     }
-
-    @Override
-    Number covertToType(Object value, Class specificClass) {
-        value ? specificClass.valueOf(value) : null
-    }
 }
