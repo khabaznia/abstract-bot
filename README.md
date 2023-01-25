@@ -283,53 +283,6 @@ Let's proceed with example:
 ```
 ![](demo/inline_keyboard.gif)
 
-#### Confirmation FLow
-
-Often it is required to implement a confirmation of the action of a button. To unify this approach, support for the confirmation flow is provided.
-
-All you need is to create a button with **confirmationFlowDto** and specify an **accept** path and a **decline** path.
-
-##### Let's check an example:
-
-```groovy
-@BotRequest(path="/testConfirmation")
-confirmation(){
-    sendMessage.text('Very important button 👇🏽')
-            .keyboard(inlineKeyboard
-                    .button('DELETE EVERYTHING', confirmationFlowDto
-                            .acceptPath('/confirm')
-                            .declinePath('/decline')))
-}
-
-@BotRequest(path = '/confirm')
-confirmationYes() {
-    sendMessage.text "Done ✅"
-    ... your code
-}
-
-@BotRequest(path = '/decline')
-confirmationNo(String reason) {
-    sendMessage.text "You saved your data"
-    ... your code
-}
-```
-![](demo/confirmation_flow.gif)
-
-Additionally, you can specify **back path**, **specific texts** for each button and add **params** next path processing.
-```groovy
-...
-inlineKeybaord.button('button.with.confirmation', confirmationFlowDto
-    .acceptPath('/confirmationYes')
-    .acceptPathMessage('button.custom.yes')
-    .declinePath('/confirmationNo')
-    .declinePathMessage('button.custom.no')
-    .backPathMessage('button.custom.back')
-    .backPath(TO_MAIN)
-    .params([reason: 'some reason']))
-```
-
-You can check how keyboards and buttons can be implemented in [ExampleController](/src/main/groovy/com/khabaznia/bot/controller/example/ExampleController.groovy).
-
 ### Additional `String` methods
 
 [Formatting options](https://core.telegram.org/bots/api#formatting-options) available as methods on `String` class:
@@ -434,6 +387,81 @@ switchable.config.duplicate.warn.logging.to.admin=true
 ```
 
 ### Additional features:
+
+#### Edit FLows
+
+// description
+annotation
+    customizing messages
+    field types
+    creation
+    deleting
+
+validation of fields
+validation on start
+Entity factory
+Selection strategy
+
+
+##### Let's check an example:
+
+// add models code
+
+// edit field example
+// button code + gif
+
+// edit entity example
+// buttons code + gif 
+
+// edit enitites example
+// keyboard creation code + gif
+
+#### Confirmation FLow
+
+Often it is required to implement a confirmation of the action of a button. To unify this approach, support for the confirmation flow is provided.
+
+All you need is to create a button with **confirmationFlowDto** and specify an **accept** path and a **decline** path.
+
+##### Let's check an example:
+
+```groovy
+@BotRequest(path="/testConfirmation")
+confirmation(){
+    sendMessage.text('Very important button 👇🏽')
+            .keyboard(inlineKeyboard
+                    .button('DELETE EVERYTHING', confirmationFlowDto
+                            .acceptPath('/confirm')
+                            .declinePath('/decline')))
+}
+
+@BotRequest(path = '/confirm')
+confirmationYes() {
+    sendMessage.text "Done ✅"
+    ... your code
+}
+
+@BotRequest(path = '/decline')
+confirmationNo(String reason) {
+    sendMessage.text "You saved your data"
+    ... your code
+}
+```
+![](demo/confirmation_flow.gif)
+
+Additionally, you can specify **back path**, **specific texts** for each button and add **params** next path processing.
+```groovy
+...
+inlineKeybaord.button('button.with.confirmation', confirmationFlowDto
+    .acceptPath('/confirmationYes')
+    .acceptPathMessage('button.custom.yes')
+    .declinePath('/confirmationNo')
+    .declinePathMessage('button.custom.no')
+    .backPathMessage('button.custom.back')
+    .backPath(TO_MAIN)
+    .params([reason: 'some reason']))
+```
+
+You can check how keyboards and buttons can be implemented in [ExampleController](/src/main/groovy/com/khabaznia/bot/controller/example/ExampleController.groovy).
 
 #### Duplicate messages
 

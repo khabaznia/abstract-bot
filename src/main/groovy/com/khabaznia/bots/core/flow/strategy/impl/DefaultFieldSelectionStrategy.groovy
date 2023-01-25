@@ -5,20 +5,20 @@ import org.springframework.stereotype.Component
 
 
 @Component('defaultFieldSelectionStrategy')
-class DefaultFieldSelectionStrategy extends FieldSelectionStrategy<Object> {
+class DefaultFieldSelectionStrategy extends FieldSelectionStrategy<Object, Object> {
 
     @Override
-    List<Object> getEntitiesToShow() {
-        super.getEntitiesToShow()
+    List<Object> getEntitiesToShow(Object targetEntity) {
+        super.getEntitiesToShow(targetEntity)
     }
 
     @Override
-    List<Object> selectEntities(Object parentEntity, List<Long> selectedEntities) {
-        super.selectEntities(parentEntity, selectedEntities)
+    List<Object> updateSelectedEntities(Object targetEntity, List<Long> selectedEntities) {
+        super.updateSelectedEntities(targetEntity, selectedEntities)
     }
 
     @Override
-    List<Object> removeEntities(Object parentEntity, List<Long> removedEntities) {
-        super.removeEntities(parentEntity, removedEntities)
+    List<Object> updateRemovedEntities(Object targetEntity, List<Long> removedEntities) {
+        super.updateRemovedEntities(targetEntity, removedEntities)
     }
 }

@@ -1,5 +1,6 @@
 package com.khabaznia.bots.core.flow.strategy.impl.processing
 
+import com.khabaznia.bots.core.flow.enums.FieldType
 import com.khabaznia.bots.core.flow.model.EditFlow
 import com.khabaznia.bots.core.flow.service.EditFlowEntityService
 import com.khabaznia.bots.core.flow.strategy.FieldProcessingStrategy
@@ -21,9 +22,9 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
     private ApplicationContext context
 
     @Override
-    void fillOldValue(EditFlow editFlow) {
-        editFlow.initialIds = getPersistedValue(editFlow)*.id
-        editFlow.selectedIds = getPersistedValue(editFlow)*.id
+    void prepare(EditFlow editFlow) {
+        editFlow.type = FieldType.SELECTIVE
+        getFieldSelectionStrategy(editFlow).setInitialValues(editFlow, getPersistedValue(editFlow))
     }
 
     @Override
@@ -45,9 +46,9 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
         log.trace 'Entities to save -> {}', entitiesToSave
         log.trace 'Entities to remove -> {}', entitiesToRemove
         log.trace 'Resolved selection strategy: {}', fieldSelectionStrategy?.class?.simpleName
-        strategy.selectEntities(entity, entitiesToSave)
-        strategy.removeEntities(entity, entitiesToRemove)
-        entity."$editFlow.fieldName" = getEntities(editFlow.initialIds + entitiesToSave - entitiesToRemove)
+        strategy.updateSelectedEntities(entity, entitiesToSave)
+        strategy.updateRemovedEntities(entity, entitiesToRemove)
+        strategy.updateTargetEntity(entity, editFlow.initialIds + entitiesToSave - entitiesToRemove)
     }
 
     @Override
@@ -56,19 +57,7 @@ class CollectionFieldProcessingStrategy extends FieldProcessingStrategy {
         messages.selectedEntitiesSavedMessage()
     }
 
-    @Override
-    Object covertToType(Object value, Class specificClass) {
-        throw new UnsupportedOperationException('Localized field can\'t be converted')
-    }
-
-    private FieldSelectionStrategy getFieldSelectionStrategy() {
-        context.getBean(fieldSelectionStrategyName, FieldSelectionStrategy.class)
-    }
-
-    protected List<?> getEntities(List<Long> ids) {
-        entityManager.createQuery("SELECT e FROM $selectableFieldHTableName e WHERE e.id IN :idsList",
-                selectableFieldEntityClass)
-                .setParameter('idsList', ids)
-                .resultList
+    private FieldSelectionStrategy getFieldSelectionStrategy(EditFlow editFlow = currentEditFlow) {
+        context.getBean(getFieldSelectionStrategyName(editFlow), FieldSelectionStrategy.class)
     }
 }

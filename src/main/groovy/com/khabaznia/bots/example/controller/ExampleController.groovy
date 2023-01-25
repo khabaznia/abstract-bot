@@ -2,17 +2,12 @@ package com.khabaznia.bots.example.controller
 
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.enums.MessageFeature
-import com.khabaznia.bots.core.flow.dto.EditEntitiesFlowKeyboardDto
-import com.khabaznia.bots.core.flow.service.EditFlowKeyboardService
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Localized
 import com.khabaznia.bots.core.service.DeepLinkingPathService
 import com.khabaznia.bots.core.service.JobService
 import com.khabaznia.bots.example.job.ExampleJob
-import com.khabaznia.bots.example.model.ExampleModel
-import com.khabaznia.bots.example.model.ExampleModelEntry
-import com.khabaznia.bots.example.service.ExampleModelService
 import com.khabaznia.bots.example.stub.StubService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,10 +34,6 @@ class ExampleController extends AbstractBotController {
     private JobService jobService
     @Autowired
     private DeepLinkingPathService deepLinkingPathService
-    @Autowired
-    private ExampleModelService exampleModelService
-    @Autowired
-    private EditFlowKeyboardService editFlowKeyboardService
 
     @Localized
     @BotRequest(path = EXAMPLE, enableDuplicateRequests = true)
@@ -204,86 +195,6 @@ class ExampleController extends AbstractBotController {
         ExampleJob job = context.getBean('exampleJob')
         job.chatToSend = currentChat.code
         jobService.scheduleJob(job, LocalDateTime.now().plusSeconds(5).toDate())
-    }
-
-    @Localized
-    @BotRequest(path = EDIT_FLOW)
-    editFlowExample() {
-        def model = exampleModelService.getAll().find()
-        def keyboard = inlineKeyboard
-        if (model)
-            keyboard
-                    .button(null, CHECK, editFieldFlowDto
-                            .fieldName('field1')
-                            .entityToEdit(model)
-                            .successPath(EXAMPLE))
-                    .button('Super-flag', editFieldFlowDto
-                            .entityToEdit(model)
-                            .fieldName('flag')
-                            .successText('Yeap! updated')
-                            .successPath('/queryWithParam')
-                            .redirectParams([someUniqueId: 'someUniqueId']))
-                    .button('localized', FEEDBACK, editFieldFlowDto
-                            .entityId(model.id)
-                            .fieldName('name')
-                            .entityClass(model.class)
-                            .successPath(EDIT_FLOW))
-                    .row()
-                    .button('Edit enitty ', editEntityFlowDto
-                            .entityToEdit(model)
-                            .fieldsInRow(1)
-                            .enterTextBinding([entityName: 'someName'])
-                            .enterText('you are going to edit $entityName')
-                            .successPath('/queryWithParam')
-                            .backPath(EDIT_FLOW)
-                            .redirectParams([someUniqueId: 'someUniqueId']))
-                    .row()
-        keyboard.button('Edit all ExampleModels', '/editExampleModels').row()
-        keyboard.button('Edit all ExampleModelEntries', '/editExampleModelEntries')
-        sendMessage.text('Add new or edit existing')
-                .keyboard(keyboard)
-    }
-
-    @BotRequest(path = '/editExampleModels')
-    editExampleModels(String myCustomParam, String entityId) {
-        if (myCustomParam) sendMessage.text myCustomParam
-        if (entityId) sendMessage.text "Entity was updated/created -> $entityId"
-        sendMessage.text('Choose action')
-                .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
-                        new EditEntitiesFlowKeyboardDto<ExampleModel>()
-                                .entityNameRetriever({ ExampleModel it -> it.field1 })
-                                .entityClass(ExampleModel.class)
-                                .entities(exampleModelService.getAll())
-                                .thisStepPath('/editExampleModels')
-                                .backPath(EDIT_FLOW)
-                                .createNewEntitySuccessMessage('YEEEEEES, CREATED!')
-                                .deleteEntitySuccessMessage("DELETED")
-                                .redirectParams([myCustomParam: 'Some custom param'])
-                                .canCreateNewEntity(true)
-                                .canDeleteEntities(true)
-                                .entityFactory('exampleModelFactory'))
-                )
-    }
-
-    @BotRequest(path = '/editExampleModelEntries')
-    editExampleModelEntries() {
-        def keyboard = inlineKeyboard
-        keyboard.button('Sample button', DEFAULT)
-                .row()
-        sendMessage.text('Choose action')
-                .keyboard(editFlowKeyboardService.addButtons(keyboard,
-                        new EditEntitiesFlowKeyboardDto<ExampleModelEntry>()
-                                .entityNameRetriever({ it.abbreviation })
-                                .entityClass(ExampleModelEntry.class)
-                                .entities(exampleModelService.getAllEntries())
-                                .thisStepPath('/editExampleModelEntries')
-                                .fieldsInRow(2)
-                                .entitiesInRow(5)
-                                .backPath(EDIT_FLOW)
-                                .canDeleteEntities(false))
-                        .row()
-                        .button('Another sample button', DEFAULT)
-                )
     }
 
     @Localized

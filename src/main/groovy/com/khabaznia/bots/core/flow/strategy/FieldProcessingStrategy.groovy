@@ -21,10 +21,6 @@ abstract class FieldProcessingStrategy {
 
     void prepare(EditFlow editFlow) {
         editFlow.type = getFieldType(getClass(editFlow), editFlow.fieldName)
-        fillOldValue(editFlow)
-    }
-
-    void fillOldValue(EditFlow editFlow) {
         editFlow.oldValue = allIncludedValuesAsString(editFlow)
     }
 
@@ -40,6 +36,11 @@ abstract class FieldProcessingStrategy {
         if (!constraintViolations.findAll().isEmpty()) throw new ConstraintViolationException('Validation of input failed', constraintViolations)
     }
 
+    Object covertToType(Object value, Class specificClass = null){
+        String.valueOf('sdfs')
+        value ? specificClass.valueOf(value) : null
+    }
+
     void updateEntity(Object entity, String value, EditFlow editFlow) {
         log.trace 'Default updating entity with value {}', value
         entity?."${editFlow.fieldName}" = value
@@ -48,8 +49,6 @@ abstract class FieldProcessingStrategy {
     String allIncludedValuesAsString(EditFlow editFlow) {
         getPersistedValue(editFlow)?.toString()
     }
-
-    abstract Object covertToType(Object value, Class specificClass = null)
 
     void sendSuccessMessages(EditFlow editFlow, boolean clear) {
         messages.editFlowSuccessMessage(editFlow.successMessage, clear)

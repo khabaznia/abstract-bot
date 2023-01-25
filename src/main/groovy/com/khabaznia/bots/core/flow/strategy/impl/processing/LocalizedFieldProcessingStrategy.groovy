@@ -44,9 +44,4 @@ class LocalizedFieldProcessingStrategy extends FieldProcessingStrategy implement
                 .collect { "$it.key  $it.value" }
                 .join(lineSeparator()))
     }
-
-    @Override
-    Object covertToType(Object value, Class specificClass) {
-        throw new UnsupportedOperationException('Localized field can\'t be converted')
-    }
 }
