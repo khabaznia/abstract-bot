@@ -65,6 +65,8 @@ class EditFlow {
     String entityFactory
     @Column
     String fieldSelectionStrategy
+    @Column
+    String selectableEntityFieldClassName
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)

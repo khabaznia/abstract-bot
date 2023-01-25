@@ -33,7 +33,7 @@ class EditSelectFieldKeyboardService implements BaseRequests {
         if (currentFieldAnnotation.canCreateEntity())
             keyboard.button('button.edit.flow.add.new.entity', PLUS, get(CreateNewEntityFlowDto.class)
                     .successText('text.create.new.entity.success.message')
-                    .entityClass(selectableFieldEntityClass)
+                    .entityClass(Class.forName(flow.selectableEntityFieldClassName))
                     .redirectParams([parentEditFlowId: flow.id.toString()])
                     .successPath(EDIT_SELECTABLE_FIELD_AFTER_CREATE))
                     .row()
@@ -65,7 +65,7 @@ class EditSelectFieldKeyboardService implements BaseRequests {
             case (1): thresholdOfSymbolsForCurrentRow = 14; break // 2 buttons in last row
             case (2): thresholdOfSymbolsForCurrentRow = 20; break // 1 button in last row
         }
-        def selectableFieldEntityClass = selectableFieldEntityClass
+        def selectableFieldEntityClass = entity.class
         def idFieldText = fieldViewService.getIdFieldValue(selectableFieldEntityClass, Long.valueOf(entity.id))
                 ?: i18nService.getFilledTemplate(getDefaultMessageOfIdField(selectableFieldEntityClass))
                 ?: getEntityIdField(selectableFieldEntityClass).name

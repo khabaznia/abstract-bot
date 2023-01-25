@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
 
-@Component('meetingSelectionStrategy')
+@Component('pointsSelectionStrategy')
 class MeetingDiscussPointsSelectingStrategy extends FieldSelectionStrategy<DiscussPoint, Meeting> {
 
     @Override

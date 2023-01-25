@@ -22,6 +22,7 @@ abstract class FieldSelectionStrategy<T, P> {
      * @param editFlow
      */
     void setInitialValues(EditFlow editFlow, Object currentValue){
+        editFlow.selectableEntityFieldClassName=getSelectableFieldEntityClass(editFlow).name
         editFlow.initialIds = currentValue*.id
         editFlow.selectedIds = currentValue*.id
     }
@@ -43,7 +44,7 @@ abstract class FieldSelectionStrategy<T, P> {
      * @param ids of selectedEntities
      * @return collection of {@link T} selected entities
      */
-    List<T> updateSelectedEntities(Object targetEntity, List<Long> selectedEntities) {
+    List<T> updateSelectedEntities(P targetEntity, List<Long> selectedEntities) {
         updateReferencesInChildEntities(selectedEntities.unique(), targetEntity, false) as List<T>
     }
 
@@ -54,7 +55,7 @@ abstract class FieldSelectionStrategy<T, P> {
      * @param ids removedEntities
      * @return collection of {@link T} unselected entities
      */
-    List<T> updateRemovedEntities(Object targetEntity, List<Long> removedEntities) {
+    List<T> updateRemovedEntities(P targetEntity, List<Long> removedEntities) {
         updateReferencesInChildEntities(removedEntities.unique(), targetEntity, true) as List<T>
     }
 
@@ -65,7 +66,7 @@ abstract class FieldSelectionStrategy<T, P> {
      * @param finalEntitiesList
      * @return collection of {@link T} final entities
      */
-    List<T> updateTargetEntity(Object targetEntity, List<Long> finalEntitiesList){
+    List<T> updateTargetEntity(P targetEntity, List<Long> finalEntitiesList){
         def fieldName = getCurrentEditFlow().fieldName
         def entities = findAllEntitiesForIds(finalEntitiesList)
         targetEntity."${fieldName}" = entities

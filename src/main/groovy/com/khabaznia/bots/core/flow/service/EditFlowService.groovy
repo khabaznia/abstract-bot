@@ -71,8 +71,10 @@ class EditFlowService {
         entity.id
     }
 
-    void postProcess(EditFlow editFlow, Long entityId) {
-        setRedirectParams([entityId: entityId.toString()] + editFlow.params)
+    void postProcess(EditFlow editFlow, Long entityId = null) {
+        def params = editFlow.params
+        if (entityId) params.put('entityId', entityId.toString())
+        setRedirectParams(params)
         currentChat.editFlow.childFlow
                 ? deleteOldChildFlow()
                 : deleteOldChatFlow(currentChat)
