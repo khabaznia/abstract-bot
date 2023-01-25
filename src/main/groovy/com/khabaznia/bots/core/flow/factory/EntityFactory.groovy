@@ -34,13 +34,18 @@ abstract class EntityFactory<T> {
      * @param entity to generate view for
      * @return view as String.
      */
-    String getView(T entity) { null }
+    String getView(T entity) {
+        log.debug 'Default view will be printed for entity {}', entity.id.toString()
+        fieldViewService.getEntityViewHeader(entity.class, entity.id)
+                .concat('\n\n')
+                .concat(getAllFieldsView(entity))
+    }
 
     protected String getAllFieldsView(Object entity,
                                       List<String> fieldNames = getViewFields(entity.class),
-                                      boolean ignoreEmpty = false) {
+                                      boolean ignoreEmpty = false, String lineSeparator = System.lineSeparator()) {
         fieldNames.collect {
             fieldViewService.getFieldStringView(entity, it, ignoreEmpty)
-        }.findAll().join(System.lineSeparator())
+        }.findAll().join(lineSeparator)
     }
 }

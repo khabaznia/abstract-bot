@@ -13,4 +13,11 @@ class DiscussPointFactory extends EntityFactory<DiscussPoint> {
     DiscussPoint createEntity() {
         new DiscussPoint(userCode: currentUser.code)
     }
+
+    @Override
+    String getView(DiscussPoint entity) {
+        entity.title
+                .concat("\n\n")
+                .concat(getAllFieldsView(entity, ['description', 'priority'], true, '\n\n'))
+    }
 }

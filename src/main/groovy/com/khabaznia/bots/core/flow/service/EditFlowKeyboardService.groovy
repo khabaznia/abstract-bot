@@ -71,6 +71,7 @@ class EditFlowKeyboardService implements BaseRequests {
                         .entityId(entity.id)
                         .fieldsInRow(dto.fieldsInRow)
                         .entityClass(entity.class)
+                        .entityFactory(dto.entityFactory)
                         .redirectParams(dto.redirectParams)
                         .backPath(dto.thisStepPath))
             }
