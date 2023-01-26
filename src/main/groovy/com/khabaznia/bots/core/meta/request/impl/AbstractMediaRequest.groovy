@@ -12,6 +12,7 @@ abstract class AbstractMediaRequest<T extends MessageResponse> extends AbstractK
 
     //     for resource strategy file should be without prefix: e.g. file - help.gif, fileIdentifier - media_help.gif
     //     for api strategy should be used as it is returned from dto
+    //     !!! don't use media id's longer that 60 symbols
     String fileIdentifier
     String label
     String text

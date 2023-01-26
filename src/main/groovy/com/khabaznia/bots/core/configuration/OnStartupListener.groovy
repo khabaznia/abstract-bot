@@ -15,6 +15,7 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
+import static com.khabaznia.bots.core.flow.validation.EditableTypeValidator.validateEditableTypes
 import static com.khabaznia.bots.core.routing.Constants.SWITCHABLE_CONFIG_KEYS_PREFIX
 import static com.khabaznia.bots.core.util.HTMLParsingUtil.*
 
@@ -39,6 +40,7 @@ class OnStartupListener implements Configurable {
     void onApplicationEvent(ContextRefreshedEvent event) {
         log.debug 'Context refreshed'
         addMethods()
+        validateEditableTypes()
         createBotUser()
         configs()
         restoreJobs()

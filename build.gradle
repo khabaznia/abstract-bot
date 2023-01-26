@@ -11,7 +11,7 @@ repositories {
 }
 
 group = 'com.github.khabaznia'
-version = '1.0.0'
+version = '2.1.0'
 sourceCompatibility = '11'
 
 dependencies {
@@ -24,17 +24,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    runtimeOnly 'org.postgresql:postgresql:42.3.1'
+    runtimeOnly 'org.postgresql:postgresql:42.3.8'
 
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
     implementation 'org.apache.commons:commons-dbcp2:2.8.0'
-    implementation 'org.telegram:telegrambots:5.4.0.1'
+    implementation 'org.telegram:telegrambots:6.4.0'
     implementation 'io.github.openfeign:feign-core:11.8'
-    implementation 'io.github.openfeign:feign-slf4j:11.8'
-    implementation 'io.github.openfeign:feign-gson:11.8'
+    implementation 'io.github.openfeign:feign-slf4j:12.1'
+    implementation 'io.github.openfeign:feign-gson:12.1'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    implementation 'org.reflections:reflections:0.10.2'
+}
+
+bootRun {
+    jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"]
 }
 
 test {

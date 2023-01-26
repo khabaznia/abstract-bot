@@ -40,9 +40,9 @@ class ExampleController extends AbstractBotController {
     getReply() {
         sendMessage
                 .text('Here is your reply keyboard')
-                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDITING_MESSAGES, INTEGRATION_TESTS_KEYBOARD],
+                .replyKeyboard([[MODIFIABLE_INLINE_KEYBOARD, EDIT_FLOW, INTEGRATION_TESTS_KEYBOARD],
                                 [JOB_TEST, SEND_MEDIA],
-                                [EXAMPLE.addEmoji(TEST_EMOJI_SET), TEST_COMMANDS], [TO_MAIN.addEmoji(LEFT_ARROW)]])
+                                [TEST_COMMANDS, EDITING_MESSAGES], [TO_MAIN.addEmoji(LEFT_ARROW)]])
     }
 
     @Localized
@@ -126,7 +126,7 @@ class ExampleController extends AbstractBotController {
                                 .declinePathMessage('button.custom.no')
                                 .backPathMessage('button.custom.back')
                                 .backPath(TO_MAIN)
-                                .params([reason: 'some reason'])))
+                                .redirectParams([reason: 'some reason'])))
     }
 
     @Localized
@@ -183,8 +183,7 @@ class ExampleController extends AbstractBotController {
                 .keyboard(inlineKeyboard.button('Yes', YES_ACTION)
                         .button("No, just count", NO_ACTION, [category: 'science'])
                         .row()
-                        .button('button.example.back', LEFT_ARROW, BACK_ACTION)
-                )
+                        .button('button.example.back', LEFT_ARROW, BACK_ACTION))
                 .feature(MessageFeature.ONE_TIME_INLINE_KEYBOARD)
     }
 

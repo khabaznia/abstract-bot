@@ -27,6 +27,7 @@ class EditMessageRequestProcessingStrategy extends RequestProcessingStrategy<Edi
             log.debug "Try to edit message with: uid {}, label {}, messageId {}", messageToEdit.uid, messageToEdit.label, messageToEdit.messageId
             populate(request, messageToEdit)
             request.setRelatedMessageUid(messageToEdit?.uid)
+            messageService.saveMessage(messageToEdit)
         }
     }
 
@@ -36,6 +37,6 @@ class EditMessageRequestProcessingStrategy extends RequestProcessingStrategy<Edi
 
         target.setKeyboard(toKeyboardModel(source.keyboard))
         target.setChat(chatService.getChatByCode(source.chatId))
-        target.setFeatures(source.features)
+        target.features.addAll(source.features)
     }
 }

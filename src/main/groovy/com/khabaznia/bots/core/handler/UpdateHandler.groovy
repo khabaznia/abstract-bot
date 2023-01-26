@@ -57,7 +57,7 @@ class UpdateHandler implements Configurable, Loggable {
         def botController = botControllerResolver.getController(update)
         while (botController) {
             sendChatAction(botController)
-            def path = botController.process update
+            def path = botController.process(update, redirectParams)
             botController = path ? botControllerResolver.getController(path) : null
         }
     }
@@ -144,5 +144,9 @@ class UpdateHandler implements Configurable, Loggable {
         isEnabled(Constants.IGNORE_CHAT_ACTIONS_FOR_GROUPS)
                 ? currentChat.type == ChatType.PRIVATE
                 : true
+    }
+
+    private static Map<String, String> getRedirectParams() {
+        SessionUtil.getAttribute(REDIRECT_PARAMETERS) as Map<String, String>
     }
 }

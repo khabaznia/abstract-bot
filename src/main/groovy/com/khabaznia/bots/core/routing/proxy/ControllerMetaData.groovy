@@ -12,6 +12,8 @@ class ControllerMetaData {
     Map<Integer, String> params
     Boolean hasParameters
     Boolean rawParams
+    String inputParameterName
+    Boolean isMediaInput
     Method beforeExecuteMethod
     Method executeMethod
     Method afterExecuteMethod

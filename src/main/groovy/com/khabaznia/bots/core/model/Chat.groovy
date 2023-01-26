@@ -2,6 +2,7 @@ package com.khabaznia.bots.core.model
 
 import com.khabaznia.bots.core.enums.ChatRole
 import com.khabaznia.bots.core.enums.ChatType
+import com.khabaznia.bots.core.flow.model.EditFlow
 import groovy.transform.ToString
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -56,9 +57,14 @@ class Chat {
     Permissions permissions
 
     @ElementCollection
-    @CollectionTable(name = "additional_params_mapping",
+    @CollectionTable(name = "chat_additional_params_mapping",
             joinColumns = [@JoinColumn(name = "id", referencedColumnName = "chat_id")])
     @MapKeyColumn(name = "key")
     @Column(name = "value")
     Map<String, String> additionalParams
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = 'edit_flow')
+    EditFlow editFlow
 }

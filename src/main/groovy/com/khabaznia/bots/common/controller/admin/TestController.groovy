@@ -16,7 +16,6 @@ class TestController extends AbstractBotController {
     private void doTest() {
         //write your test here
 
-
     }
 
     @Secured(roles = Role.ADMIN)

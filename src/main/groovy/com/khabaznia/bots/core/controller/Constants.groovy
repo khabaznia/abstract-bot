@@ -10,6 +10,21 @@ class Constants {
         public static final String CONFIRMATION_MENU = '/confirmation_menu'
     }
 
+    static final class EDIT_FIELD_CONTROLLER {
+        public static final String EDIT_FIELD_ENTER = '/editFieldEnter'
+        public static final String EDIT_LOCALIZED_FIELD_MENU = '/editLocalizedFieldMenu'
+        public static final String EDIT_BOOLEAN_FIELD = '/editBooleanFieldMenu'
+        public static final String EDIT_ENTITY_ENTER = '/editEntityEnter'
+        public static final String EDIT_FIELD_VALIDATION_FAILED = '/editFieldValidationFailed'
+        public static final String EDIT_FIELD_CLEAR_VALUE = '/editFieldClearValue'
+        public static final String CREATE_NEW_ENTITY = '/createNewEntity'
+        public static final String DELETE_ENTITY = '/deleteEntity'
+        public static final String SELECT_ENTITY_COLLECTION_FIELD = '/selectEntity'
+        public static final String SELECT_ENTITIES_CONFIRM = '/selectEntitiesConfirm'
+        public static final String EDIT_SELECTABLE_FIELD_AFTER_CREATE = '/editSelectableFieldAfterCreateChild'
+        public static final String EDIT_FIELD_CANCEL = '/editFlowCancel'
+    }
+
     static final class LANG_CONTROLLER {
         static final Map<String, String> LANG_EMOJI = [en: LANG_EN, ru: LANG_RU, uk: LANG_UK]
 
@@ -47,6 +62,11 @@ class Constants {
         public static final String UPDATE_MESSAGE = 'updateMessage'
         public static final String UPDATE_ID = 'updateId'
         public static final String IS_UPDATE_PROCESSED = 'isUpdateProcessed'
+        public static final String REDIRECT_PARAMETERS = 'redirectParameters'
+    }
+
+    static final class CHAT_PARAMS {
+        public static final String CURRENT_REPLY_KEYBOARD_ID = 'currentReplyKeyboardId'
     }
 
     static final class GROUP_CHATS_ACTIONS_CONTROLLER {

@@ -7,9 +7,12 @@ This is ready-to-use bot abstraction that based on:
 
 **[Check an example of current version](https://t.me/example_abstract_bot)**
 
-_Release 2.0_
+_Release 2.1_
 
-#### Release notes:
+#### Release notes 2.1:
+* Support creating Edit flow menus for Models marked with annotation
+
+#### Release notes 2.0:
 * Confirmation flow inline buttons
 * Jobs support
 * Sending media requests (photo, audio, documents)
@@ -73,14 +76,14 @@ curl -F "url=<host-url>/<bot-token>" https://api.telegram.org/bot<bot-token>/set
 ## Map user input (commands).
 The app based on webhook and use text input and chat id to understand what resource user wants to access.
 Thus, all application resources are marked with the following corresponding annotations to ensure proper mapping:
-- [`@BotController`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotController.groovy) - ***Mandatory***, intended to mark class as controller that aggregates specific command mappings. 
-- [`@BotRequest`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotRequest.groovy) - ***Optional***, intended to mark method in bot controller with specific command mapping
-- [`@Localized`](/src/main/groovy/com/khabaznia/bot/core/annotation/Localized.groovy) - ***Optional***, intended to enable localization of specific command mapping (used in reply keyboards).
-- [`@Secured`](/src/main/groovy/com/khabaznia/bot/core/annotation/Secured.groovy) - ***Optional***, intended to restrict access to command mapping method to specific user [roles](https://github.com/khabaznia/abstract-bot#roles).  _Default - ALL_
-- [`@Action`](/src/main/groovy/com/khabaznia/bot/core/annotation/Action.groovy) - ***Optional***, intended to specify SendChatAction that should be sent to user, while request is processing. _Default - Typing_
+- [`@BotController`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/BotController.groovy) - ***Mandatory***, intended to mark class as controller that aggregates specific command mappings. 
+- [`@BotRequest`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/BotRequest.groovy) - ***Optional***, intended to mark method in bot controller with specific command mapping
+- [`@Localized`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/Localized.groovy) - ***Optional***, intended to enable localization of specific command mapping (used in reply keyboards).
+- [`@Secured`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/Secured.groovy) - ***Optional***, intended to restrict access to command mapping method to specific user [roles](https://github.com/khabaznia/abstract-bot#roles).  _Default - ALL_
+- [`@Action`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/Action.groovy) - ***Optional***, intended to specify SendChatAction that should be sent to user, while request is processing. _Default - Typing_
 
 > NOTE!
-> You must extend your controller from [`AbstractBotController`](/src/main/groovy/com/khabaznia/bot/controller/AbstractBotController.groovy) to enable pre- and post- processing of update, and get access to specific [object](https://github.com/khabaznia/abstract-bot#available-methods) like sendMessage, editMessage, keyboard etc. 
+> You must extend your controller from [`AbstractBotController`](/src/main/groovy/com/khabaznia/bots/core/controller/AbstractBotController.groovy) to enable pre- and post- processing of update, and get access to specific [object](https://github.com/khabaznia/abstract-bot#available-methods) like sendMessage, editMessage, keyboard etc. 
 
 Example:
 ```groovy
@@ -135,7 +138,7 @@ You can use it all together
 ### Previous path
 
 You can create you own flows using next feautures:
-- in [`@BotRequest#after`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotRequest.groovy) you can specify previous action
+- in [`@BotRequest#after`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/BotRequest.groovy) you can specify previous action
 - you can forward processing of same update to another command mapping by returning `String` from command mapping method with name of command.
 - inject parameters from button to target command mapping method arguments
 
@@ -164,7 +167,7 @@ You can create you own flows using next feautures:
 
 If there are no specific command mapping present in application, some default mappings will be used:
 
-- /any_string - this command is used as empty path in [`@BotRequest`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotRequest.groovy)
+- /any_string - this command is used as empty path in [`@BotRequest`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/BotRequest.groovy)
 - /default - default command mapping if no matching command was found
 - /process_image - default command if user send image. Redirects this file to admin chat.
 - /process_audio - default command if user send audio. Redirects this file to admin chat.
@@ -186,18 +189,18 @@ Eventually app based on two roles: **ADMIN** and **USER**.
 All controllers mapping based on these roles. 
 
 For adding custom role you need:
-- add this role to [`UserRole`](/src/main/groovy/com/khabaznia/bot/enums/UserRole.groovy) enum
-- extend logic in [`UserService`](/src/main/groovy/com/khabaznia/bot/service/UserService.groovy) to specify how this role of user should be assigned
-- extend [`Role`](/src/main/groovy/com/khabaznia/bot/enums/Role.groovy) enum with corresponding role (used in @Secured annotation restricting access to resource in bot controller)
+- add this role to [`UserRole`](/src/main/groovy/com/khabaznia/bots/core/enums/UserRole.groovy) enum
+- extend logic in [`UserService`](/src/main/groovy/com/khabaznia/bots/core/service/UserService.groovy) to specify how this role of user should be assigned
+- extend [`Role`](/src/main/groovy/com/khabaznia/bots/core/enums/Role.groovy) enum with corresponding role (used in @Secured annotation restricting access to resource in bot controller)
 
 ## Available methods.
 
-The app has implementation of [wrappers](/src/main/groovy/com/khabaznia/bot/meta/request/impl) to main api method:
+The app has implementation of [wrappers](/src/main/groovy/com/khabaznia/bots/core/meta/request/impl) to main api method:
 _SendMessage, EditMessage, DeleteMessage, PinMessage, SendAudio, SendVideo, SendPhoto, SendChatAction, SetMyCommands, BanChatMember, LeaveChat, etc._
 These objects intended to wrap data that should be sent to user in convenient way. 
 Objects are based on Builder pattern, so you can fill its fields easily. 
 
-The recommended way to use it - get needed bean from context, fill its fields, and execute it by publishing [ExecuteMethodsEvent](/src/main/groovy/com/khabaznia/bot/event/ExecuteMethodsEvent.groovy).
+The recommended way to use it - get needed bean from context, fill its fields, and execute it by publishing [ExecuteMethodsEvent](/src/main/groovy/com/khabaznia/bots/core/event/ExecuteMethodsEvent.groovy).
 AbstractBotController contains methods that enables you to create such wrappers, and it will execute created wrappers after method invocation.
 
 Let's check an example:
@@ -235,8 +238,8 @@ Same for `text` fields in keyboard buttons.
 ### Keyboards, Buttons
 Same to api methods, app contains wrappers for keyboards and buttons.
 There are two types of keyboards:
-[`InlineKeyboard`](/src/main/groovy/com/khabaznia/bot/meta/keyboard/impl/InlineKeyboard.groovy)
-[`ReplyKeyboard`](/src/main/groovy/com/khabaznia/bot/meta/keyboard/impl/ReplyKeyboard.groovy)
+[`InlineKeyboard`](/src/main/groovy/com/khabaznia/bots/core/meta/keyboard/impl/InlineKeyboard.groovy)
+[`ReplyKeyboard`](/src/main/groovy/com/khabaznia/bots/core/meta/keyboard/impl/ReplyKeyboard.groovy)
 
 Both of them has methods to create buttons. 
 Let's proceed with example:
@@ -283,11 +286,320 @@ Let's proceed with example:
 ```
 ![](demo/inline_keyboard.gif)
 
+### Additional `String` methods
+
+[Formatting options](https://core.telegram.org/bots/api#formatting-options) available as methods on `String` class:
+- bold()
+- italic()
+- underline()
+- strikethrough()
+- linkUrl(), linkText()- creates markup with link
+- mentionUrl() - creates user mention link
+
+```groovy
+@BotRequest(path = '/checkTexts')
+  checkTexts() {
+    sendMessage.text('some bold'.bold())
+    sendMessage.text('some italic'.italic())
+    sendMessage.text('some underline'.underline())
+    sendMessage.text('some strikethrough'.strikethrough())
+    sendMessage.text('go to ' + 'github repo'.linkUrl('https://github.com/khabaznia/abstract-bot'))
+    sendMessage.text('user'.linkUrl(currentChat.code.userMentionUrl()))
+
+    // for localized values
+    sendMessage.text('test.bold'.bold()) 
+    sendMessage.text('test.italic'.italic()) 
+    sendMessage.text('test.underline'.underline())
+    sendMessage.text('test.strikethrough'.strikethrough())
+  }
+```
+
+![](demo/check_texts.gif)
+
+### MessageFeature
+Each api method wrapper (BaseRequest) has [`MessageFeature`](/src/main/groovy/com/khabaznia/bots/core/enums/MessageFeature.groovy) that provides additional pre- and post- processing of the request.
+
+- **PERSIST** - Just save to DB
+- **DELETE** - Send message and deletes it with next request.
+- **INLINE_KEYBOARD** - Default for message with inline keyboard. Inline keyboards can be updated. Saved in DB.
+- **REPLY_KEYBOARD** - Default for message with reply keyboard. Saved in DB.
+- **ONE_TIME_INLINE_KEYBOARD** -  Message with inline keyboard that should be deleted after its any button click.
+- **PINNED** - After sending, saved to DB, send additional request to pin the message.
+- **EDIT** - Edit existing message. Updates it in db. Default for `EditMessage`.
+- **MEDIA** -  For AUDIO, IMAGE, VIDEO messages. Default for `SendPhoto`, `SendVideo`, `SendAudio`.
+
+You can explicitly specify it in builder
+
+```groovy
+sendMessage
+        .text('This message should be pinned')
+        .feature(MessageFeature.PINNED)
+
+sendMessage
+        .text('This message will be deleted')
+        .feature(MessageFeature.DELETE)
+
+// or another variant for MessageType.DELETE   
+sendMessage
+        .text('This message will be deleted')
+        .delete()
+```
+
+## Configuration 
+
+The configuration of app is presented in [application.properties](/src/main/resources/application.properties) and [application.yml](/src/main/resources/application.yml) files
+
+Config properties are saved to DB in order to save state of application while new release deploy. 
+You can simply get config value using methods in [`Configurable`](/src/main/groovy/com/khabaznia/bots/core/trait/Configurable.groovy) trait.
+
+There are specific prefixes for config properties:
+- **env.only** - property don't saved to DB
+- **switchable.config** - property should be boolean, and can be managed from [switch features flow](https://github.com/khabaznia/abstract-bot#default-mappings-and-flows) by admin user.
+
+Next properties are needed to start application and should be specified as system properties (recommended) or in [application.yml](/src/main/resources/application.yml) file
+
+```yaml
+logging:
+  level:
+ ...
+    com.khabaznia.bots: ${LOGGING_LEVEL} // mandatory to specify logging level
+
+env.only:  
+ ...
+  bot:
+    token: ${BOT_TOKEN} // mandatory, token of your bot
+    admin.chat.id: ${CHAT_ADMIN} // mandatory, specified admin chat. Use https://t.me/userinfobot to check id of user
+```
+
+### Logging to chat
+
+You can set any group as logging chat in order to check what actions are performed in the application, 
+by **'/setLogging'** command that is available to admin.
+
+
+Next type of logging available:
+- **DEBUG** - logs every update info to specified `CHAT_LOGGING` if feature is enabled
+- **INFO** - logs to message to `CHAT_LOGGING`. Use [`Loggable`](/src/main/groovy/com/khabaznia/bots/core/trait/Loggable.groovy) trait or publish [`LogEvent`](/src/main/groovy/com/khabaznia/bots/core/event/LogEvent.groovy) with specified message.
+- **WARN** - logs any errors of application to `CHAT_LOGGING`, and duplicates the message to `CHAT_ADMIN` if feature is enabled
+
+Use [`Loggable`](/src/main/groovy/com/khabaznia/bots/core/trait/Loggable.groovy) trait to log any message.
+
+```properties
+switchable.config.debug.logging.enabled=false
+switchable.config.duplicate.warn.logging.to.admin=true
+```
+
+### Additional features:
+
+#### Edit FLow
+
+Edit flow feature allows you to perform **CRUD operations** with generated inlineKeyboard for specified entities or fields of entities
+
+Using feature lays on two main objects:
+- annotation [`@Editable`](/src/main/groovy/com/khabaznia/bots/core/flow/annotation/Editable.groovy) - intended to mark entities and it's fields that should be changed. 
+- dto classes [`extending EditFlowDto`](/src/main/groovy/com/khabaznia/bots/core/flow/dto)  - intended to bind buttons in controller to specified flow with defining concrete entities/field to edit
+
+Editable annotation allows you to specify:
+* field type to define specific flow and persistance startegy: _STRING, NUMBER, BOOLEAN, SELECTIVE_ (for OneToMany & ManyToMany relations) and _LOCALIZED_(Map<String, String> to persist lang-value fields))
+* Custom texts for each field: 
+  * fieldButtonName - defines message that will be shown in field selection menu while you edit whole entity
+  * enterMessage - defines message that will be displayed when expecting user input. E.g: 'Enter you age'
+* for Media
+      field types
+      creation
+      deleting
+
+Additionally you can:
+* add **validation** of user input before saving in db: just use spring validation annotations on fields
+* specify **entity factory** to define specific **on-create logic**, and **custom view** in editEntityMenu
+  * create class extending [`EntityFactory`](/src/main/groovy/com/khabaznia/bots/core/flow/factory/EntityFactory.groovy)
+  * override methods: **createEntity** and **getView** for custom logic
+  * add factory bean name in [`@Editable#entityFactory`](/src/main/groovy/com/khabaznia/bots/core/flow/annotation/Editable.groovy) annotation on model
+* specify **selection startegy** to define custom selection logic for fields with relations (_SELECTIVE_)
+  * create class extending [`FieldSelectionStrategy`](/src/main/groovy/com/khabaznia/bots/core/flow/strategy/FieldSelectionStrategy.groovy)
+  * override parent methods for custom logic
+  * add strategy bean name in [`@Editable#selectionStrategy`](/src/main/groovy/com/khabaznia/bots/core/flow/annotation/Editable.groovy) on Selective field
+
+
+##### Let's check an example:
+
+<details>
+<summary> Define models with marking fields with @Editable annotation </summary>
+ 
+```groovy
+@ToString(excludes = ['pointsToDiscuss'])
+@Editable(entityViewHeader = 'meeting.header') // Custom header in entity view
+@Entity(name = "meeting")
+class Meeting {
+
+    // ID field is mandatory. Should be Long and with name 'id'
+    @Id 
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id
+
+    ...
+    
+    @Editable(enableClear = false, 
+            id = true, // Only one field should be marked as id. Value in this field will be used as title for model instance
+            fieldButtonMessage = 'meeting.title.name') // Custom message of field that used for button name/field view
+    @Column(name = 'meeting_title')
+    String title
+
+    @Editable(type = MEDIA, mediaType = DOCUMENT, // Media type will expect user to upload media with specified mediaType
+            enableClear = true, // Adds button that allows to clear value in curren field.
+            fieldButtonMessage = 'meeting.attachment.name')
+    @Column
+    String attachment
+
+    @Editable(viewOnly = true, // Field is displayed in entity view, but is not allowed to edit
+            type = BOOLEAN, 
+            fieldButtonMessage = 'meeting.upcoming.name')
+    @Column(name = 'upcoming')
+    Boolean upcoming
+
+    @Editable(type = SELECTIVE, mappedBy = 'meeting', // Selective field should be marked with SELECTIVE type and provide mappedBy field name in related entity
+            selectionStrategy = 'pointsSelectionStrategy', // Bean name of specific selection strategy
+            fieldButtonMessage = 'meeting.points.to.discuss.name',
+            enterMessage = 'meeting.points.to.discuss.enter.message') // Custom message that will be displayed before user input 
+    @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @Column(name = "points_to_discuss")
+    Set<DiscussPoint> pointsToDiscuss
+    ...
+}
+
+
+@ToString(excludes = ['meeting'])
+@Editable(entityFactory = 'discussPointFactory') // Bean name of custom entity creating factory
+@Entity(name = "discuss_point")
+class DiscussPoint {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id
+
+    ...
+    @Editable(id = true,
+            fieldButtonMessage = 'discuss.point.title.name',
+            enterMessage = 'discuss.point.title.enter.message')
+    // Custom validation is supported. Error message will be displayed if user will violate constraint in regexp
+    @Pattern(regexp = /^(.+) (.+)+$/, message = 'discuss.point.title.validation.title.is.too.small')
+    @Column
+    String title
+
+    @Editable(enableClear = true, type = LOCALIZED, // Localized field enables to specify different values for each available lang
+            fieldButtonMessage = 'discuss.point.description.name',
+            enterMessage = 'discuss.point.description.enter.message')
+    @ElementCollection
+    @CollectionTable(name = 'discuss_point_localized_description',
+            joinColumns = [@JoinColumn(name = 'id', referencedColumnName = 'id')])
+    @MapKeyColumn(name = 'lang')
+    @Column(name = 'description', columnDefinition = "TEXT")
+    Map<String, String> description = [:]
+
+    ...
+}
+```
+
+</details>
+
+<details>
+<summary>Example edit FIELD menu</summary> 
+
+Create flow for fields on concrete entity:
+```groovy
+
+inlineKeyboard
+     .button('Edit description', editFieldFlowDto
+             .entityToEdit(pointToDiscuss) // (Mandatory) Entity to edit. (or specify entityClass and entityId)
+             .fieldName('description') // (Mandatory) Field name
+             .enterText('Update current description of $title') // (Optional) custom enter text message
+             .enterTextBinding(['title': pointToDiscuss.title]) // (Optional) custom biding for enter text
+             .redirectParams(params) // (Optional) some params that will be added on redirection to success path
+             .successPath(TO_MAIN)) // (Optional) Success path after field editing (or canceling)
+```
+
+![](demo/edit_field_menu.gif)
+
+</details>
+
+
+
+<details>
+<summary>Example edit ENTITY menu</summary> 
+
+Create flow for concrete entity:
+
+```groovy
+keyboard(inlineKeyboard
+     .button('Edit my awesome meeting', editEntityFlowDto
+             .entityId(meetingId) // (Mandatory)
+             .entityClass(Meeting.class) // (Mandatory) Or specify entityToEdit as in example higher, instead this two fields
+             .entityFactory('meetingFactory') // (Optional) specific entity factory also can be defined here
+             .enterText('Edit entity with id $id')  // (Optional) custom enter text message
+             .enterTextBinding(['id': meetingId.toString()]) // (Optional) custom biding for enter text
+             .redirectParams(params) // (Optional) some params that will be added while redirection to back path
+             .backPath(EDIT_FLOW))) // (Optional) Adds button for return from the generated menu
+
+```
+
+![](demo/edit_entity_menu.gif)
+
+</details>
+
+<details>
+<summary>Example edit ENTITIES menu</summary> 
+
+Create flows for list of entities:
+
+```groovy
+...
+inlineKeyboard
+     .button('button.my.meetings', Emoji.TEAM, MY_MEETINGS).row()
+     .button('button.my.points.to.discuss', Emoji.EDIT, EDIT_MY_DISCUSS_POINTS).row()
+...
+
+@BotRequest(path = MY_MEETINGS)
+myMeetingsMenu() {
+    def myMeetings = ... // get which entities will be displayed to user
+    sendMessage.text('text.meetings.select.entity')
+            .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
+                    new EditEntitiesFlowKeyboardDto<Meeting>()
+                            .entityClass(Meeting.class) // (Mandatory) Entities class
+                            .entities(myMeetings) // (Mandatory) Entities to display/edit
+                            .thisStepPath(MY_MEETINGS) // (Mandatory) Needed for returning after action on entities performed
+                            .entityFactory('meetingFactory') // (Optional) specific entity factory also can be defined here (instead in annotation on type)
+                            .backPath(EDIT_FLOW))) // (Optional) create back button 
+}
+
+@BotRequest(path = EDIT_MY_DISCUSS_POINTS)
+editExampleModelEntries() {
+    def discussPoints = ...  
+    sendMessage.text('text.points.to.discuss.select')
+            .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
+                    new EditEntitiesFlowKeyboardDto<DiscussPoint>()
+                            .entityNameRetriever({ it -> it.title }) // (Optional) Specific logic how each entity button name in entity menu 
+                            .entityClass(DiscussPoint.class)
+                            .entities(discussPoints)
+                            .fieldsInRow(1) // (Optional) Specifying number of field-columns in edit entity menu. Default - 3
+                            .entitiesInRow(2) // (Optional) Specifying number of entities-columns in edit entities menu. Default - 3
+                            .canDeleteEntities(false) // (Optional) restrict deleting entities. Default - true
+                            .canCreateNewEntity(false) // (Optional) restrict creating entities. Default - true
+                            .thisStepPath(EDIT_MY_DISCUSS_POINTS)
+                            .redirectParams(params) // (Optional) some params that will be added while redirection to back path and this step path 
+                            .backPath(EDIT_FLOW)))
+}
+```
+![](demo/edit_entities_menu.gif)
+
+</details>
+
 #### Confirmation FLow
 
 Often it is required to implement a confirmation of the action of a button. To unify this approach, support for the confirmation flow is provided.
 
-All you need is to create a button with **confirmationFlowDto** and specify an **accept** path and a **decline** path.
+All you need is to create a button with [`ConfirmationFlowDto`](/src/main/groovy/com/khabaznia/bots/core/flow/dto/ConfirmationFlowDto.groovy) and specify an **accept** path and a **decline** path.
 
 ##### Let's check an example:
 
@@ -328,112 +640,7 @@ inlineKeybaord.button('button.with.confirmation', confirmationFlowDto
     .params([reason: 'some reason']))
 ```
 
-You can check how keyboards and buttons can be implemented in [ExampleController](/src/main/groovy/com/khabaznia/bot/controller/example/ExampleController.groovy).
-
-### Additional `String` methods
-
-[Formatting options](https://core.telegram.org/bots/api#formatting-options) available as methods on `String` class:
-- bold()
-- italic()
-- underline()
-- strikethrough()
-- linkUrl(), linkText()- creates markup with link
-- mentionUrl() - creates user mention link
-
-```groovy
-@BotRequest(path = '/checkTexts')
-  checkTexts() {
-    sendMessage.text('some bold'.bold())
-    sendMessage.text('some italic'.italic())
-    sendMessage.text('some underline'.underline())
-    sendMessage.text('some strikethrough'.strikethrough())
-    sendMessage.text('go to ' + 'github repo'.linkUrl('https://github.com/khabaznia/abstract-bot'))
-    sendMessage.text('user'.linkUrl(currentChat.code.userMentionUrl()))
-
-    // for localized values
-    sendMessage.text('test.bold'.bold()) 
-    sendMessage.text('test.italic'.italic()) 
-    sendMessage.text('test.underline'.underline())
-    sendMessage.text('test.strikethrough'.strikethrough())
-  }
-```
-
-![](demo/check_texts.gif)
-
-### MessageFeature
-Each api method wrapper (BaseRequest) has [`MessageType`](/src/main/groovy/com/khabaznia/bot/enums/MessageType.groovy) that provides additional pre- and post- processing of the request.
-
-- **PERSIST** - Just save to DB
-- **DELETE** - Send message and deletes it with next request.
-- **INLINE_KEYBOARD** - Default for message with inline keyboard. Inline keyboards can be updated. Saved in DB.
-- **REPLY_KEYBOARD** - Default for message with reply keyboard. Saved in DB.
-- **ONE_TIME_INLINE_KEYBOARD** -  Message with inline keyboard that should be deleted after its any button click.
-- **PINNED** - After sending, saved to DB, send additional request to pin the message.
-- **EDIT** - Edit existing message. Updates it in db. Default for `EditMessage`.
-- **MEDIA** -  For AUDIO, IMAGE, VIDEO messages. Default for `SendPhoto`, `SendVideo`, `SendAudio`.
-
-You can explicitly specify it in builder
-
-```groovy
-sendMessage
-        .text('This message should be pinned')
-        .feature(MessageFeature.PINNED)
-
-sendMessage
-        .text('This message will be deleted')
-        .feature(MessageFeature.DELETE)
-
-// or another variant for MessageType.DELETE   
-sendMessage
-        .text('This message will be deleted')
-        .delete()
-```
-
-## Configuration 
-
-The configuration of app is presented in [application.properties](/src/main/resources/application.properties) and [application.yml](/src/main/resources/application.yml) files
-
-Config properties are saved to DB in order to save state of application while new release deploy. 
-You can simply get config value using methods in [`Configurable`](/src/main/groovy/com/khabaznia/bot/trait/Configurable.groovy) trait.
-
-There are specific prefixes for config properties:
-- **env.only** - property don't saved to DB
-- **switchable.config** - property should be boolean, and can be managed from [switch features flow](https://github.com/khabaznia/abstract-bot#default-mappings-and-flows) by admin user.
-
-Next properties are needed to start application and should be specified as system properties (recommended) or in [application.yml](/src/main/resources/application.yml) file
-
-```yaml
-logging:
-  level:
- ...
-    com.khabaznia.bots: ${LOGGING_LEVEL} // mandatory to specify logging level
-
-env.only:  
- ...
-  bot:
-    token: ${BOT_TOKEN} // mandatory, token of your bot
-    admin.chat.id: ${CHAT_ADMIN} // mandatory, specified admin chat. Use https://t.me/userinfobot to check id of user
-```
-
-### Logging to chat
-
-You can set any group as logging chat in order to check what actions are performed in the application, 
-by **'/setLogging'** command that is available to admin.
-
-
-Next type of logging available:
-- **DEBUG** - logs every update info to specified `CHAT_LOGGING` if feature is enabled
-- **INFO** - logs to message to `CHAT_LOGGING`. Use [`Loggable`](/src/main/groovy/com/khabaznia/bot/trait/Loggable.groovy) trait or publish [`LogEvent`](/src/main/groovy/com/khabaznia/bot/event/LogEvent.groovy) with specified message.
-- **WARN** - logs any errors of application to `CHAT_LOGGING`, and duplicates the message to `CHAT_ADMIN` if feature is enabled
-
-Use [`Loggable`](/src/main/groovy/com/khabaznia/bot/trait/Loggable.groovy) trait to log any message.
-
-```properties
-switchable.config.debug.logging.enabled=false
-switchable.config.duplicate.warn.logging.to.admin=true
-```
-
-### Additional features:
+You can check how keyboards and buttons can be implemented in [ExampleController](/src/main/groovy/com/khabaznia/bots/core/controller/example/ExampleController.groovy).
 
 #### Duplicate messages
 
@@ -443,7 +650,7 @@ block.duplicate.requests: true
 ```
 
 Can be explicitly turned off for enabled feature:
-- _for command mappings_ - [`@BotRequest#enableDuplicateRequests`](/src/main/groovy/com/khabaznia/bot/core/annotation/BotRequest.groovy)
+- _for command mappings_ - [`@BotRequest#enableDuplicateRequests`](/src/main/groovy/com/khabaznia/bots/core/routing/annotation/BotRequest.groovy)
 - _for buttons_ - using **UNLIMITED_CALL** parameter
 ```groovy
 .button('button.example.simple', AVOCADO, '/query', [(UNLIMITED_CALL): 'true'])
