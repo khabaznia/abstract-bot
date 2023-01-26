@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
+import static org.springframework.util.StringUtils.capitalize
 
 @Slf4j
 @Component
@@ -31,7 +32,7 @@ class FieldViewService {
         def value = fieldResolvingStrategyMap.get(fieldAnnotation.type())
                 .getStringView(entity, fieldName)
         if (ignoreEmpty && !value) return null
-        def localizedFieldName = i18nService.getFilledTemplate(fieldAnnotation.fieldButtonMessage() ?: fieldName)
+        def localizedFieldName = capitalize(i18nService.getFilledTemplate(fieldAnnotation.fieldButtonMessage() ?: fieldName))
         "$localizedFieldName:    <b>${value ?: Emoji.NONE}</b>"
     }
 

@@ -45,6 +45,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
         def oldValueCanBeDeleted = isCurrentValueRemovable()
         def message = sendMessage.text(text ?: enterMessage ?: defaultMessageRetriever.call())
                 .binding(binding)
+                .emoji(FINGER_DOWN)
                 .delete() as SendMessage
         def keyboard = inlineKeyboard
                 .button('button.back', LEFT_ARROW, EDIT_FIELD_CANCEL, currentEditFlow.params)
@@ -95,6 +96,7 @@ class EditFlowMessages implements BaseRequests, Configurable {
 
     void editFlowSelectEntitiesMenu(String text, Map<String, String> binding, Map<Object, Boolean> entities) {
         requests << sendMessage.text(text ?: enterMessage ?: 'text.edit.flow.select.entities')
+                .emoji(FINGER_DOWN)
                 .binding(binding)
                 .label(chatService.setChatParam(EDIT_FLOW_SELECT_ENTITIES_MESSAGE))
                 .keyboard(keyboardService.getSelectedEntitiesKeyboard(entities))

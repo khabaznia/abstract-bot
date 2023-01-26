@@ -3,6 +3,7 @@ package com.khabaznia.bots.example.controller
 import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.flow.dto.EditEntitiesFlowKeyboardDto
 import com.khabaznia.bots.core.flow.service.EditFlowKeyboardService
+import com.khabaznia.bots.core.meta.Emoji
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
 import com.khabaznia.bots.core.routing.annotation.Localized
@@ -31,9 +32,9 @@ class EditFlowExampleController extends AbstractBotController {
     @BotRequest(path = EDIT_FLOW)
     editFlowExample() {
         def keyboard = inlineKeyboard
-        keyboard.button('Check my meetings', MY_MEETINGS).row()
-        keyboard.button('Edit discuss points', EDIT_MY_DISCUSS_POINTS).row()
-        sendMessage.text('Example models to edit/create: <b>meeting</b> and <b>discuss points</b>.\n\nChoose model 👇')
+        keyboard.button('button.my.meetings', Emoji.TEAM, MY_MEETINGS).row()
+        keyboard.button('button.my.points.to.discuss', Emoji.EDIT, EDIT_MY_DISCUSS_POINTS).row()
+        sendMessage.text('text.select.meetings')
                 .keyboard(keyboard)
     }
 
@@ -43,7 +44,7 @@ class EditFlowExampleController extends AbstractBotController {
                 .createQuery("SELECT m FROM meeting m WHERE m.userCode = :userCode")
                 .setParameter('userCode', currentUser.code)
                 .resultList
-        sendMessage.text('Here is the list of meetings that you are owner of')
+        sendMessage.text('text.meetings.select.entity')
                 .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
                         new EditEntitiesFlowKeyboardDto<Meeting>()
                                 .entityClass(Meeting.class)
@@ -59,7 +60,7 @@ class EditFlowExampleController extends AbstractBotController {
                 .createQuery("SELECT m FROM discuss_point m WHERE m.userCode = :userCode")
                 .setParameter('userCode', currentUser.code)
                 .resultList
-        sendMessage.text('Choose discuss point to edit')
+        sendMessage.text('text.points.to.discuss.select')
                 .keyboard(editFlowKeyboardService.addButtons(inlineKeyboard,
                         new EditEntitiesFlowKeyboardDto<DiscussPoint>()
                                 .entityNameRetriever({ it -> it.title })
@@ -69,7 +70,7 @@ class EditFlowExampleController extends AbstractBotController {
                                 .entitiesInRow(2)
                                 .canDeleteEntities(false)
                                 .canCreateNewEntity(false)
-                        .entityFactory('discussPointFactory')
+                                .entityFactory('discussPointFactory')
                                 .thisStepPath(EDIT_MY_DISCUSS_POINTS)
                                 .backPath(EDIT_FLOW)))
     }
