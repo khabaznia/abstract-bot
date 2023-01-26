@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component
 
 import javax.persistence.EntityManager
 
+import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.util.SessionUtil.currentUser
 import static com.khabaznia.bots.example.Constants.*
 
@@ -28,14 +29,51 @@ class EditFlowExampleController extends AbstractBotController {
     @Autowired
     private EntityManager entityManager
 
+
+    @BotRequest(path = '/editFieldFlow')
+    editFieldFlow() {
+        def pointToDiscuss = entityManager
+                .createQuery("SELECT m FROM discuss_point m WHERE m.userCode = :userCode")
+                .setParameter('userCode', currentUser.code)
+                .resultList.find() as DiscussPoint
+        if (pointToDiscuss)
+            sendMessage.text('Press button to edit localized description  👇🏽')
+                    .keyboard(inlineKeyboard
+                            .button('Edit description', editFieldFlowDto
+                                    .entityToEdit(pointToDiscuss)
+                                    .fieldName('description')
+                                    .enterText('Update current description of $title')
+                                    .enterTextBinding(['title': pointToDiscuss.title])
+                                    .successPath(TO_MAIN)
+                            ))
+    }
+
+    @BotRequest(path = '/editEntityFlow')
+    editEntityFlow() {
+        def meetingId = entityManager
+                .createQuery("SELECT m FROM meeting m WHERE m.userCode = :userCode")
+                .setParameter('userCode', currentUser.code)
+                .resultList?.find()?.id as Long
+        if (meetingId)
+            sendMessage.text('Press button to edit entity 👇🏽')
+                    .keyboard(inlineKeyboard
+                            .button('Edit my awesome meeting', editEntityFlowDto
+                                    .entityId(meetingId)
+                                    .entityClass(Meeting.class)
+                                    .entityFactory('meetingFactory')
+                                    .enterText('Edit entity with id $id')
+                                    .enterTextBinding(['id': meetingId.toString()])
+                                    .backPath(EDIT_FLOW)
+                            ))
+    }
+
     @Localized
     @BotRequest(path = EDIT_FLOW)
     editFlowExample() {
-        def keyboard = inlineKeyboard
-        keyboard.button('button.my.meetings', Emoji.TEAM, MY_MEETINGS).row()
-        keyboard.button('button.my.points.to.discuss', Emoji.EDIT, EDIT_MY_DISCUSS_POINTS).row()
         sendMessage.text('text.select.meetings')
-                .keyboard(keyboard)
+                .keyboard(inlineKeyboard
+                        .button('button.my.meetings', Emoji.TEAM, MY_MEETINGS).row()
+                        .button('button.my.points.to.discuss', Emoji.EDIT, EDIT_MY_DISCUSS_POINTS).row())
     }
 
     @BotRequest(path = MY_MEETINGS)
@@ -70,7 +108,6 @@ class EditFlowExampleController extends AbstractBotController {
                                 .entitiesInRow(2)
                                 .canDeleteEntities(false)
                                 .canCreateNewEntity(false)
-                                .entityFactory('discussPointFactory')
                                 .thisStepPath(EDIT_MY_DISCUSS_POINTS)
                                 .backPath(EDIT_FLOW)))
     }
