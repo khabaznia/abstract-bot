@@ -5,6 +5,7 @@ import com.khabaznia.bots.core.flow.dto.EditEntityFlowDto
 import com.khabaznia.bots.core.flow.service.EditSelectFieldKeyboardService
 import com.khabaznia.bots.core.meta.container.DefaultRequestContainer
 import com.khabaznia.bots.core.meta.keyboard.impl.InlineKeyboard
+import com.khabaznia.bots.core.meta.request.BaseRequest
 import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bots.core.meta.request.impl.AbstractMediaRequest
 import com.khabaznia.bots.core.meta.request.impl.SendMessage
@@ -130,14 +131,8 @@ class EditFlowMessages implements BaseRequests, Configurable {
 
     void editFlowCurrentMediaMessage(String currentFileId, String beanName) {
         requests << (!isEmpty(currentFileId?.strip())
-                ? (context.getBean(beanName) as AbstractMediaRequest)
-                    .fileIdentifier(currentFileId)
-                    .messageLabel(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
-                    .text('text.edit.flow.media.field.current.value')
-                    .delete()
-                : sendMessage.text('text.edit.flow.no.media.is.assigned')
-                    .label(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
-                    .delete())
+                ? oldMediaMessage(beanName, currentFileId)
+                : noMediaMessage())
     }
 
     void mediaUpdatedSuccessMessage(String text, boolean clear = false) {
@@ -202,6 +197,20 @@ class EditFlowMessages implements BaseRequests, Configurable {
             keyboard.row()
         }
         keyboard
+    }
+
+    private BaseRequest noMediaMessage() {
+        sendMessage.text('text.edit.flow.no.media.is.assigned')
+                .label(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+                .delete()
+    }
+
+    private AbstractMediaRequest oldMediaMessage(String beanName, String currentFileId) {
+        (context.getBean(beanName) as AbstractMediaRequest)
+                .fileIdentifier(currentFileId)
+                .messageLabel(chatService.setChatParam(EDIT_FLOW_CURRENT_VALUE_MESSAGE_LABEL))
+                .text('text.edit.flow.media.field.current.value')
+                .delete()
     }
 
     private AbstractKeyboardMessage withCurrentReplyKeyboard(AbstractKeyboardMessage message) {
