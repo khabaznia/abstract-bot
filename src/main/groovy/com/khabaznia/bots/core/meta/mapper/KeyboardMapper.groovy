@@ -68,6 +68,7 @@ class KeyboardMapper {
             row
         })
         result.setResizeKeyboard(true)
+        result.setIsPersistent(true)
         result.setOneTimeKeyboard(false)
         result.setInputFieldPlaceholder(i18nService.getFilledTemplate('text.reply.keyboard.placeholder'))
         result
