@@ -11,7 +11,7 @@ repositories {
 }
 
 group = 'com.github.khabaznia'
-version = '1.0.0'
+version = '2.0.0'
 sourceCompatibility = '11'
 
 dependencies {
@@ -24,7 +24,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    runtimeOnly 'org.postgresql:postgresql:42.3.1'
+    runtimeOnly 'org.postgresql:postgresql:42.3.8'
 
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
