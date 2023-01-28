@@ -20,7 +20,7 @@ import static com.khabaznia.bots.core.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.COUNT_OF_RETRIES_FOR_TELEGRAM_API_REQUESTS
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.util.BotSession.currentChat
 import static com.khabaznia.bots.example.Constants.*
 
 @Slf4j

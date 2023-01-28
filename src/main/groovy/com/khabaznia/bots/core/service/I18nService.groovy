@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 
 import static com.khabaznia.bots.core.routing.Constants.*
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
 
 @Slf4j
 @Component

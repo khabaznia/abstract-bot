@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 import static com.khabaznia.bots.core.controller.Constants.COMMON.GENERAL_SUBSCRIPTION_NOTIFY_ALL
 import static com.khabaznia.bots.core.controller.Constants.COMMON.SETTINGS
 import static com.khabaznia.bots.core.meta.Emoji.FINGER_DOWN
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
+import static com.khabaznia.bots.core.util.BotSession.getCurrentUser
 
 @Slf4j
 @Component

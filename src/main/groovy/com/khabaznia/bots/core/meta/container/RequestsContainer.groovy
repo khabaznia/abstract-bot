@@ -7,7 +7,7 @@ import com.khabaznia.bots.core.trait.BaseRequests
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.util.BotSession.currentChat
 
 @Slf4j
 abstract class RequestsContainer implements BaseRequests {

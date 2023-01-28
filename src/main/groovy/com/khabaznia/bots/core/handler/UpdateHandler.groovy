@@ -14,7 +14,7 @@ import com.khabaznia.bots.core.service.MessageService
 import com.khabaznia.bots.core.service.UpdateService
 import com.khabaznia.bots.core.trait.Configurable
 import com.khabaznia.bots.core.trait.Loggable
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -28,8 +28,8 @@ import static com.khabaznia.bots.core.routing.Constants.DELETE_PREVIOUS_INLINE_K
 import static com.khabaznia.bots.core.service.UpdateService.getParametersFromMessage
 import static com.khabaznia.bots.core.service.UpdateService.getUpdateType
 import static com.khabaznia.bots.core.util.HTMLParsingUtil.mapHTMLParsableSymbols
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
-import static com.khabaznia.bots.core.util.SessionUtil.getStringAttribute
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getStringAttribute
 
 @Slf4j
 @Component
@@ -88,9 +88,9 @@ class UpdateHandler implements Configurable, Loggable {
     }
 
     private setUpdateAttributesToSession(Update update) {
-        SessionUtil.setAttribute(UPDATE_MESSAGE, updateAsString(update))
-        SessionUtil.setAttribute(UPDATE_ID, update.updateId.toString())
-        SessionUtil.setAttribute(IS_UPDATE_PROCESSED, 'false')
+        BotSession.setAttribute(UPDATE_MESSAGE, updateAsString(update))
+        BotSession.setAttribute(UPDATE_ID, update.updateId.toString())
+        BotSession.setAttribute(IS_UPDATE_PROCESSED, 'false')
     }
 
     private String updateAsString(Update update) {
@@ -147,6 +147,6 @@ class UpdateHandler implements Configurable, Loggable {
     }
 
     private static Map<String, String> getRedirectParams() {
-        SessionUtil.getAttribute(REDIRECT_PARAMETERS) as Map<String, String>
+        BotSession.getAttribute(REDIRECT_PARAMETERS) as Map<String, String>
     }
 }

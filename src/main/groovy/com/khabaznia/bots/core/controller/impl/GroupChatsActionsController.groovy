@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.controller.Constants.COMMON.DEFAULT
 import static com.khabaznia.bots.core.controller.Constants.GROUP_CHATS_ACTIONS_CONTROLLER.*
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentUser
 
 @Slf4j
 @Component

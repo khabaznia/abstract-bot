@@ -15,7 +15,7 @@ import static com.khabaznia.bots.common.util.DefaultRoleKeyboardsUtil.adminReply
 import static com.khabaznia.bots.core.enums.MessageFeature.INLINE_KEYBOARD_MESSAGE_GROUP
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.CHECK_MESSAGES_IN_LOGGING_CHAT
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.util.BotSession.currentChat
 
 @Slf4j
 @Component

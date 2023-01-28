@@ -8,7 +8,7 @@ import com.khabaznia.bots.core.repository.ButtonRepository
 import com.khabaznia.bots.core.repository.KeyboardRepository
 import com.khabaznia.bots.core.repository.MessageRepository
 import com.khabaznia.bots.core.trait.Configurable
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -47,7 +47,7 @@ class MessageService implements Configurable {
     }
 
     List<Message> getMessagesForUpdate(Integer updateId) {
-        messageRepository.findAllUnsentByChatCode(SessionUtil.currentChat.code, updateId)
+        messageRepository.findAllUnsentByChatCode(BotSession.currentChat.code, updateId)
     }
 
     Message getMessage(String uniqueId) {
@@ -60,7 +60,7 @@ class MessageService implements Configurable {
     }
 
     void removeMessagesOfTypeExcludingUpdateId(MessageFeature type, Integer updateId) {
-        messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, SessionUtil.currentChat?.code, updateId)
+        messageRepository.findByTypeAndChatCodeThatNotOfUpdateId(type, BotSession.currentChat?.code, updateId)
                 .each { removeMessageForUid(it.uid) }
     }
 

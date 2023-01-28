@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
-import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
+import static com.khabaznia.bots.core.util.BotSession.currentChat
+import static com.khabaznia.bots.core.util.BotSession.setRedirectParams
 
 @Slf4j
 @Service

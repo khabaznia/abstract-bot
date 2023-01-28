@@ -4,7 +4,7 @@ import com.khabaznia.bots.core.enums.UpdateType
 import com.khabaznia.bots.core.routing.proxy.BotControllerProxy
 import com.khabaznia.bots.core.service.UpdateService
 import com.khabaznia.bots.core.trait.Configurable
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -61,8 +61,8 @@ class UpdateBotControllerResolver implements Configurable {
     }
 
     private Map<String, BotControllerProxy> getRoleSpecificControllers(String path) {
-        controllerContainer.getMatchingControllers(path + SPECIFIC_ROLE_DELIMITER + SessionUtil.currentChat.role.toString())
-                ?: controllerContainer.getMatchingControllers(path + SPECIFIC_ROLE_DELIMITER + SessionUtil.currentUser.role.toString())
+        controllerContainer.getMatchingControllers(path + SPECIFIC_ROLE_DELIMITER + BotSession.currentChat.role.toString())
+                ?: controllerContainer.getMatchingControllers(path + SPECIFIC_ROLE_DELIMITER + BotSession.currentUser.role.toString())
     }
 
     private BotControllerProxy getDefiniteController(Map<String, BotControllerProxy> matchingControllers) {
@@ -75,7 +75,7 @@ class UpdateBotControllerResolver implements Configurable {
     }
 
     private static BotControllerProxy getControllerByLastAction(Map<String, BotControllerProxy> matchingControllers) {
-        def lastAction = SessionUtil.currentChat.lastAction
+        def lastAction = BotSession.currentChat.lastAction
         log.trace 'Try to get controller by lastAction {}', lastAction
         // try to find match by last action
         def controller = matchingControllers.find({ it.key ==~ /$lastAction\$PREVIOUS_PATH_DELIMITER.*/ })

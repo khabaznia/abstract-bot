@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.meta.Emoji.LOG_DEBUG
 import static com.khabaznia.bots.core.routing.Constants.DEBUG_LOGGING
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.util.BotSession.currentChat
 
 @Slf4j
 @Component(value = 'debugLoggingStrategy')

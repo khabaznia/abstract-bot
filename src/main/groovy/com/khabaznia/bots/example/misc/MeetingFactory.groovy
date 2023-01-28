@@ -4,7 +4,7 @@ import com.khabaznia.bots.core.flow.factory.EntityFactory
 import com.khabaznia.bots.example.model.Meeting
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.util.SessionUtil.currentUser
+import static com.khabaznia.bots.core.util.BotSession.currentUser
 
 @Component('meetingFactory')
 class MeetingFactory extends EntityFactory<Meeting> {

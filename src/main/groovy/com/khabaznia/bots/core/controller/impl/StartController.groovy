@@ -15,8 +15,8 @@ import static com.khabaznia.bots.common.Constants.ADMIN_CONTROLLER.ADMIN_TO_MAIN
 import static com.khabaznia.bots.common.Constants.USER_CONTROLLER.USER_START
 import static com.khabaznia.bots.common.Constants.USER_CONTROLLER.USER_TO_MAIN
 import static com.khabaznia.bots.core.controller.Constants.COMMON.*
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentUser
 
 @Slf4j
 @Component

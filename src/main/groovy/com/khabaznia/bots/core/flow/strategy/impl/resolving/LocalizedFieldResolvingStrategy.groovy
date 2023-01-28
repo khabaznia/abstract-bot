@@ -6,7 +6,7 @@ import com.khabaznia.bots.core.trait.Configurable
 import org.springframework.stereotype.Component
 
 import static com.khabaznia.bots.core.routing.Constants.DEFAULT_LOCALE
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
 import static java.lang.System.lineSeparator
 
 @Component('localizedFieldResolvingStrategy')

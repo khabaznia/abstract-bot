@@ -5,7 +5,7 @@ import com.khabaznia.bots.example.model.DiscussPoint
 import com.khabaznia.bots.example.model.Meeting
 import org.springframework.stereotype.Component
 
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
+import static com.khabaznia.bots.core.util.BotSession.getCurrentUser
 
 @Component('pointsSelectionStrategy')
 class MeetingDiscussPointsSelectingStrategy extends FieldSelectionStrategy<DiscussPoint, Meeting> {

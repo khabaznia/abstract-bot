@@ -11,7 +11,7 @@ import static com.khabaznia.bots.core.controller.Constants.SESSION_ATTRIBUTES.RE
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION
 
 @Slf4j
-class SessionUtil {
+class BotSession {
 
     static Chat getCurrentChat() {
         principal?.fromChat

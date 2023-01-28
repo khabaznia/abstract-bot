@@ -6,8 +6,8 @@ import com.khabaznia.bots.core.enums.UserRole
 import com.khabaznia.bots.core.model.Chat
 import com.khabaznia.bots.core.model.User
 
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
+import static BotSession.getCurrentChat
+import static BotSession.getCurrentUser
 
 class LoggingUtil {
 

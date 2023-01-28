@@ -1,6 +1,6 @@
 package com.khabaznia.bots.core.security.authorization.voter
 
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +21,7 @@ class RestrictedModeVoter extends AbstractBotAuthorizationVoter {
     int voteInternal(Authentication authentication, MethodInvocation method) {
         if (isFeatureEnabled()) {
             def allowedUsers = env.getProperty(RESTRICTED_MODE_USERS)?.tokenize(CONFIGS_DELIMITER)
-            def chatCode = [SessionUtil.getCurrentChat().code, SessionUtil.currentUser.code]
+            def chatCode = [BotSession.getCurrentChat().code, BotSession.currentUser.code]
             log.trace 'Allowed users -> {}. User & chat codes -> {}', allowedUsers, chatCode
             return allowedUsers.intersect(chatCode)
                     ? ACCESS_GRANTED

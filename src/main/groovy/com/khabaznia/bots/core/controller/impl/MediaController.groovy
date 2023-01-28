@@ -4,7 +4,7 @@ import com.khabaznia.bots.core.controller.AbstractBotController
 import com.khabaznia.bots.core.meta.request.impl.AbstractMediaRequest
 import com.khabaznia.bots.core.routing.annotation.BotController
 import com.khabaznia.bots.core.routing.annotation.BotRequest
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -54,7 +54,7 @@ class MediaController extends AbstractBotController {
     protected void fillMediaRequest(AbstractMediaRequest request) {
         request.fileIdentifier(getFileId(update))
                 .text('text.admin.media.from.chat')
-                .binding([chatId: SessionUtil.currentChat.code])
+                .binding([chatId: BotSession.currentChat.code])
                 .chatId(adminChatId)
     }
 }

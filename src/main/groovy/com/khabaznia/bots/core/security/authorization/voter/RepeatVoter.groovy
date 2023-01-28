@@ -1,6 +1,6 @@
 package com.khabaznia.bots.core.security.authorization.voter
 
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,7 +27,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     @Override
     int voteInternal(Authentication authentication, MethodInvocation method) {
         def result = ACCESS_GRANTED
-        def updateMessage = SessionUtil.getStringAttribute(UPDATE_MESSAGE)
+        def updateMessage = BotSession.getStringAttribute(UPDATE_MESSAGE)
         if (isFeatureEnabled()
                 && isNotRedirectCallFromController()
                 && isNotSpecialButton(updateMessage)
@@ -37,7 +37,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
                     ? ACCESS_DENIED
                     : ACCESS_GRANTED
         }
-        SessionUtil.setAttribute(IS_UPDATE_PROCESSED, '')
+        BotSession.setAttribute(IS_UPDATE_PROCESSED, '')
         result
     }
 
@@ -56,7 +56,7 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     private static boolean isNotRedirectCallFromController() {
-        SessionUtil.getStringAttribute(IS_UPDATE_PROCESSED) && SessionUtil.getStringAttribute(IS_UPDATE_PROCESSED) != ''
+        BotSession.getStringAttribute(IS_UPDATE_PROCESSED) && BotSession.getStringAttribute(IS_UPDATE_PROCESSED) != ''
     }
 
     private boolean isFeatureEnabled() {
@@ -68,6 +68,6 @@ class RepeatVoter extends AbstractBotAuthorizationVoter {
     }
 
     private static String getUserLastActionFullPath() {
-        SessionUtil.currentChat.lastActionFullPath
+        BotSession.currentChat.lastActionFullPath
     }
 }

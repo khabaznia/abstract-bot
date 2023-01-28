@@ -4,7 +4,7 @@ import com.khabaznia.bots.core.enums.MessageFeature
 import com.khabaznia.bots.core.meta.request.impl.AbstractKeyboardMessage
 import com.khabaznia.bots.core.meta.response.BaseResponse
 import com.khabaznia.bots.core.strategy.RequestProcessingStrategy
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Component
 
@@ -30,7 +30,7 @@ class ReplyKeyboardRequestProcessingStrategy extends RequestProcessingStrategy<A
     }
 
     private static int getUpdateId() {
-        def updateId = SessionUtil.getStringAttribute(UPDATE_ID)
+        def updateId = BotSession.getStringAttribute(UPDATE_ID)
         updateId ? Integer.parseInt(updateId) : -1
     }
 }

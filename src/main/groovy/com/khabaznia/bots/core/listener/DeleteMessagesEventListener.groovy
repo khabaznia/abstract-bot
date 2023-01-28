@@ -6,7 +6,7 @@ import com.khabaznia.bots.core.meta.request.impl.DeleteMessage
 import com.khabaznia.bots.core.model.Message
 import com.khabaznia.bots.core.service.BotRequestService
 import com.khabaznia.bots.core.service.MessageService
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -31,7 +31,7 @@ class DeleteMessagesEventListener {
     @EventListener
     void onApplicationEvent(DeleteMessagesEvent event) {
         def messageTypes = event.types ?: [DELETE]
-        def currentChatCode = SessionUtil.currentChat.code
+        def currentChatCode = BotSession.currentChat.code
         def messagesToDelete = getMessagesToDelete(messageTypes, currentChatCode, event.updateId)
         messagesToDelete.collect { convertToRequest(it) }
                 .each { requestService.execute(it) }

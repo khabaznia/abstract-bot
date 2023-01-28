@@ -8,7 +8,7 @@ import javax.persistence.Entity
 import javax.persistence.ManyToMany
 import java.lang.reflect.Field
 
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
 
 class EditableParsingUtil {
 

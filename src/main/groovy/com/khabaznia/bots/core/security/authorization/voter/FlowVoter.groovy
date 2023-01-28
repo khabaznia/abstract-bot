@@ -1,6 +1,6 @@
 package com.khabaznia.bots.core.security.authorization.voter
 
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,6 +52,6 @@ class FlowVoter extends AbstractBotAuthorizationVoter {
     }
 
     private static String getUserLastAction() {
-        SessionUtil.currentChat.lastAction
+        BotSession.currentChat.lastAction
     }
 }

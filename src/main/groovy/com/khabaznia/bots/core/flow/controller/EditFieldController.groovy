@@ -14,7 +14,7 @@ import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.controller.Constants.EDIT_FIELD_CONTROLLER.*
 import static com.khabaznia.bots.core.flow.util.EditableParsingUtil.*
 import static com.khabaznia.bots.core.flow.util.FlowConversionUtil.FLOW_PARAM_PREFIX
-import static com.khabaznia.bots.core.util.SessionUtil.setRedirectParams
+import static com.khabaznia.bots.core.util.BotSession.setRedirectParams
 
 @Slf4j
 @Component

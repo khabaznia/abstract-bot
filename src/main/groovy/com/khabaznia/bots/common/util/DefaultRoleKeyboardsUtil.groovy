@@ -11,8 +11,8 @@ import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.DISPL
 import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.LANG_EMOJI
 import static com.khabaznia.bots.core.meta.Emoji.*
 import static com.khabaznia.bots.core.routing.Constants.USE_ONLY_DEFAULT_LANGUAGE
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentUser
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentUser
 import static com.khabaznia.bots.example.Constants.EXAMPLE
 
 @Component

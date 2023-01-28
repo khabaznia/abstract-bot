@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 import javax.persistence.EntityManager
 
 import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
-import static com.khabaznia.bots.core.util.SessionUtil.currentUser
+import static com.khabaznia.bots.core.util.BotSession.currentUser
 import static com.khabaznia.bots.example.Constants.*
 
 @Slf4j

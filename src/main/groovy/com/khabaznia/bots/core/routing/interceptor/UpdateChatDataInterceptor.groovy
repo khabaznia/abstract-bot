@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse
 import static com.khabaznia.bots.core.routing.Constants.DEFAULT_LOCALE
 import static com.khabaznia.bots.core.security.authentication.filter.AbstractBotFilter.getUpdate
 import static com.khabaznia.bots.core.service.UpdateService.getApiChatFromUpdate
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.util.BotSession.currentChat
 
 @Slf4j
 @Component

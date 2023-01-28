@@ -11,7 +11,7 @@ import com.khabaznia.bots.core.repository.ConfigRepository
 import com.khabaznia.bots.core.repository.UserRepository
 import com.khabaznia.bots.core.trait.Configurable
 import com.khabaznia.bots.core.trait.Loggable
-import com.khabaznia.bots.core.util.SessionUtil
+import com.khabaznia.bots.core.util.BotSession
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -76,8 +76,8 @@ class UserService implements Configurable, Loggable {
     }
 
     void setPreviousPath(String path) {
-        def lastActionFullPath = SessionUtil.getStringAttribute(UPDATE_MESSAGE)
-        def currentChat = SessionUtil.currentChat
+        def lastActionFullPath = BotSession.getStringAttribute(UPDATE_MESSAGE)
+        def currentChat = BotSession.currentChat
         currentChat.lastAction = path
         if (lastActionFullPath) currentChat.lastActionFullPath = lastActionFullPath
         chatRepository.save(currentChat)

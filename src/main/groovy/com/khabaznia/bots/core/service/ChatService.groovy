@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministr
 
 import static com.khabaznia.bots.core.controller.Constants.CHAT_PARAMS.CURRENT_REPLY_KEYBOARD_ID
 import static com.khabaznia.bots.core.meta.mapper.KeyboardMapper.keyboardFromModel
-import static com.khabaznia.bots.core.util.SessionUtil.getCurrentChat
+import static com.khabaznia.bots.core.util.BotSession.getCurrentChat
 
 @Slf4j
 @Service

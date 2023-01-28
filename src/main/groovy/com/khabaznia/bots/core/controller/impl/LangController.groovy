@@ -15,7 +15,7 @@ import static com.khabaznia.bots.core.controller.Constants.COMMON.TO_MAIN
 import static com.khabaznia.bots.core.controller.Constants.LANG_CONTROLLER.*
 import static com.khabaznia.bots.core.meta.Emoji.FINGER_DOWN
 import static com.khabaznia.bots.core.routing.Constants.*
-import static com.khabaznia.bots.core.util.SessionUtil.currentChat
+import static com.khabaznia.bots.core.util.BotSession.currentChat
 
 @Slf4j
 @Component
